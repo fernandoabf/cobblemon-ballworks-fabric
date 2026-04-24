@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "group": "cobbleballworks_hammering",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:heal_lid_blank"
+    },
+    {
+      "tag": "cobbleballworks:hammers"
+    }
+  ],
+  "result": {
+    "item": "cobbleballworks:heal_lid",
+    "count": 1
+  }
+}

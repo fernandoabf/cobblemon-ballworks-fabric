@@ -1,0 +1,75 @@
+{
+  "__comment": "Clean 5-element anvil silhouette. Base -> narrow waist -> top plate -> flared rim -> horn (front/-Z). Every element stays inside [0,16]^3 with no rotations. Horn at -Z matches FACING=NORTH blockstate so the 4 facing variants in blockstates/ball_anvil.json rotate it correctly with y=0/90/180/270.",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "cobbleballworks:block/ball_anvil",
+    "all": "cobbleballworks:block/ball_anvil"
+  },
+  "elements": [
+    {
+      "name": "base",
+      "from": [1, 0, 1],
+      "to":   [15, 3, 15],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "east":  { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "up":    { "texture": "#all" },
+        "down":  { "texture": "#all", "cullface": "down" }
+      }
+    },
+    {
+      "name": "waist",
+      "from": [5, 3, 5],
+      "to":   [11, 10, 11],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "east":  { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "up":    { "texture": "#all" },
+        "down":  { "texture": "#all" }
+      }
+    },
+    {
+      "name": "top_plate",
+      "from": [2, 10, 2],
+      "to":   [14, 14, 14],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "east":  { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "up":    { "texture": "#all" },
+        "down":  { "texture": "#all" }
+      }
+    },
+    {
+      "name": "top_rim",
+      "from": [1, 14, 1],
+      "to":   [15, 15, 15],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "east":  { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "up":    { "texture": "#all" },
+        "down":  { "texture": "#all" }
+      }
+    },
+    {
+      "name": "horn",
+      "from": [5, 11, 0],
+      "to":   [11, 14, 3],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" },
+        "east":  { "texture": "#all" },
+        "west":  { "texture": "#all" },
+        "up":    { "texture": "#all" },
+        "down":  { "texture": "#all" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "mekmm:stamper",
+  "input": {
+    "ingredient": {
+      "item": "cobbleballworks:base_blank"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "cobbleballworks:ball_mold"
+    }
+  },
+  "output": {
+    "item": "cobbleballworks:pokeball_base",
+    "count": 1
+  }
+}

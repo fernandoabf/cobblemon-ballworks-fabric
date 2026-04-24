@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "group": "cobbleballworks_hammering",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:verdant_lid_blank"
+    },
+    {
+      "tag": "cobbleballworks:hammers"
+    }
+  ],
+  "result": {
+    "item": "cobbleballworks:verdant_lid",
+    "count": 1
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:quick_lid"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    },
+    {
+      "tag": "minecraft:buttons"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "result": {
+    "item": "cobblemon:quick_ball",
+    "count": 1
+  }
+}

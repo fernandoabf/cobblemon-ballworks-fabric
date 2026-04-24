@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "cobbleballworks:wood_hammer",
+    "cobbleballworks:stone_hammer",
+    "cobbleballworks:iron_hammer",
+    "cobbleballworks:gold_hammer",
+    "cobbleballworks:diamond_hammer",
+    "cobbleballworks:aluminium_hammer",
+    "cobbleballworks:amethyst_hammer",
+    "cobbleballworks:ruby_hammer",
+    "cobbleballworks:sapphire_hammer",
+    "cobbleballworks:dawn_stone_hammer",
+    "cobbleballworks:dusk_stone_hammer",
+    "cobbleballworks:fire_stone_hammer",
+    "cobbleballworks:leaf_stone_hammer",
+    "cobbleballworks:moon_stone_hammer",
+    "cobbleballworks:sun_stone_hammer",
+    "cobbleballworks:thunder_stone_hammer",
+    "cobbleballworks:water_stone_hammer"
+  ]
+}

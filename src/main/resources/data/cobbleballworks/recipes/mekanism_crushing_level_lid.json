@@ -1,0 +1,25 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "mekanism"
+        }
+      ],
+      "recipe": {
+        "type": "mekanism:crushing",
+        "input": {
+          "ingredient": {
+            "item": "cobbleballworks:level_lid_blank"
+          }
+        },
+        "output": {
+          "item": "cobbleballworks:level_lid",
+          "count": 1
+        }
+      }
+    }
+  ]
+}

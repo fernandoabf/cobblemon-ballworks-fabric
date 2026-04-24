@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "cobbleballworks_lid_blanks",
+  "pattern": [
+    " t ",
+    "l r",
+    " b "
+  ],
+  "key": {
+    "t": {
+      "item": "cobblemon:black_apricorn"
+    },
+    "l": {
+      "item": "cobblemon:blue_apricorn"
+    },
+    "r": {
+      "item": "cobblemon:blue_apricorn"
+    },
+    "b": {
+      "item": "cobblemon:white_apricorn"
+    }
+  },
+  "result": {
+    "item": "cobbleballworks:net_lid_blank",
+    "count": 5
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "cobbleballworks:item/water_stone_hammer"
+  }
+}

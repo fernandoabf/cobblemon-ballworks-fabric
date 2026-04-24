@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "cobbleballworks:block/ball_anvil",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "cobbleballworks:block/ball_anvil",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "cobbleballworks:block/ball_anvil",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "cobbleballworks:block/ball_anvil",
+      "y": 270
+    }
+  }
+}

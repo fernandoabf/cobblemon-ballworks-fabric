@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "cobbleballworks_base_blanks",
+  "pattern": [
+    "iii"
+  ],
+  "key": {
+    "i": { "tag": "forge:ingots/iron" }
+  },
+  "result": {
+    "item": "cobbleballworks:base_blank",
+    "count": 5
+  }
+}

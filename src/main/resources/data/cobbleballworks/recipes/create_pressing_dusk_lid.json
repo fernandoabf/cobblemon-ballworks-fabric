@@ -1,0 +1,28 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "create"
+        }
+      ],
+      "recipe": {
+        "type": "create:pressing",
+        "ingredients": [
+          {
+            "item": "cobbleballworks:dusk_lid_blank"
+          }
+        ],
+        "results": [
+          {
+            "item": "cobbleballworks:dusk_lid",
+            "count": 1
+          }
+        ],
+        "processingTime": 300
+      }
+    }
+  ]
+}

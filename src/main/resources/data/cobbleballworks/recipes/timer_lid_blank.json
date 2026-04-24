@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "cobbleballworks_lid_blanks",
+  "pattern": [
+    " t ",
+    "l r",
+    " b "
+  ],
+  "key": {
+    "t": {
+      "item": "cobblemon:red_apricorn"
+    },
+    "l": {
+      "item": "cobblemon:white_apricorn"
+    },
+    "r": {
+      "item": "cobblemon:white_apricorn"
+    },
+    "b": {
+      "item": "cobblemon:black_apricorn"
+    }
+  },
+  "result": {
+    "item": "cobbleballworks:timer_lid_blank",
+    "count": 5
+  }
+}

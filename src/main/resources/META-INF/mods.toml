@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT"
+issueTrackerURL = "https://example.com/cobbleballworks/issues"
+
+[[mods]]
+modId = "cobbleballworks"
+version = "${file.jarVersion}"
+displayName = "Cobblemon Ballworks"
+authors = "xaiver"
+description = '''
+Manual Poke Ball parts crafting for Cobblemon. Restores the Pixelmon-style feel where Poke Balls are assembled from parts — apricorn plates, a ball mechanism, and an unfinished ball you finalize with a recipe or hammer.
+'''
+
+# Kotlin for Forge — required because this mod is written in Kotlin.
+[[dependencies.cobbleballworks]]
+    modId = "kotlinforforge"
+    mandatory = true
+    versionRange = "[4.10.0,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+# Forge — minimum we target.
+[[dependencies.cobbleballworks]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[47.2.8,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+# Minecraft — cap below 1.21.
+[[dependencies.cobbleballworks]]
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.20.1,1.21)"
+    ordering = "NONE"
+    side = "BOTH"
+
+# Cobblemon — mandatory for the addon to do anything useful.
+# If you want to let the mod load without Cobblemon (items still register, recipes
+# that reference cobblemon items simply won't be craftable) flip mandatory to false.
+[[dependencies.cobbleballworks]]
+    modId = "cobblemon"
+    mandatory = true
+    versionRange = "[1.4.0,1.6)"
+    ordering = "AFTER"
+    side = "BOTH"

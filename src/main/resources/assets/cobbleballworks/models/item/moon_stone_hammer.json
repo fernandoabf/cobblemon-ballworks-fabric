@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "cobbleballworks:item/moon_stone_hammer"
+  }
+}

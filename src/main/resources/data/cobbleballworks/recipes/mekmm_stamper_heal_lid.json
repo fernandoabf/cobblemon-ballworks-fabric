@@ -1,0 +1,17 @@
+{
+  "type": "mekmm:stamper",
+  "input": {
+    "ingredient": {
+      "item": "cobbleballworks:heal_lid_blank"
+    }
+  },
+  "mold": {
+    "ingredient": {
+      "item": "cobbleballworks:ball_mold"
+    }
+  },
+  "output": {
+    "item": "cobbleballworks:heal_lid",
+    "count": 1
+  }
+}

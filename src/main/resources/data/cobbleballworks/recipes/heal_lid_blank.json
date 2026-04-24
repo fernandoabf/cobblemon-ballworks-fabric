@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "cobbleballworks_lid_blanks",
+  "pattern": [
+    " t ",
+    "l r",
+    " b "
+  ],
+  "key": {
+    "t": {
+      "item": "cobblemon:pink_apricorn"
+    },
+    "l": {
+      "item": "cobblemon:white_apricorn"
+    },
+    "r": {
+      "item": "cobblemon:white_apricorn"
+    },
+    "b": {
+      "item": "cobblemon:pink_apricorn"
+    }
+  },
+  "result": {
+    "item": "cobbleballworks:heal_lid_blank",
+    "count": 5
+  }
+}
