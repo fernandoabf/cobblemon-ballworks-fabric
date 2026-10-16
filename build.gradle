@@ -151,17 +151,75 @@ tasks.matching { it.name == 'runGametest' }.configureEach {
 
 // Fresh showcase world and screenshots; options that keep an unattended client going (no
 // accessibility onboarding, no pause when the window has no focus, no sound, short view distance).
+def prepareShowcaseDir = { File dir ->
+    delete(new File(dir, 'saves'), new File(dir, 'screenshots'))
+    dir.mkdirs()
+    new File(dir, 'options.txt').text = [
+        'onboardAccessibility:false', 'pauseOnLostFocus:false', 'tutorialStep:none',
+        'joinedFirstServer:true', 'skipMultiplayerWarning:true', 'renderDistance:4',
+        'simulationDistance:5', 'soundCategory_master:0.0', 'narrator:0', 'guiScale:2',
+        "lang:${project.findProperty('showcaseLang') ?: 'en_us'}",
+    ].join('\n') + '\n'
+}
 tasks.matching { it.name == 'runShowcase' }.configureEach {
+    doFirst { prepareShowcaseDir(file('build/showcase')) }
+}
+
+// ./gradlew runProductionGametest -> the same gametests on a production Fabric server: the
+// official installer/launcher, intermediary names, our remapped jar and the published Fabric API
+// and Cobblemon jars, as on a real server. Exits by itself, != 0 if a test fails.
+def gametestDevJar = tasks.register('gametestDevJar', Jar) {
+    from sourceSets.gametest.output
+    archiveClassifier = 'gametest-dev'
+    destinationDirectory = layout.buildDirectory.dir('devlibs')
+}
+def remapGametestJar = tasks.register('remapGametestJar', net.fabricmc.loom.task.RemapJarTask) {
+    inputFile = gametestDevJar.flatMap { it.archiveFile }
+    classpath.from(sourceSets.main.output, sourceSets.main.compileClasspath)
+    archiveClassifier = 'gametest'
+    destinationDirectory = layout.buildDirectory.dir('prodgametest-mods')
+    addNestedDependencies = false
+}
+tasks.register('runProductionGametest', net.fabricmc.loom.task.prod.ServerProductionRunTask) {
+    group = 'verification'
+    description = 'Runs every gametest on a production Fabric server with the remapped jars.'
+    mods.from(remapGametestJar)
+    jvmArgs.addAll('-Xmx3G', '-Dfabric-api.gametest',
+            "-Dfabric-api.gametest.report-file=${file('build/prodgametest/junit.xml').absolutePath}")
+    runDir = layout.buildDirectory.dir('prodgametest')
     doFirst {
-        delete(file('build/showcase/saves'), file('build/showcase/screenshots'))
-        file('build/showcase').mkdirs()
-        file('build/showcase/options.txt').text = [
-            'onboardAccessibility:false', 'pauseOnLostFocus:false', 'tutorialStep:none',
-            'joinedFirstServer:true', 'skipMultiplayerWarning:true', 'renderDistance:4',
-            'simulationDistance:5', 'soundCategory_master:0.0', 'narrator:0', 'guiScale:2',
-            "lang:${project.findProperty('showcaseLang') ?: 'en_us'}",
-        ].join('\n') + '\n'
+        delete(file('build/prodgametest/world'))
+        file('build/prodgametest').mkdirs()
     }
+}
+
+// xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runProductionShowcase -> the showcase on a
+// production client (intermediary names) with the published EMI, Cobblemon and Fabric API jars;
+// screenshots in build/prodshowcase/screenshots.
+configurations {
+    productionClientMods { transitive = false }
+}
+def showcaseDevJar = tasks.register('showcaseDevJar', Jar) {
+    from sourceSets.showcase.output
+    archiveClassifier = 'showcase-dev'
+    destinationDirectory = layout.buildDirectory.dir('devlibs')
+}
+def remapShowcaseJar = tasks.register('remapShowcaseJar', net.fabricmc.loom.task.RemapJarTask) {
+    inputFile = showcaseDevJar.flatMap { it.archiveFile }
+    classpath.from(sourceSets.main.output, sourceSets.client.output, sourceSets.client.compileClasspath)
+    archiveClassifier = 'showcase'
+    destinationDirectory = layout.buildDirectory.dir('prodshowcase-mods')
+    addNestedDependencies = false
+}
+tasks.register('runProductionShowcase', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+    group = 'verification'
+    description = 'Runs the client showcase on a production client with the remapped jars.'
+    mods.from(remapShowcaseJar, configurations.productionClientMods)
+    jvmArgs.addAll('-Xmx4G', '-Dcobbleballworks.showcase=true')
+    programArgs.addAll('--width', '1280', '--height', '720')
+    runDir = layout.buildDirectory.dir('prodshowcase')
+    useXVFB = false // run the whole Gradle command under xvfb-run, as for runShowcase
+    doFirst { prepareShowcaseDir(file('build/prodshowcase')) }
 }
 
 dependencies {
@@ -178,7 +236,12 @@ dependencies {
     modCompileOnly "dev.emi:emi-fabric:${project.emi_version}:api"
     modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
 
+    // Published (intermediary) jars for the production runs; Loom adds our remapJar itself.
+    productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    productionClientMods "dev.emi:emi-fabric:${project.emi_version}"
+
     if (hasCobblemon) {
+        productionRuntimeMods files(cobblemonJar)
         modLocalRuntime files(cobblemonJar)
         localRuntime fileTree(cobblemonJijDir) {
             include '*.jar'

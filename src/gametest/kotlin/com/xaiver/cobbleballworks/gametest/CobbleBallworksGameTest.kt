@@ -8,6 +8,7 @@ import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.resources.ResourceLocation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.nio.file.Files
 
 /**
  * Headless Fabric gametests ("fabric-gametest" entrypoint in src/gametest/resources/fabric.mod.json).
@@ -47,6 +48,22 @@ class CobbleBallworksGameTest : FabricGameTest {
         }
 
         helper.succeed()
+    }
+
+    /** The shipped metadata keeps the credits and the license (CLAUDE.md) and its icon exists. */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun metadataKeepsCreditsLicenseAndIcon(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val mod = FabricLoader.getInstance().getModContainer("cobbleballworks").orElseThrow()
+        val meta = mod.metadata
+        checks.check("MIT" in meta.license) { "the license should be MIT (${meta.license})" }
+        checks.check(meta.authors.any { "xaiver" in it.name }) { "the original author must stay in authors (${meta.authors.map { it.name }})" }
+        checks.check(meta.version.friendlyString.matches(Regex("""\d+\.\d+\.\d+\+1\.21\.1"""))) {
+            "unexpected version ${meta.version.friendlyString}"
+        }
+        val icon = meta.getIconPath(128).flatMap { mod.findPath(it) }
+        checks.check(icon.isPresent && Files.isRegularFile(icon.get())) { "icon ${meta.getIconPath(128)} not found" }
+        checks.finish()
     }
 
     private companion object {

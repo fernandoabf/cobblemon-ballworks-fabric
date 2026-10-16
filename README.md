@@ -44,6 +44,7 @@ overrides the same Poké Ball recipes.
 | Fabric Loader | 0.19.5 (mod requires >= 0.16.10) |
 | Fabric API | 0.116.17+1.21.1 |
 | Cobblemon | 1.8.2+1.21.1 |
+| EMI (optional) | 1.1.24+1.21.1 |
 | fabric-language-kotlin | 1.13.6+kotlin.2.2.20 (bundled inside Cobblemon) |
 | Gradle / Loom / Kotlin | 8.14.3 / 1.13.6 / 2.2.20 |
 | Java | 21 |
@@ -68,6 +69,11 @@ the anvils in a flat world, opens the screens and saves screenshots to
 `build/showcase/screenshots/`, then quits; `-PshowcaseLang=pt_br` takes them in Portuguese. It needs
 Xvfb and Mesa on a headless machine.
 
+Before a release, `./gradlew runProductionGametest` runs the same gametests on a production Fabric
+server (official installer and launcher, intermediary names, the remapped jar plus the published
+Fabric API and Cobblemon jars), and `runProductionShowcase` (under `xvfb-run`) does the showcase on a
+production client with the published EMI.
+
 No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jdk21` Docker image.
 
 ## Layout
@@ -78,7 +84,7 @@ No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jd
 | `src/client` | client-only code (renderers, screens); Loom forbids `main` from touching `net.minecraft.client` |
 | `src/gametest` | headless Fabric gametests (dev-only mod, never shipped) |
 | `src/showcase` | dev-only client mod that builds scenes and takes screenshots (`runShowcase`) |
-| `tools` | `derive_ball_parts.py`, which generates the disc and lid sprites from Cobblemon's jar |
+| `tools` | `derive_ball_parts.py` (disc and lid sprites from Cobblemon's jar) and `make_icon.py` (mod icon) |
 | `legacy/forge-1.20.1` | the original Forge sources and build files, kept as porting reference |
 | `docs/PLANO.md` | specification of the port (Portuguese) |
 | `docs/COMO-JOGAR.md` | player guide with every recipe (Portuguese) |
@@ -99,5 +105,7 @@ No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jd
   The anvil and the work-state shapes of the pieces follow classic Pixelmon but are drawn by this mod
   (the anvil model uses the vanilla anvil textures by reference). This is a non-commercial fan
   project.
+- The mod icon (`assets/cobbleballworks/icon.png`, made by [`tools/make_icon.py`](tools/make_icon.py))
+  combines the Poké Ball lid and the iron hammer sprites described above and stays under their terms.
 - [Cobblemon](https://cobblemon.com) is developed by the Cobblemon team. Pokémon is © Nintendo / Game
   Freak / The Pokémon Company. This project is not affiliated with any of them.

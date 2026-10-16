@@ -25,6 +25,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.Difficulty
+import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameRules
@@ -35,6 +36,7 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.WorldOptions
 import net.minecraft.world.level.levelgen.presets.WorldPresets
 import org.slf4j.LoggerFactory
+import java.lang.reflect.Modifier
 
 /**
  * Dev-only visual check (`./gradlew runShowcase`, under Xvfb on a headless machine): creates a
@@ -210,11 +212,16 @@ private object Showcase {
         }
     }
 
-    /** Opens the creative inventory on the mod's tab (the screen keeps the last tab in a static field). */
+    /**
+     * Opens the creative inventory on the mod's tab. The screen keeps the last tab in its only static
+     * CreativeModeTab field, found by type so it also works with intermediary names in production.
+     */
     private fun openBallworksTab(mc: Minecraft) {
         mc.options.hideGui = false
         mc.player?.closeContainer()
-        val field = CreativeModeInventoryScreen::class.java.getDeclaredField("selectedTab")
+        val field = CreativeModeInventoryScreen::class.java.declaredFields.single {
+            Modifier.isStatic(it.modifiers) && it.type == CreativeModeTab::class.java
+        }
         field.isAccessible = true
         field.set(null, ModCreativeTab.BALLWORKS)
         val player = mc.player!!

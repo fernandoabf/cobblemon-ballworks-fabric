@@ -20,10 +20,28 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 
 ## Estado atual
 
-Só o toolchain está pronto: o build gera o jar, o gametest headless sobe com o **Cobblemon real** e
-passa um teste de fumaça. Os recursos herdados (`src/main/resources/assets` e `data`) ainda estão no
-formato 1.20 e precisam ser convertidos (o Minecraft 1.21 ignora as pastas antigas em silêncio).
-Nenhum item, bloco ou receita foi portado ainda.
+**Versão 1.0.0**, com o checklist do plano completo, menos o teste com o modpack inteiro (que depende
+do modpack do usuário). As 46 bolas do Cobblemon que têm receita passam pela forja: o disco usa a
+receita do Cobblemon com bolotas cozidas, vira tampa na bigorna e a bola é tampa + botão de pedra +
+base de ferro. Estão prontos a Bigorna de Pokébola, os 17 martelos, a Bigorna Mecânica, o plugin do
+EMI, a config do servidor e as traduções en_us/pt_br. Os 31 gametests passam no servidor headless com
+o Cobblemon real e o showcase confere o client (render, GUI, EMI), os dois em dev e em produção. Guia
+do jogador: [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
+
+Mapa do código (`com.xaiver.cobbleballworks`):
+
+- `content/`: regras e dados (`ForgeBall`: as 46 bolas; `HammerMaterial`; `AnvilRules`;
+  `ApricornColor`; `DisabledRecipes`).
+- `registry/`: registros (itens, blocos, block entities, menu, tipo de receita, tags, aba criativa).
+- `block/` e `block/entity/`: as duas bigornas; `menu/`: o menu da Bigorna Mecânica; `item/`:
+  martelos e `AnvilStrikes` (o servidor confere o ritmo das marteladas); `recipe/AnvilRecipe`: o tipo
+  `cobbleballworks:anvil`; `config/BallworksConfig`.
+- `src/main/java/.../mixin/RecipeManagerMixin`: tira as receitas nativas das bolas do Cobblemon (os
+  overrides de datapack perdem para o Cobblemon, ver 3.3 do plano).
+- `src/client`: renderers (`PieceRenderer` desenha as peças em 3D a partir dos sprites), a tela da
+  Bigorna Mecânica e o plugin do EMI (`compat/emi`).
+- `tools/derive_ball_parts.py`: gera os sprites de disco e tampa a partir do jar do Cobblemon;
+  `tools/make_icon.py` monta o ícone do mod com dois desses sprites.
 
 ## Ambiente e comandos
 
@@ -43,6 +61,13 @@ ou o Temurin 21) e aponte o `JAVA_HOME`.
 - Conferência visual no client (sem monitor): `xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew
   runShowcase` sobe o client com o mod de dev `src/showcase`, monta cenas num mundo plano, salva
   screenshots em `build/showcase/screenshots/` e fecha sozinho (precisa de Xvfb e Mesa; ~2 min).
+  O EMI roda junto (só em dev); `-PshowcaseLang=pt_br` tira as fotos com o jogo em português.
+- **Produção** (antes de uma versão): `./gradlew runProductionGametest` roda os mesmos gametests num
+  servidor Fabric de produção (instalador/launcher oficiais, nomes intermediary, nosso jar remapeado
+  e os jars publicados do Fabric API e do Cobblemon; resultado em `build/prodgametest/`), e
+  `xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runProductionShowcase` faz o showcase num client
+  de produção com o EMI publicado (`build/prodshowcase/screenshots/`). Pegam o que o dev esconde:
+  reflexão por nome mojmap, mixin sem remapear, dependência que só existe em dev.
 - Alternativa sem JDK local: `./dgradle.sh <tarefas>` (mesmo Gradle dentro do Docker).
 
 ## Regras do projeto

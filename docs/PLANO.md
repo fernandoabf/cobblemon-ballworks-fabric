@@ -343,9 +343,13 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Tipo de receita `cobbleballworks:anvil` (47 receitas: 46 discos + disco de ferro)
 - [x] Plugin EMI (7): categorias das duas bigornas, marteladas por martelo, conferido no showcase
 - [x] Traduções en_us/pt_br completas (gametest de paridade + toda chave usada no código existe)
-- [x] Gametests da seção 8 todos verdes (30 no servidor headless com o Cobblemon real)
-- [ ] Testar num servidor com o modpack completo e no client (render, GUI, EMI)
-- [ ] Versão 1.0.0 e jar em `build/libs`
+- [x] Gametests da seção 8 todos verdes (31, com o Cobblemon real, em dev e num servidor de produção)
+- [ ] Testar num servidor com o modpack completo e no client (render, GUI, EMI). Feito aqui, com o
+      Cobblemon real, em dev e em produção (instalador/launcher oficiais, jars publicados): servidor
+      dedicado headless (`runGametest` e `runProductionGametest`) e client (`runShowcase` e
+      `runProductionShowcase`: render, GUI, EMI, en_us e pt_br). Falta o modpack completo, que só
+      existe na máquina do usuário.
+- [x] Versão 1.0.0 e jar em `build/libs`
 
 ## 10. Fora do escopo por enquanto
 

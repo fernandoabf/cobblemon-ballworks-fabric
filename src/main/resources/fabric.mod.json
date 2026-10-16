@@ -16,6 +16,7 @@
     "issues": "https://github.com/fernandoabf/cobblemon-ballworks-fabric/issues"
   },
   "license": "MIT",
+  "icon": "assets/cobbleballworks/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
