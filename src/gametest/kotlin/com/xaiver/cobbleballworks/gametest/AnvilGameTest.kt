@@ -36,8 +36,8 @@ class AnvilGameTest : FabricGameTest {
             val recipe = AnvilRecipe.find(level, ItemStack(ModItems.DISCS.getValue(ball)))?.value()
             checks.check(recipe?.result?.item == ModItems.LIDS.getValue(ball)) { "${ball.id} disc does not hammer into its lid" }
             val expectedForce = when (ball) {
-                ForgeBall.MASTER, ForgeBall.BEAST -> 15
-                ForgeBall.DREAM -> 10
+                ForgeBall.MASTER, ForgeBall.BEAST, ForgeBall.ANCIENT_ORIGIN -> 15
+                ForgeBall.DREAM, ForgeBall.CHERISH -> 10
                 else -> 5
             }
             checks.check(recipe?.force == expectedForce) { "${ball.id} disc force ${recipe?.force}, expected $expectedForce" }

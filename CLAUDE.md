@@ -21,7 +21,7 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 ## Estado atual
 
 **Versão 1.0.1**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
-depende do modpack do usuário). As 46 bolas do Cobblemon que têm receita passam pela forja: o disco
+depende do modpack do usuário). As 48 bolas do Cobblemon passam pela forja: o disco
 usa a receita do Cobblemon com bolotas cozidas, vira tampa na bigorna e a bola é tampa + botão de
 pedra + base de ferro. Estão prontos a Bigorna de Pokébola, os 18 martelos (o de netherite sai da
 mesa de ferraria), a Bigorna Mecânica, o plugin do EMI, a config do servidor e as traduções
@@ -31,7 +31,7 @@ client (render, GUI, EMI), os dois em dev e em produção. Guia do jogador:
 
 Mapa do código (`com.xaiver.cobbleballworks`):
 
-- `content/`: regras e dados (`ForgeBall`: as 46 bolas; `HammerMaterial`; `AnvilRules`;
+- `content/`: regras e dados (`ForgeBall`: as 48 bolas; `HammerMaterial`; `AnvilRules`;
   `ApricornColor`; `DisabledRecipes`).
 - `registry/`: registros (itens, blocos, block entities, menu, tipo de receita, tags, aba criativa).
 - `block/` e `block/entity/`: as duas bigornas; `menu/`: o menu da Bigorna Mecânica; `item/`:
@@ -107,5 +107,6 @@ ou o Temurin 21) e aponte o `JAVA_HOME`.
 ## Entrega
 
 O resultado é o jar de `build/libs/`. Ele vai nos dois lados: na pasta `mods/` do servidor e na do
-client. Quando instalar, o mod **Cobblemon Parts Refabricated** tem que sair do modpack, porque ele
-sobrescreve as mesmas receitas de Poké Ball do Cobblemon.
+client. O **Cobblemon Parts Refabricated** pode sair do modpack: as receitas de bola dele (as 48) são
+desligadas pelo mixin de receitas (config `disableOtherModsBallRecipes`), então as peças dele ficam sem
+uso.

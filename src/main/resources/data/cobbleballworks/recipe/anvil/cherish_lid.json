@@ -1,0 +1,10 @@
+{
+  "type": "cobbleballworks:anvil",
+  "ingredient": {
+    "item": "cobbleballworks:cherish_lid_blank"
+  },
+  "result": {
+    "id": "cobbleballworks:cherish_lid"
+  },
+  "force": 10
+}

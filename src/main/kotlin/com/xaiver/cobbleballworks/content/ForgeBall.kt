@@ -3,13 +3,14 @@ package com.xaiver.cobbleballworks.content
 import net.minecraft.resources.ResourceLocation
 
 /**
- * Every Cobblemon Poké Ball that has a crafting recipe, all forged Pixelmon-style: disc ->
- * hammered on the anvil into a lid -> lid + stone button + iron base.
+ * Every Cobblemon Poké Ball, all forged Pixelmon-style: disc -> hammered on the anvil into a lid
+ * -> lid + stone button + iron base.
  *
  * The disc recipe is Cobblemon's own ball recipe (same shape, materials and amount, with cooked
- * apricorns), so the better balls keep Cobblemon's cost; see docs/PLANO.md. Order: the 22
- * forgeable balls of Pixelmon 1.12.2, the Cobblemon apricorn balls, the special balls and the
- * ancient (Hisui) balls. Cherish and Ancient Origin have no recipe in Cobblemon and stay out.
+ * apricorns), so the better balls keep Cobblemon's cost; see docs/PLANO.md. Cherish and Ancient
+ * Origin have no recipe in Cobblemon, so their discs have recipes of the forge's own in the same
+ * cross (Cherish: Dream-like, Ancient Origin: Master-like). Order: the 22 forgeable balls of
+ * Pixelmon 1.12.2, the Cobblemon apricorn balls, the special balls and the ancient (Hisui) balls.
  */
 enum class ForgeBall(val id: String) {
     POKE("poke"),
@@ -43,6 +44,7 @@ enum class ForgeBall(val id: String) {
     DREAM("dream"),
     BEAST("beast"),
     MASTER("master"),
+    CHERISH("cherish"),
     ANCIENT_POKE("ancient_poke"),
     ANCIENT_GREAT("ancient_great"),
     ANCIENT_ULTRA("ancient_ultra"),
@@ -58,6 +60,7 @@ enum class ForgeBall(val id: String) {
     ANCIENT_AZURE("ancient_azure"),
     ANCIENT_ROSEATE("ancient_roseate"),
     ANCIENT_SLATE("ancient_slate"),
+    ANCIENT_ORIGIN("ancient_origin"),
     ;
 
     /** Disc item path. The original Ballworks called the disc a "lid blank"; the id is kept. */

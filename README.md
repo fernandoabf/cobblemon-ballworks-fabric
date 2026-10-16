@@ -15,11 +15,12 @@ decisions: [`docs/PLANO.md`](docs/PLANO.md).
 
 ## Features
 
-- **Every Cobblemon ball that has a recipe (46)** is forged: Poké, Great and Ultra Balls, the apricorn
-  balls, Park, Dream, Beast, Master and all the Ancient balls. Cobblemon's own ball recipes are
+- **Every Cobblemon Poké Ball (48)** is forged: Poké, Great and Ultra Balls, the apricorn balls,
+  Park, Dream, Beast, Master, Cherish and all the Ancient balls. Cobblemon's own ball recipes are
   disabled and come back as **disc** recipes with the same shape and materials (copper, iron, gold,
-  diamond, netherite...), using **cooked** apricorns. Cherish and Ancient Origin have no recipe in
-  Cobblemon and still have none.
+  diamond, netherite...), using **cooked** apricorns. Cherish and Ancient Origin, which have no
+  recipe in Cobblemon, get disc recipes of the forge's own (Dream-like and Master-like). Other mods'
+  recipes that make one of these balls are switched off too (config `disableOtherModsBallRecipes`).
 - **Poké Ball Anvil**: right-click a disc onto it and hold left-click with a hammer. The piece goes
   through 3 work stages (force 5 per stage; Dream Ball 10; Master and Beast Ball 15) and becomes a
   lid; iron discs become iron bases. Lid + stone button + iron base = one ball.
@@ -34,8 +35,8 @@ decisions: [`docs/PLANO.md`](docs/PLANO.md).
 ## Installing
 
 Put the jar in `mods/` on **both the server and the clients**, next to Fabric API and Cobblemon 1.8.x
-(Cobblemon already bundles fabric-language-kotlin). **Remove Cobblemon Parts Refabricated**: it
-overrides the same Poké Ball recipes.
+(Cobblemon already bundles fabric-language-kotlin). Cobblemon Parts Refabricated is not needed: its
+Poké Ball recipes are switched off, so its parts would have no use.
 
 ## Versions
 

@@ -1,0 +1,6 @@
+{
+  "parent": "cobbleballworks:piece/ancient_lid",
+  "textures": {
+    "layer0": "cobblemon:item/poke_balls/models/ancient_origin_ball"
+  }
+}

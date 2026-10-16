@@ -20,6 +20,8 @@ object BallworksConfig {
         val allowAnvilAutoreloading: Boolean = false,
         /** The Mechanical Anvil clanks (iron golem death sound, as in Pixelmon 8.x) on every finished piece. */
         val mechanicalAnvilSound: Boolean = true,
+        /** Other mods' recipes that make a forged ball are dropped too, so balls only come from the forge. */
+        val disableOtherModsBallRecipes: Boolean = true,
     )
 
     /** Current values. Replaced on load; tests may set it directly. */
@@ -31,6 +33,7 @@ object BallworksConfig {
         "hammerDamagePerStage" to "Durability a hammer loses when a strike advances a stage (3 stages per piece). Pixelmon 8.x: 1; up to 7.2.0: 3.",
         "allowAnvilAutoreloading" to "After hammering a finished piece off the anvil, pull the next matching disc from the inventory (Pixelmon option, off by default).",
         "mechanicalAnvilSound" to "Mechanical Anvil plays a heavy metal clank on every finished piece, as in Pixelmon 8.x.",
+        "disableOtherModsBallRecipes" to "Also remove other mods' recipes that make a Poké Ball the forge makes (Cobblemon Parts Refabricated, for example), so every ball comes from the forge. Applies on the next data reload.",
     )
 
     fun load(path: Path = FabricLoader.getInstance().configDir.resolve("${CobbleBallworks.MOD_ID}.json")) {
@@ -45,6 +48,7 @@ object BallworksConfig {
             hammerDamagePerStage = json.int("hammerDamagePerStage", defaults.hammerDamagePerStage).coerceIn(0, 1000),
             allowAnvilAutoreloading = json.bool("allowAnvilAutoreloading", defaults.allowAnvilAutoreloading),
             mechanicalAnvilSound = json.bool("mechanicalAnvilSound", defaults.mechanicalAnvilSound),
+            disableOtherModsBallRecipes = json.bool("disableOtherModsBallRecipes", defaults.disableOtherModsBallRecipes),
         )
         save(path)
     }
@@ -55,6 +59,7 @@ object BallworksConfig {
         out.addProperty("hammerDamagePerStage", values.hammerDamagePerStage)
         out.addProperty("allowAnvilAutoreloading", values.allowAnvilAutoreloading)
         out.addProperty("mechanicalAnvilSound", values.mechanicalAnvilSound)
+        out.addProperty("disableOtherModsBallRecipes", values.disableOtherModsBallRecipes)
         try {
             Files.createDirectories(path.parent)
             Files.writeString(path, GsonBuilder().setPrettyPrinting().create().toJson(out) + "\n")

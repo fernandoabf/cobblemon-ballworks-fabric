@@ -40,12 +40,6 @@ class RegistryGameTest : FabricGameTest {
         checks.check(modItem("base_blank") != null) { "missing base_blank (iron disc)" }
         checks.check(modItem("pokeball_base") != null) { "missing pokeball_base (iron base)" }
 
-        // No crafting recipe in Cobblemon -> nothing to forge; the mold had no use.
-        for (unforgeable in listOf("cherish", "ancient_origin")) {
-            checks.check(modItem("${unforgeable}_lid") == null && modItem("${unforgeable}_lid_blank") == null) {
-                "$unforgeable should not have a disc/lid"
-            }
-        }
         checks.check(modItem("ball_mold") == null) { "ball_mold should not exist" }
 
         for ((material, expected) in HAMMERS) {
@@ -120,11 +114,14 @@ class RegistryGameTest : FabricGameTest {
         val BALLS = listOf(
             "poke", "great", "ultra", "level", "moon", "friend", "love", "safari", "heavy", "fast", "repeat",
             "timer", "nest", "net", "dive", "luxury", "heal", "dusk", "premier", "sport", "quick", "lure",
-            "citrine", "verdant", "azure", "roseate", "slate", "park", "dream", "beast", "master",
+            "citrine", "verdant", "azure", "roseate", "slate", "park", "dream", "beast", "master", "cherish",
             "ancient_poke", "ancient_great", "ancient_ultra", "ancient_heavy", "ancient_leaden", "ancient_gigaton",
             "ancient_feather", "ancient_wing", "ancient_jet", "ancient_ivory", "ancient_citrine", "ancient_verdant",
-            "ancient_azure", "ancient_roseate", "ancient_slate",
+            "ancient_azure", "ancient_roseate", "ancient_slate", "ancient_origin",
         )
+
+        /** Balls Cobblemon has no recipe for: their disc recipes are the forge's own. */
+        val OWN_DISC_RECIPES = mapOf("cherish" to 4, "ancient_origin" to 1)
 
         /**
          * material -> (strength, durability), from Pixelmon 1.12.2 ItemHammer/GenericHammer;

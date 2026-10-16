@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "ball_discs",
+  "pattern": [
+    " t ",
+    "lcr",
+    " b "
+  ],
+  "key": {
+    "b": {
+      "item": "cobbleballworks:cooked_black_apricorn"
+    },
+    "c": {
+      "tag": "cobblemon:tier_4_poke_ball_materials"
+    },
+    "l": {
+      "tag": "c:ingots/gold"
+    },
+    "r": {
+      "tag": "c:ingots/gold"
+    },
+    "t": {
+      "item": "cobbleballworks:cooked_red_apricorn"
+    }
+  },
+  "result": {
+    "id": "cobbleballworks:cherish_lid_blank",
+    "count": 4
+  }
+}

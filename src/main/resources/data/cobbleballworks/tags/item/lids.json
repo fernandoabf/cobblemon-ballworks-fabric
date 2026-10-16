@@ -32,6 +32,7 @@
     "cobbleballworks:dream_lid",
     "cobbleballworks:beast_lid",
     "cobbleballworks:master_lid",
+    "cobbleballworks:cherish_lid",
     "cobbleballworks:ancient_poke_lid",
     "cobbleballworks:ancient_great_lid",
     "cobbleballworks:ancient_ultra_lid",
@@ -46,6 +47,7 @@
     "cobbleballworks:ancient_verdant_lid",
     "cobbleballworks:ancient_azure_lid",
     "cobbleballworks:ancient_roseate_lid",
-    "cobbleballworks:ancient_slate_lid"
+    "cobbleballworks:ancient_slate_lid",
+    "cobbleballworks:ancient_origin_lid"
   ]
 }

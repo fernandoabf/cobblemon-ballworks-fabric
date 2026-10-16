@@ -1,0 +1,10 @@
+{
+  "type": "cobbleballworks:anvil",
+  "ingredient": {
+    "item": "cobbleballworks:ancient_origin_lid_blank"
+  },
+  "result": {
+    "id": "cobbleballworks:ancient_origin_lid"
+  },
+  "force": 15
+}

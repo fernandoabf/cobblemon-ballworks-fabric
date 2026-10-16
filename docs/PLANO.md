@@ -40,9 +40,10 @@ referência: o port reescreve tudo em `src/`.
 | `ball_anvil` | Bigorna de Poké Ball | seção 5 (nome evita confusão com a bigorna vanilla) |
 | `mechanical_anvil` | Bigorna Mecânica | seção 6 |
 
-- `<bola>` = as **46 bolas do Cobblemon que têm receita**: as 22 do Pixelmon, as 5 de apricorn do
-  Cobblemon (citrine, verdant, azure, roseate, slate), park, dream, beast, master e as 15 `ancient_*`.
-  Cherish e Ancient Origin não têm receita no Cobblemon e ficam de fora.
+- `<bola>` = as **48 bolas do Cobblemon**: as 22 do Pixelmon, as 5 de apricorn do Cobblemon
+  (citrine, verdant, azure, roseate, slate), park, dream, beast, master, cherish e as 16 `ancient_*`.
+  Cherish e Ancient Origin não têm receita no Cobblemon; as receitas de disco delas são do mod
+  (seção 11).
 - Nomes pt-BR das bolas: use os nomes do `pt_br.json` do próprio Cobblemon para ficar consistente.
   Há `en_us.json` e `pt_br.json` completos.
 - Sprites de disco e tampa: derivados das bolas do Cobblemon por `tools/derive_ball_parts.py` (seção 11).
@@ -101,6 +102,7 @@ ferro, ouro, diamante). J/JC/JP = `cobblemon:tumblestone`/`sky_tumblestone`/`bla
 | dream | V | R | T4 | R | Az | 4 | 10 |
 | beast | `GEG` / `EDE` / `GEG` (D = T4, E = `echo_shard`, G = `#c:ingots/gold`) | | | | | 8 | 15 |
 | master | `shulker_shell` | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | `shulker_shell` | 1 | 15 |
+| cherish ¹ | V | `#c:ingots/gold` | T4 | `#c:ingots/gold` | P | 4 | 10 |
 | ancient_poke | V | J | T1 | J | V | 4 | 5 |
 | ancient_great | V | J | T2 | J | Az | 4 | 5 |
 | ancient_ultra | A | J | T3 | J | P | 4 | 5 |
@@ -116,6 +118,9 @@ ferro, ouro, diamante). J/JC/JP = `cobblemon:tumblestone`/`sky_tumblestone`/`bla
 | ancient_azure | Az | J | T1 | J | Az | 4 | 5 |
 | ancient_roseate | R | J | T1 | J | R | 4 | 5 |
 | ancient_slate | P | J | T1 | J | P | 4 | 5 |
+| ancient_origin ¹ | JC | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | JP | 1 | 15 |
+
+¹ Sem receita no Cobblemon: receita do mod na mesma cruz (seção 11).
 
 Se um modpack mudar o conteúdo das tags de tier do Cobblemon, os discos acompanham.
 
@@ -131,7 +136,7 @@ Se um modpack mudar o conteúdo das tags de tier do Cobblemon, os discos acompan
 
 ### 3.3 Desativar as receitas nativas do Cobblemon
 
-As 46 receitas `cobblemon:<bola>_ball` e as 7 de fornalha `cobblemon:<cor>_apricorn_smelt_to_dye`
+As 48 receitas `cobblemon:<bola>_ball` e as 7 de fornalha `cobblemon:<cor>_apricorn_smelt_to_dye`
 (que disputariam a fornalha com o cozimento do apricorn) são removidas por um mixin no
 `RecipeManager.apply` (`RecipeManagerMixin` + `DisabledRecipes`), antes de virarem receitas. Sem isso
 as bolas continuariam saindo direto da bancada, e a Master e a Beast (que não usam apricorn) teriam
@@ -149,8 +154,13 @@ Gametest: depois de carregar, essas 53 receitas **não existem**, as outras rece
 continuam lá, nenhuma receita fora do mod produz uma bola forjada, e a grade original do Cobblemon
 (apricorns crus) não produz mais nada.
 
-> Atenção: o mod **Cobblemon Parts Refabricated** sobrescreve os mesmos arquivos. Os dois não devem
-> ficar instalados juntos; o modpack que vai usar este mod vai removê-lo.
+**Receitas de outros mods:** o Cobblemon Parts Refabricated sobrescreve os mesmos ids
+`cobblemon:<bola>_ball` para as 48 bolas, inclusive `cherish_ball` e `ancient_origin_ball`, que o
+Cobblemon não tem (o usuário viu a Estima ainda saindo pelas peças dele). Por isso o mixin também
+remove qualquer receita fora do mod cujo resultado seja uma bola forjada, venha de que id vier
+(`DisabledRecipes.resultOf` lê `result.id`, `result.item` ou o id direto), e lista no log as que tirou.
+Dá para desligar isso com `disableOtherModsBallRecipes` no config. Com os dois mods instalados, as
+peças do Parts Refabricated continuam existindo, mas nenhuma bola sai delas.
 
 ### 3.4 Tags e formato 1.21
 
@@ -343,14 +353,14 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Converter recursos para 1.21 (pastas, `result.id`, `c:`), apagar receitas de mods ausentes,
       `ball_mold` e o martelar na grade
 - [x] Itens: apricorns cozidos, discos, tampas, disco/base de ferro, martelos (força/durabilidade)
-- [x] Todas as 46 bolas do Cobblemon na forja, com sprites de disco/tampa derivados do Cobblemon
+- [x] Todas as 48 bolas do Cobblemon na forja, com sprites de disco/tampa derivados do Cobblemon
 - [x] Receitas: cozimento, discos (tabela 3.1), disco de ferro, martelos, montagem (as das bigornas
       entram junto com cada bigorna)
 - [x] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
 - [x] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
 - [x] Bigorna: BER com os estágios do Pixelmon (5.4) + showcase com screenshots no client
 - [x] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER
-- [x] Tipo de receita `cobbleballworks:anvil` (47 receitas: 46 discos + disco de ferro)
+- [x] Tipo de receita `cobbleballworks:anvil` (49 receitas: 48 discos + disco de ferro)
 - [x] Plugin EMI (7): categorias das duas bigornas, marteladas por martelo, conferido no showcase
 - [x] Traduções en_us/pt_br completas (gametest de paridade + toda chave usada no código existe)
 - [x] Gametests da seção 8 todos verdes (31, com o Cobblemon real, em dev e num servidor de produção)
@@ -364,7 +374,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 ## 10. Fora do escopo por enquanto
 
 Cadeia do alumínio (bauxita, placa), Bigorna Mecânica de 2 blocos, auto-recarga ligada por padrão,
-cherish e ancient origin (sem receita no Cobblemon).
+receitas próprias para outras bolas que o Cobblemon venha a ter.
 
 ## 11. Decisões tomadas durante o port
 
@@ -375,12 +385,17 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
 - **Textura do apricorn cozido:** o modelo aponta para o sprite do próprio Cobblemon
   (`cobblemon:item/<cor>_apricorn`, sem copiar o arquivo), tingido no client com um tom quente, mais
   uma sobreposição nossa com marcas de grelha e vapor. A cor do apricorn continua reconhecível.
-- **Todas as bolas do Cobblemon na forja** (decisão do usuário): as 46 bolas com receita no Cobblemon
-  têm disco e tampa. O disco usa a receita da bola no Cobblemon com apricorns cozidos (seção 3.1), a
-  Master e a Beast pedem 15 de força por estágio na bigorna e a Dream 10.
+- **Todas as bolas do Cobblemon na forja** (decisão do usuário): as 48 bolas têm disco e tampa. O
+  disco usa a receita da bola no Cobblemon com apricorns cozidos (seção 3.1), a Master e a Beast pedem
+  15 de força por estágio na bigorna e a Dream 10.
+- **Cherish e Ancient Origin** (pedido do usuário, que viu as duas saindo pelo Parts Refabricated):
+  sem receita no Cobblemon, ganharam receitas de disco do mod na mesma cruz. Estima: apricorn vermelho
+  cozido em cima, ouro dos lados, diamante (T4) no meio, apricorn preto cozido embaixo, 4 discos,
+  força 10 (como a Onírica). Origem Ancestral: tumblestone celeste em cima, netherite dos lados,
+  estrela do Nether no meio, tumblestone preta embaixo, 1 disco, força 15 (como a Mestra).
 - **Sprites de disco e tampa derivados do Cobblemon** (decisão do usuário): `tools/derive_ball_parts.py`
   lê o sprite de cada bola dentro do jar do Cobblemon (`run-libs/`) e gera a tampa (a metade de cima da
-  bola, com uma borda) e o disco (essa metade achatada). O visual fica uniforme nas 46 bolas e
+  bola, com uma borda) e o disco (essa metade achatada). O visual fica uniforme nas 48 bolas e
   substitui os sprites que a Ballworks tinha importado do Pixelmon. Licença: o Cobblemon é MPL-2.0;
   os PNGs gerados levam o aviso num bloco de texto do PNG e o README dá o crédito.
 - **Martelos:** além da força e da durabilidade do Pixelmon, têm o dano de ataque do Pixelmon

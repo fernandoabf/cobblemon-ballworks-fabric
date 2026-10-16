@@ -2,6 +2,7 @@ package com.xaiver.cobbleballworks.gametest
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.xaiver.cobbleballworks.content.DisabledRecipes
 import com.mojang.serialization.JsonOps
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
 import net.fabricmc.loader.api.FabricLoader
@@ -58,6 +59,17 @@ class RecipeGameTest : FabricGameTest {
         val cobblemon = FabricLoader.getInstance().getModContainer("cobblemon").orElseThrow()
         for (ball in RegistryGameTest.BALLS) {
             val path = cobblemon.findPath("data/cobblemon/recipe/${ball}_ball.json").orElse(null)
+            val ownCount = RegistryGameTest.OWN_DISC_RECIPES[ball]
+            if (ownCount != null) {
+                // No Cobblemon recipe to follow: the forge's own grid makes the discs.
+                checks.check(path == null) { "Cobblemon now has a recipe for ${ball}_ball: follow it" }
+                val own = modJsonResources("data/$MOD_ID/recipe").firstOrNull { it.path.endsWith("/${ball}_lid_blank.json") }
+                val crafted = own?.let { craft(level, grid(it.json.asJsonObject, cook = false)) } ?: ItemStack.EMPTY
+                checks.check(crafted.item == modItem("${ball}_lid_blank") && crafted.count == ownCount) {
+                    "$ball: the forge's own disc grid gives $crafted, expected ${ownCount}x ${ball}_lid_blank"
+                }
+                continue
+            }
             if (path == null) {
                 checks.fail("Cobblemon has no recipe file for ${ball}_ball")
                 continue
@@ -155,6 +167,34 @@ class RecipeGameTest : FabricGameTest {
             for (col in 0..2) items[row * 3 + col] = iron
             val result = craft(level, CraftingInput.of(3, 3, items))
             checks.check(result.item == modItem("base_blank") && result.count == 5) { "3 iron ingots in row $row give $result" }
+        }
+        checks.finish()
+    }
+
+    /**
+     * Other mods' recipes for a forged ball go too, whatever their id: Cobblemon Parts Refabricated
+     * overrides Cobblemon's ids and adds Cherish and Ancient Origin ones Cobblemon does not have.
+     */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun otherModsBallRecipesAreDropped(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        fun recipe(result: String) = JsonParser.parseString(
+            """{"type": "minecraft:crafting_shapeless", "ingredients": [{"item": "minecraft:stick"}], "result": {"id": "$result", "count": 1}}""",
+        )
+        val recipes = mapOf(
+            cobblemonId("cherish_ball") to recipe("cobblemon:cherish_ball"),
+            ResourceLocation.fromNamespaceAndPath("othermod", "parts/cherish_ball") to recipe("cobblemon:cherish_ball"),
+            ResourceLocation.fromNamespaceAndPath("othermod", "parts/poke_ball_old_format") to
+                JsonParser.parseString("""{"type": "minecraft:crafting_shapeless", "result": {"item": "cobblemon:poke_ball"}}"""),
+            ResourceLocation.fromNamespaceAndPath("othermod", "stick") to recipe("minecraft:stick"),
+            ResourceLocation.fromNamespaceAndPath("othermod", "red_apricorn") to recipe("cobblemon:red_apricorn"),
+            modId("cherish_ball") to recipe("cobblemon:cherish_ball"),
+        )
+        val kept = DisabledRecipes.filter(recipes, otherMods = true).keys.map { it.toString() }.toSet()
+        checks.check(kept == setOf("othermod:stick", "othermod:red_apricorn", "$MOD_ID:cherish_ball")) { "kept $kept" }
+        val lenient = DisabledRecipes.filter(recipes, otherMods = false).keys.map { it.toString() }.toSet()
+        checks.check("cobblemon:cherish_ball" !in lenient && "othermod:parts/cherish_ball" in lenient) {
+            "with disableOtherModsBallRecipes off only Cobblemon's ids should go: $lenient"
         }
         checks.finish()
     }

@@ -118,6 +118,7 @@ Preto (tumblestones). **Força** = força por estágio na bigorna.
 | Bola Onírica | V | R | T4 | R | Az | 4 | 10 |
 | Bola Criatura | `GEG` / `EDE` / `GEG` (D = T4, E = `echo_shard`, G = `#c:ingots/gold`) |  |  |  |  | 8 | 15 |
 | Bola Mestra | `shulker_shell` | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | `shulker_shell` | 1 | 15 |
+| Bola Estima ¹ | V | `#c:ingots/gold` | T4 | `#c:ingots/gold` | P | 4 | 10 |
 | Pokébola Ancestral | V | J | T1 | J | V | 4 | 5 |
 | Grande Bola Ancestral | V | J | T2 | J | Az | 4 | 5 |
 | Ultra Bola Ancestral | A | J | T3 | J | P | 4 | 5 |
@@ -133,8 +134,10 @@ Preto (tumblestones). **Força** = força por estágio na bigorna.
 | Bola Cerúlea Ancestral | Az | J | T1 | J | Az | 4 | 5 |
 | Bola Rosada Ancestral | R | J | T1 | J | R | 4 | 5 |
 | Bola Ardósia Ancestral | P | J | T1 | J | P | 4 | 5 |
+| Bola Origem Ancestral ¹ | JC | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | JP | 1 | 15 |
 
-A Bola Estima (Cherish) e a Bola Origem Ancestral não têm receita no Cobblemon e continuam sem receita.
+¹ A Bola Estima (Cherish) e a Bola Origem Ancestral não têm receita no Cobblemon, então as receitas de
+disco delas são do próprio mod, na mesma cruz: a Estima no nível da Onírica e a Origem no da Mestra.
 
 ## Configuração do servidor
 
@@ -145,10 +148,13 @@ A Bola Estima (Cherish) e a Bola Origem Ancestral não têm receita no Cobblemon
 | `hammerDamagePerStage` | 1 | Durabilidade que o martelo perde por estágio (o Pixelmon até a 7.2.0 usava 3). |
 | `allowAnvilAutoreloading` | false | Depois de martelar uma tampa para fora da bigorna, puxa o próximo disco igual do inventário. |
 | `mechanicalAnvilSound` | true | A Bigorna Mecânica faz um "clank" metálico a cada peça pronta. |
+| `disableOtherModsBallRecipes` | true | Desliga também as receitas de outros mods que fazem uma das bolas da forja (como as do Cobblemon Parts Refabricated), para toda bola sair da forja. |
 
 ## Avisos para o modpack
 
 - Instale o mod **no servidor e no client**.
-- **Remova o Cobblemon Parts Refabricated**: ele mexe nas mesmas receitas de bola.
+- O **Cobblemon Parts Refabricated** deixa de fazer bolas: as receitas de bola dele (todas as 48,
+  inclusive Estima e Origem) são desligadas. As peças dele continuam no jogo sem uso, então dá para
+  tirar o mod do pack.
 - Com o **EMI** instalado, as receitas das duas bigornas aparecem em categorias próprias, com as
   marteladas de cada martelo.

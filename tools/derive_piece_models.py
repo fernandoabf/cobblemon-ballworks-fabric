@@ -33,10 +33,11 @@ BALLS = [
     "poke", "great", "ultra", "level", "moon", "friend", "love", "safari", "heavy", "fast", "repeat",
     "timer", "nest", "net", "dive", "luxury", "heal", "dusk", "premier", "sport", "quick", "lure",
     "citrine", "verdant", "azure", "roseate", "slate",
-    "park", "dream", "beast", "master",
+    "park", "dream", "beast", "master", "cherish",
     "ancient_poke", "ancient_great", "ancient_ultra", "ancient_heavy", "ancient_leaden",
     "ancient_gigaton", "ancient_feather", "ancient_wing", "ancient_jet", "ancient_ivory",
     "ancient_citrine", "ancient_verdant", "ancient_azure", "ancient_roseate", "ancient_slate",
+    "ancient_origin",
 ]
 
 SEAM = 4.0  # y of the line between the two halves in Cobblemon's models
