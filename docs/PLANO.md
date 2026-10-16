@@ -370,6 +370,10 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
       `runProductionShowcase`: render, GUI, EMI, en_us e pt_br). Falta o modpack completo, que só
       existe na máquina do usuário.
 - [x] Versão 1.0.0 e jar em `build/libs`
+- [x] 1.0.1: peças na bigorna com a Pokébola 3D do Cobblemon (5.4)
+- [x] 1.1.0 (pedidos do usuário depois do teste): martelo de netherite; Bola Estima e Origem Ancestral
+      na forja e receitas de bola de outros mods desligadas (3.3); encantamentos nos martelos; prensa
+      animada na Bigorna Mecânica (seção 11)
 
 ## 10. Fora do escopo por enquanto
 

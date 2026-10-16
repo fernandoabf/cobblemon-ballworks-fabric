@@ -20,14 +20,15 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 
 ## Estado atual
 
-**Versão 1.0.1**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
-depende do modpack do usuário). As 48 bolas do Cobblemon passam pela forja: o disco
-usa a receita do Cobblemon com bolotas cozidas, vira tampa na bigorna e a bola é tampa + botão de
-pedra + base de ferro. Estão prontos a Bigorna de Pokébola, os 18 martelos (o de netherite sai da
-mesa de ferraria), a Bigorna Mecânica, o plugin do EMI, a config do servidor e as traduções
-en_us/pt_br. Os 31 gametests passam no servidor headless com o Cobblemon real e o showcase confere o
-client (render, GUI, EMI), os dois em dev e em produção. Guia do jogador:
-[`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
+**Versão 1.1.0**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
+depende do modpack do usuário). As 48 bolas do Cobblemon passam pela forja: o disco usa a receita do
+Cobblemon com bolotas cozidas (Estima e Origem Ancestral, sem receita no Cobblemon, têm receitas do
+mod), vira tampa na bigorna e a bola é tampa + botão de pedra + base de ferro. Receitas de bola de
+outros mods (Cobblemon Parts Refabricated) são desligadas. Estão prontos a Bigorna de Pokébola, os 18
+martelos (o de netherite sai da mesa de ferraria; encantamentos funcionam), a Bigorna Mecânica com a
+prensa animada, o plugin do EMI, a config do servidor e as traduções en_us/pt_br. Os 37 gametests
+passam no servidor headless com o Cobblemon real e o showcase confere o client (render, GUI, EMI), os
+dois em dev e em produção. Guia do jogador: [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
 
 Mapa do código (`com.xaiver.cobbleballworks`):
 
