@@ -319,10 +319,11 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Receitas: cozimento, discos (tabela 3.1), disco de ferro, martelos, montagem (as das bigornas
       entram junto com cada bigorna)
 - [x] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
-- [ ] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
+- [x] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
 - [ ] Bigorna: BER com os modelos do Pixelmon corrigidos (5.4)
 - [ ] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER
-- [ ] Tipo de receita `cobbleballworks:anvil` + plugin EMI
+- [x] Tipo de receita `cobbleballworks:anvil` (47 receitas: 46 discos + disco de ferro)
+- [ ] Plugin EMI
 - [ ] Traduções en_us/pt_br completas
 - [ ] Gametests da seção 8 todos verdes
 - [ ] Testar num servidor com o modpack completo e no client (render, GUI, EMI)
@@ -362,4 +363,17 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   não tiver modelo ou nome em en_us/pt_br, ou se um modelo apontar para textura inexistente.
 - **Modelos de tampa herdados (`models/item/anvil_states/`) e as cópias em `textures/item/lids/`
   removidos:** apontavam para texturas inexistentes; o BER da seção 5.4 usa modelos novos.
+- **Bigorna:** modelo novo nas proporções da bigorna do Pixelmon (menor que um bloco: face de trabalho
+  de 12×7 px no topo, a 11 px de altura, com chifre e calcanhar), usando as texturas da bigorna vanilla
+  por referência (`minecraft:block/anvil` e `anvil_top`). A hitbox acompanha o modelo. Dureza 1.0,
+  resistência 1200 (o 2000 do 1.12 equivale a 1200 hoje), som de metal, sem exigir ferramenta;
+  picareta quebra mais rápido. Nome: "Poké Ball Anvil" / "Bigorna de Pokébola".
+- **Ritmo das marteladas conferido no servidor:** depois da primeira martelada o client vanilla não
+  manda um novo START_DESTROY_BLOCK, e o servidor aceitaria qualquer STOP na hora. `AnvilStrikes`
+  confere o tempo desde a martelada anterior com a mesma tolerância de 70% que o vanilla usa na
+  primeira. Em criativo não há essa conferência (cada clique é uma martelada).
+- **Força salva no NBT:** além do item e do estágio, a força acumulada também é salva (o Pixelmon
+  perdia a força parcial ao descarregar o chunk).
+- **Configuração** em `config/cobbleballworks.json`: `hammerDamagePerStage` (1),
+  `allowAnvilAutoreloading` (false) e `mechanicalAnvilSound` (true).
 

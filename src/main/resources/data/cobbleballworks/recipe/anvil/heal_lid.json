@@ -1,0 +1,9 @@
+{
+  "type": "cobbleballworks:anvil",
+  "ingredient": {
+    "item": "cobbleballworks:heal_lid_blank"
+  },
+  "result": {
+    "id": "cobbleballworks:heal_lid"
+  }
+}

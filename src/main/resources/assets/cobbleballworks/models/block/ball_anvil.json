@@ -1,74 +1,208 @@
 {
-  "__comment": "Clean 5-element anvil silhouette. Base -> narrow waist -> top plate -> flared rim -> horn (front/-Z). Every element stays inside [0,16]^3 with no rotations. Horn at -Z matches FACING=NORTH blockstate so the 4 facing variants in blockstates/ball_anvil.json rotate it correctly with y=0/90/180/270.",
   "parent": "minecraft:block/block",
   "textures": {
-    "particle": "cobbleballworks:block/ball_anvil",
-    "all": "cobbleballworks:block/ball_anvil"
+    "particle": "minecraft:block/anvil",
+    "side": "minecraft:block/anvil",
+    "top": "minecraft:block/anvil_top"
   },
   "elements": [
     {
       "name": "base",
-      "from": [1, 0, 1],
-      "to":   [15, 3, 15],
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        2,
+        12
+      ],
       "faces": {
-        "north": { "texture": "#all" },
-        "south": { "texture": "#all" },
-        "east":  { "texture": "#all" },
-        "west":  { "texture": "#all" },
-        "up":    { "texture": "#all" },
-        "down":  { "texture": "#all", "cullface": "down" }
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "down": {
+          "texture": "#side",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "name": "foot",
+      "from": [
+        4,
+        2,
+        5
+      ],
+      "to": [
+        12,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "down": {
+          "texture": "#side"
+        }
       }
     },
     {
       "name": "waist",
-      "from": [5, 3, 5],
-      "to":   [11, 10, 11],
+      "from": [
+        5.5,
+        3,
+        6
+      ],
+      "to": [
+        10.5,
+        7,
+        10
+      ],
       "faces": {
-        "north": { "texture": "#all" },
-        "south": { "texture": "#all" },
-        "east":  { "texture": "#all" },
-        "west":  { "texture": "#all" },
-        "up":    { "texture": "#all" },
-        "down":  { "texture": "#all" }
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "down": {
+          "texture": "#side"
+        }
       }
     },
     {
-      "name": "top_plate",
-      "from": [2, 10, 2],
-      "to":   [14, 14, 14],
+      "name": "face",
+      "from": [
+        2,
+        7,
+        4.5
+      ],
+      "to": [
+        14,
+        11,
+        11.5
+      ],
       "faces": {
-        "north": { "texture": "#all" },
-        "south": { "texture": "#all" },
-        "east":  { "texture": "#all" },
-        "west":  { "texture": "#all" },
-        "up":    { "texture": "#all" },
-        "down":  { "texture": "#all" }
-      }
-    },
-    {
-      "name": "top_rim",
-      "from": [1, 14, 1],
-      "to":   [15, 15, 15],
-      "faces": {
-        "north": { "texture": "#all" },
-        "south": { "texture": "#all" },
-        "east":  { "texture": "#all" },
-        "west":  { "texture": "#all" },
-        "up":    { "texture": "#all" },
-        "down":  { "texture": "#all" }
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "down": {
+          "texture": "#side"
+        }
       }
     },
     {
       "name": "horn",
-      "from": [5, 11, 0],
-      "to":   [11, 14, 3],
+      "from": [
+        0,
+        8,
+        6
+      ],
+      "to": [
+        2,
+        10.5,
+        10
+      ],
       "faces": {
-        "north": { "texture": "#all" },
-        "south": { "texture": "#all" },
-        "east":  { "texture": "#all" },
-        "west":  { "texture": "#all" },
-        "up":    { "texture": "#all" },
-        "down":  { "texture": "#all" }
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "down": {
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "name": "heel",
+      "from": [
+        14,
+        8.5,
+        6.5
+      ],
+      "to": [
+        15.5,
+        11,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#side"
+        },
+        "down": {
+          "texture": "#side"
+        }
       }
     }
   ]

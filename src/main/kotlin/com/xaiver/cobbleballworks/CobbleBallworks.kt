@@ -1,7 +1,11 @@
 package com.xaiver.cobbleballworks
 
+import com.xaiver.cobbleballworks.config.BallworksConfig
+import com.xaiver.cobbleballworks.registry.ModBlockEntities
+import com.xaiver.cobbleballworks.registry.ModBlocks
 import com.xaiver.cobbleballworks.registry.ModCreativeTab
 import com.xaiver.cobbleballworks.registry.ModItems
+import com.xaiver.cobbleballworks.registry.ModRecipes
 import net.fabricmc.api.ModInitializer
 import net.minecraft.resources.ResourceLocation
 import org.slf4j.Logger
@@ -22,8 +26,12 @@ object CobbleBallworks : ModInitializer {
     fun id(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, path)
 
     override fun onInitialize() {
+        BallworksConfig.load()
+        ModBlocks.init()
+        ModBlockEntities.init()
         ModItems.init()
+        ModRecipes.init()
         ModCreativeTab.init()
-        LOGGER.info("Cobblemon Ballworks initialized ({} items).", ModItems.all().size)
+        LOGGER.info("Cobblemon Ballworks initialized ({} items).", ModItems.all().size + ModBlocks.items().size)
     }
 }

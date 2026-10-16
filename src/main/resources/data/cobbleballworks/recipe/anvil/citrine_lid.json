@@ -1,0 +1,9 @@
+{
+  "type": "cobbleballworks:anvil",
+  "ingredient": {
+    "item": "cobbleballworks:citrine_lid_blank"
+  },
+  "result": {
+    "id": "cobbleballworks:citrine_lid"
+  }
+}

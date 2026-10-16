@@ -16,7 +16,10 @@ object ModCreativeTab {
         FabricItemGroup.builder()
             .title(Component.translatable("itemGroup.cobbleballworks.ballworks"))
             .icon { ItemStack(ModItems.hammer(HammerMaterial.IRON)) }
-            .displayItems { _, output -> ModItems.all().forEach(output::accept) }
+            .displayItems { _, output ->
+                ModBlocks.items().forEach(output::accept)
+                ModItems.all().forEach(output::accept)
+            }
             .build(),
     )
 

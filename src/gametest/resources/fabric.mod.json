@@ -11,7 +11,8 @@
       "com.xaiver.cobbleballworks.gametest.CobbleBallworksGameTest",
       "com.xaiver.cobbleballworks.gametest.RegistryGameTest",
       "com.xaiver.cobbleballworks.gametest.DataIntegrityGameTest",
-      "com.xaiver.cobbleballworks.gametest.RecipeGameTest"
+      "com.xaiver.cobbleballworks.gametest.RecipeGameTest",
+      "com.xaiver.cobbleballworks.gametest.AnvilGameTest"
     ]
   },
   "depends": {

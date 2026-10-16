@@ -1,0 +1,10 @@
+{
+  "type": "cobbleballworks:anvil",
+  "ingredient": {
+    "item": "cobbleballworks:dream_lid_blank"
+  },
+  "result": {
+    "id": "cobbleballworks:dream_lid"
+  },
+  "force": 10
+}

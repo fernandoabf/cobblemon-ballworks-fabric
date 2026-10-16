@@ -1,0 +1,9 @@
+{
+  "type": "cobbleballworks:anvil",
+  "ingredient": {
+    "item": "cobbleballworks:friend_lid_blank"
+  },
+  "result": {
+    "id": "cobbleballworks:friend_lid"
+  }
+}
