@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:level_lid"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    },
+    {
+      "tag": "minecraft:buttons"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:level_ball",
+    "count": 1
+  }
+}

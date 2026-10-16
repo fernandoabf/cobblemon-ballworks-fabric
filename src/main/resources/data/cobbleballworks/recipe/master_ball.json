@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:master_lid"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    },
+    {
+      "tag": "minecraft:buttons"
+    },
+    {
+      "item": "minecraft:nether_star"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:master_ball",
+    "count": 1
+  }
+}

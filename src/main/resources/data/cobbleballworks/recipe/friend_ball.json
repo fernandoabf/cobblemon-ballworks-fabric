@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:friend_lid"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    },
+    {
+      "tag": "minecraft:buttons"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:friend_ball",
+    "count": 1
+  }
+}

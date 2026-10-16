@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:roseate_lid"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    },
+    {
+      "tag": "minecraft:buttons"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:roseate_ball",
+    "count": 1
+  }
+}

@@ -254,7 +254,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 ## 9. Checklist
 
 - [x] Toolchain: Loom 1.13.6 + Kotlin 2.2.20 + mojmap, gametest headless com o Cobblemon real
-- [ ] Converter recursos para 1.21 (pastas, `result.id`, `c:`), apagar receitas de mods ausentes,
+- [x] Converter recursos para 1.21 (pastas, `result.id`, `c:`), apagar receitas de mods ausentes,
       `ball_mold` e o martelar na grade
 - [ ] Itens: apricorns cozidos, discos, tampas, disco/base de ferro, martelos (força/durabilidade)
 - [ ] Receitas: cozimento, discos (tabela 3.1), disco de ferro, bigornas, martelos, montagem
