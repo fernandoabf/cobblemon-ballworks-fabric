@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "ball_discs",
+  "pattern": [
+    "GEG",
+    "EDE",
+    "GEG"
+  ],
+  "key": {
+    "D": {
+      "tag": "cobblemon:tier_4_poke_ball_materials"
+    },
+    "E": {
+      "item": "minecraft:echo_shard"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    }
+  },
+  "result": {
+    "id": "cobbleballworks:beast_lid_blank",
+    "count": 8
+  }
+}

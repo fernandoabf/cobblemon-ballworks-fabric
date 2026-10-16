@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "group": "cobbleballworks_base_blanks",
+  "category": "misc",
+  "group": "ball_bases",
   "pattern": [
     "iii"
   ],

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "ball_discs",
+  "pattern": [
+    " t ",
+    "lcr",
+    " b "
+  ],
+  "key": {
+    "b": {
+      "item": "cobbleballworks:cooked_pink_apricorn"
+    },
+    "c": {
+      "tag": "cobblemon:tier_1_poke_ball_materials"
+    },
+    "l": {
+      "item": "cobblemon:tumblestone"
+    },
+    "r": {
+      "item": "cobblemon:tumblestone"
+    },
+    "t": {
+      "item": "cobbleballworks:cooked_pink_apricorn"
+    }
+  },
+  "result": {
+    "id": "cobbleballworks:ancient_roseate_lid_blank",
+    "count": 4
+  }
+}

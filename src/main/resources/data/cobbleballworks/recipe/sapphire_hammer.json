@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "group": "cobbleballworks_hammers",
+  "group": "hammers",
   "pattern": [
     "MMM",
     "MSM",
@@ -18,5 +18,13 @@
   "result": {
     "id": "cobbleballworks:sapphire_hammer",
     "count": 1
-  }
+  },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:tags_populated",
+      "values": [
+        "c:gems/sapphire"
+      ]
+    }
+  ]
 }

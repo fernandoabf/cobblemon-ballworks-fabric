@@ -1,28 +1,31 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "group": "cobbleballworks_lid_blanks",
+  "group": "ball_discs",
   "pattern": [
     " t ",
-    "l r",
+    "lcr",
     " b "
   ],
   "key": {
-    "t": {
-      "item": "cobblemon:black_apricorn"
+    "b": {
+      "item": "cobbleballworks:cooked_black_apricorn"
+    },
+    "c": {
+      "tag": "cobblemon:tier_1_poke_ball_materials"
     },
     "l": {
-      "item": "cobblemon:black_apricorn"
+      "item": "cobbleballworks:cooked_black_apricorn"
     },
     "r": {
-      "item": "cobblemon:black_apricorn"
+      "item": "cobbleballworks:cooked_black_apricorn"
     },
-    "b": {
-      "item": "cobblemon:black_apricorn"
+    "t": {
+      "item": "cobbleballworks:cooked_black_apricorn"
     }
   },
   "result": {
     "id": "cobbleballworks:slate_lid_blank",
-    "count": 5
+    "count": 4
   }
 }

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "group": "ball_assembly",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:ancient_ultra_lid"
+    },
+    {
+      "item": "minecraft:stone_button"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:ancient_ultra_ball",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "group": "ball_assembly",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:park_lid"
+    },
+    {
+      "item": "minecraft:stone_button"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:park_ball",
+    "count": 1
+  }
+}

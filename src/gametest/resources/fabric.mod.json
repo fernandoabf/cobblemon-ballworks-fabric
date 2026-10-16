@@ -10,7 +10,8 @@
     "fabric-gametest": [
       "com.xaiver.cobbleballworks.gametest.CobbleBallworksGameTest",
       "com.xaiver.cobbleballworks.gametest.RegistryGameTest",
-      "com.xaiver.cobbleballworks.gametest.DataIntegrityGameTest"
+      "com.xaiver.cobbleballworks.gametest.DataIntegrityGameTest",
+      "com.xaiver.cobbleballworks.gametest.RecipeGameTest"
     ]
   },
   "depends": {

@@ -1,28 +1,31 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "group": "cobbleballworks_lid_blanks",
+  "group": "ball_discs",
   "pattern": [
     " t ",
-    "l r",
+    "lcr",
     " b "
   ],
   "key": {
-    "t": {
-      "item": "cobblemon:green_apricorn"
+    "b": {
+      "item": "cobbleballworks:cooked_green_apricorn"
+    },
+    "c": {
+      "tag": "cobblemon:tier_1_poke_ball_materials"
     },
     "l": {
-      "item": "cobblemon:green_apricorn"
+      "item": "cobbleballworks:cooked_green_apricorn"
     },
     "r": {
-      "item": "cobblemon:green_apricorn"
+      "item": "cobbleballworks:cooked_green_apricorn"
     },
-    "b": {
-      "item": "cobblemon:green_apricorn"
+    "t": {
+      "item": "cobbleballworks:cooked_green_apricorn"
     }
   },
   "result": {
     "id": "cobbleballworks:verdant_lid_blank",
-    "count": 5
+    "count": 4
   }
 }

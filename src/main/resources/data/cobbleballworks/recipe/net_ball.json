@@ -1,18 +1,16 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
+  "group": "ball_assembly",
   "ingredients": [
     {
       "item": "cobbleballworks:net_lid"
     },
     {
+      "item": "minecraft:stone_button"
+    },
+    {
       "item": "cobbleballworks:pokeball_base"
-    },
-    {
-      "tag": "minecraft:buttons"
-    },
-    {
-      "item": "minecraft:iron_ingot"
     }
   ],
   "result": {

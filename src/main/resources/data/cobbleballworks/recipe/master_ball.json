@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "group": "ball_assembly",
+  "ingredients": [
+    {
+      "item": "cobbleballworks:master_lid"
+    },
+    {
+      "item": "minecraft:stone_button"
+    },
+    {
+      "item": "cobbleballworks:pokeball_base"
+    }
+  ],
+  "result": {
+    "id": "cobblemon:master_ball",
+    "count": 1
+  }
+}

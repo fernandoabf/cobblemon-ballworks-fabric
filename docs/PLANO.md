@@ -131,16 +131,23 @@ Se um modpack mudar o conteúdo das tags de tier do Cobblemon, os discos acompan
 
 ### 3.3 Desativar as receitas nativas do Cobblemon
 
-As 46 receitas `data/cobblemon/recipe/<bola>_ball.json` são sobrescritas com uma condição de carga
-sempre falsa do Fabric: `"fabric:load_conditions": [{"condition": "fabric:not", "value":
-{"condition": "fabric:true"}}]` (ids conferidos no `fabric-resource-conditions-api-v1` 4.3.0). Sem
-isso as bolas continuariam saindo direto da bancada, e a Master e a Beast (que não usam apricorn)
-teriam duas receitas com a mesma grade. Também são desativadas as 7 receitas de fornalha
-`<cor>_apricorn_smelt_to_dye`, que disputariam a fornalha com o cozimento do apricorn.
+As 46 receitas `cobblemon:<bola>_ball` e as 7 de fornalha `cobblemon:<cor>_apricorn_smelt_to_dye`
+(que disputariam a fornalha com o cozimento do apricorn) são removidas por um mixin no
+`RecipeManager.apply` (`RecipeManagerMixin` + `DisabledRecipes`), antes de virarem receitas. Sem isso
+as bolas continuariam saindo direto da bancada, e a Master e a Beast (que não usam apricorn) teriam
+duas receitas com a mesma grade.
 
-Gametest: depois de carregar, `cobblemon:poke_ball` (etc.) e `cobblemon:red_apricorn_smelt_to_dye`
-**não existem** como receita, e as outras receitas do Cobblemon continuam lá. Isso também confere a
-ordem de prioridade entre os data packs dos mods.
+**Por que não sobrescrever os arquivos:** foi a primeira tentativa (arquivos em
+`data/cobblemon/recipe/` com `fabric:load_conditions` sempre falsa) e o gametest mostrou que não
+funciona. O Fabric empilha os data packs dos mods na ordem de `getAllMods()`, que é alfabética
+(`cobbleballworks` fica abaixo de `cobblemon`), e um pack embutido do mod também entra em ordem
+alfabética como "novo data pack" (`cobbleballworks:forge_overrides` < `cobblemon`). O mixin não
+depende da ordem dos packs. O Loom remapeia o alvo do mixin direto na classe (`class_1863`/
+`method_20705` no jar), sem refmap.
+
+Gametest: depois de carregar, essas 53 receitas **não existem**, as outras receitas do Cobblemon
+continuam lá, nenhuma receita fora do mod produz uma bola forjada, e a grade original do Cobblemon
+(apricorns crus) não produz mais nada.
 
 > Atenção: o mod **Cobblemon Parts Refabricated** sobrescreve os mesmos arquivos. Os dois não devem
 > ficar instalados juntos; o modpack que vai usar este mod vai removê-lo.
@@ -309,8 +316,9 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
       `ball_mold` e o martelar na grade
 - [x] Itens: apricorns cozidos, discos, tampas, disco/base de ferro, martelos (força/durabilidade)
 - [x] Todas as 46 bolas do Cobblemon na forja, com sprites de disco/tampa derivados do Cobblemon
-- [ ] Receitas: cozimento, discos (tabela 3.1), disco de ferro, bigornas, martelos, montagem
-- [ ] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
+- [x] Receitas: cozimento, discos (tabela 3.1), disco de ferro, martelos, montagem (as das bigornas
+      entram junto com cada bigorna)
+- [x] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
 - [ ] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
 - [ ] Bigorna: BER com os modelos do Pixelmon corrigidos (5.4)
 - [ ] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
-  "group": "cobbleballworks_hammers",
+  "group": "hammers",
   "pattern": [
     "MMM",
     "MSM",
@@ -9,7 +9,7 @@
   ],
   "key": {
     "M": {
-      "tag": "minecraft:stone_crafting_materials"
+      "tag": "minecraft:stone_tool_materials"
     },
     "S": {
       "item": "minecraft:stick"

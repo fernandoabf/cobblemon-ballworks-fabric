@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "ball_discs",
+  "pattern": [
+    " t ",
+    "lcr",
+    " b "
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:shulker_shell"
+    },
+    "c": {
+      "item": "minecraft:nether_star"
+    },
+    "l": {
+      "tag": "c:ingots/netherite"
+    },
+    "r": {
+      "tag": "c:ingots/netherite"
+    },
+    "t": {
+      "item": "minecraft:shulker_shell"
+    }
+  },
+  "result": {
+    "id": "cobbleballworks:master_lid_blank",
+    "count": 1
+  }
+}

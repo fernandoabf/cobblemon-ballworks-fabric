@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.xaiver.cobbleballworks.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "RecipeManagerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
