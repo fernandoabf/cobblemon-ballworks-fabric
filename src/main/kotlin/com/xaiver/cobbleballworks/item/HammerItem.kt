@@ -80,12 +80,18 @@ class HammerItem(val material: HammerMaterial) : Item(properties(material)) {
         /** Attack speed modifier of a pickaxe (attack speed 1.2). */
         private const val ATTACK_SPEED = -2.8
 
+        /**
+         * Vanilla only adds Efficiency to a tool that mines faster than the hand (Player.getDestroySpeed:
+         * speed > 1), so the strength 1 wooden hammer mines the anvil at a hair above 1.
+         */
+        private const val MIN_ANVIL_SPEED = 1.01f
+
         private fun properties(material: HammerMaterial): Properties = Properties()
             .durability(material.durability)
             .apply { if (material.fireResistant) fireResistant() }
             .component(
                 DataComponents.TOOL,
-                Tool(listOf(Tool.Rule.overrideSpeed(ModTags.Blocks.HAMMERABLE, material.strength.toFloat())), 1.0f, 1),
+                Tool(listOf(Tool.Rule.overrideSpeed(ModTags.Blocks.HAMMERABLE, maxOf(material.strength.toFloat(), MIN_ANVIL_SPEED))), 1.0f, 1),
             )
             .attributes(
                 ItemAttributeModifiers.builder()

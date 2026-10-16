@@ -6,6 +6,7 @@ import com.xaiver.cobbleballworks.block.entity.BallAnvilBlockEntity.StrikeResult
 import com.xaiver.cobbleballworks.config.BallworksConfig
 import com.xaiver.cobbleballworks.content.ForgeBall
 import com.xaiver.cobbleballworks.content.HammerMaterial
+import com.xaiver.cobbleballworks.item.AnvilStrikes
 import com.xaiver.cobbleballworks.recipe.AnvilRecipe
 import com.xaiver.cobbleballworks.registry.ModBlocks
 import com.xaiver.cobbleballworks.registry.ModItems
@@ -13,11 +14,17 @@ import net.fabricmc.fabric.api.entity.FakePlayer
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.gametest.framework.GameTest
 import net.minecraft.gametest.framework.GameTestHelper
+import net.minecraft.resources.ResourceKey
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.Enchantment
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -48,8 +55,9 @@ class AnvilGameTest : FabricGameTest {
         checks.check(base?.processingTime == 200) { "a force-5 piece should take 200 ticks in the Mechanical Anvil" }
         val anvil = ModBlocks.BALL_ANVIL.defaultBlockState()
         for (material in HammerMaterial.entries) {
+            // Strength 1 mines at 1.01 so that Efficiency counts (vanilla only adds it above speed 1).
             val speed = ItemStack(ModItems.hammer(material)).getDestroySpeed(anvil)
-            checks.check(speed == material.strength.toFloat()) { "${material.id} hammer mines the anvil at $speed" }
+            checks.check(speed == maxOf(material.strength.toFloat(), 1.01f)) { "${material.id} hammer mines the anvil at $speed" }
         }
         checks.finish()
     }
@@ -260,6 +268,89 @@ class AnvilGameTest : FabricGameTest {
             BallworksConfig.values = previous
         }
         checks.finish()
+    }
+
+    /**
+     * Hammers take the mining enchantments: Efficiency makes strikes come faster (never stronger),
+     * Unbreaking saves wear and Mending fits; Fortune and Silk Touch do not.
+     */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun enchantmentsWorkOnHammers(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val (pos, anvil) = placeAnvil(helper)
+        val absolute = helper.absolutePos(pos)
+        val state = helper.level.getBlockState(absolute)
+        val player = fakePlayer(helper, "bw-enchanted", GameType.SURVIVAL)
+        val efficiency = enchantment(helper, Enchantments.EFFICIENCY)
+        for (material in HammerMaterial.entries) {
+            val plain = ItemStack(ModItems.hammer(material))
+            for (key in listOf(Enchantments.EFFICIENCY, Enchantments.UNBREAKING, Enchantments.MENDING)) {
+                checks.check(enchantment(helper, key).value().canEnchant(plain)) { "${material.id} hammer should take ${key.location()}" }
+            }
+            for (key in listOf(Enchantments.FORTUNE, Enchantments.SILK_TOUCH)) {
+                checks.check(!enchantment(helper, key).value().canEnchant(plain)) { "${material.id} hammer should not take ${key.location()}" }
+            }
+            val fast = plain.copy().also { it.enchant(efficiency, 3) }
+            equip(player, plain)
+            val base = state.getDestroyProgress(player, helper.level, absolute)
+            equip(player, fast)
+            val boosted = state.getDestroyProgress(player, helper.level, absolute)
+            checks.check(boosted > base * 1.5f) { "${material.id} hammer: Efficiency III should strike faster ($base -> $boosted per tick)" }
+        }
+
+        // Unbreaking III keeps 1 wear in 4 on average: 20 discs are 60 wear events.
+        val hammer = ItemStack(ModItems.hammer(HammerMaterial.NETHERITE)).also { it.enchant(enchantment(helper, Enchantments.UNBREAKING), 3) }
+        repeat(20) {
+            anvil.take()
+            anvil.place(ItemStack(ModItems.DISCS.getValue(ForgeBall.POKE)))
+            repeat(3) { anvil.strike(player, hammer, HammerMaterial.NETHERITE.strength) }
+        }
+        checks.check(hammer.damageValue in 1 until 45) { "Unbreaking III left ${hammer.damageValue} of 60 wear" }
+        checks.finish()
+    }
+
+    /** Efficiency V lets a strong hammer "instamine" the anvil; strikes still keep vanilla's 5-tick pause. */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun instantStrikesKeepThePause(helper: GameTestHelper) {
+        val (pos, anvil) = placeAnvil(helper)
+        val absolute = helper.absolutePos(pos)
+        val player = fakePlayer(helper, "bw-instant", GameType.SURVIVAL)
+        val hammer = ItemStack(ModItems.hammer(HammerMaterial.NETHERITE)).also { it.enchant(enchantment(helper, Enchantments.EFFICIENCY), 5) }
+        equip(player, hammer)
+        anvil.place(ItemStack(ModItems.DISCS.getValue(ForgeBall.MASTER)))
+        if (helper.level.getBlockState(absolute).getDestroyProgress(player, helper.level, absolute) < 1f) {
+            helper.fail("an Efficiency V netherite hammer should instamine the anvil")
+        }
+        player.gameMode.destroyBlock(absolute)
+        player.gameMode.destroyBlock(absolute)
+        if (anvil.stage != 0 || anvil.force != HammerMaterial.NETHERITE.strength) {
+            helper.fail("a second strike in the same tick was accepted (stage ${anvil.stage}, force ${anvil.force})")
+        }
+        helper.runAfterDelay(AnvilStrikes.MIN_TICKS_BETWEEN_STRIKES.toLong()) {
+            player.gameMode.destroyBlock(absolute)
+            if (anvil.stage != 1) helper.fail("a strike after the pause was refused (stage ${anvil.stage}, force ${anvil.force})")
+            helper.succeed()
+        }
+    }
+
+    private fun enchantment(helper: GameTestHelper, key: ResourceKey<Enchantment>): Holder<Enchantment> =
+        helper.level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(key)
+
+    /**
+     * Puts [stack] in the main hand with its attribute modifiers (Efficiency adds mining speed), as
+     * a ticking player's equipment check would; fake players do not tick.
+     */
+    private fun equip(player: FakePlayer, stack: ItemStack) {
+        player.mainHandItem.forEachModifier(EquipmentSlot.MAINHAND) { attribute, modifier ->
+            player.getAttribute(attribute)?.removeModifier(modifier.id())
+        }
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack)
+        stack.forEachModifier(EquipmentSlot.MAINHAND) { attribute, modifier ->
+            player.getAttribute(attribute)?.let {
+                it.removeModifier(modifier.id())
+                it.addTransientModifier(modifier)
+            }
+        }
     }
 
     private fun placeAnvil(helper: GameTestHelper): Pair<BlockPos, BallAnvilBlockEntity> {

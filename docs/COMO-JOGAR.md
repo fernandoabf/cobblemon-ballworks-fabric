@@ -37,8 +37,17 @@ viram **tampas** na bigorna, e a bola é montada com a tampa.
 ## Martelos
 
 Receita: `MMM` / `MSM` / ` S ` (5 do material + 2 gravetos). Martelo melhor bate mais forte **e** mais
-rápido. Aceitam Eficiência e Inquebrável, e consertam na bigorna comum com o material da receita.
-Rubi, safira e alumínio só têm receita se algum mod do pack tiver esses materiais.
+rápido. Consertam na bigorna comum com o material da receita. Rubi, safira e alumínio só têm receita
+se algum mod do pack tiver esses materiais.
+
+**Encantamentos:** os martelos aceitam **Eficiência**, **Inquebrável** e **Remendo**, na mesa de
+encantamentos ou com livro na bigorna comum.
+- **Eficiência** (e o efeito Pressa) deixa as marteladas mais **rápidas**, como deixa a mineração. A
+  quantidade de marteladas não muda, porque ela depende da força do martelo. O limite é uma martelada
+  a cada 5 ticks, a mesma pausa que o jogo dá entre dois blocos quebrados: com Eficiência alta, um
+  martelo forte chega nesse limite.
+- **Inquebrável** faz o martelo gastar menos.
+- **Remendo** conserta o martelo com experiência.
 
 **Martelo de Netherite:** como as ferramentas de netherite do vanilla, sai da **mesa de ferraria**:
 Molde de Aprimoramento de Netherite + Martelo de Diamante + Lingote de Netherite. Mantém os

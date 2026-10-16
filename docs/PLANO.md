@@ -404,6 +404,15 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   (Eficiência e Inquebrável, como no Pixelmon) e conserto na bigorna vanilla com o material da receita.
   Fora da bigorna mineram como a mão (velocidade 1) e gastam 1 por bloco, como as ferramentas do
   Pixelmon.
+- **Encantamentos nos martelos:** Eficiência, Inquebrável e Remendo (tags `enchantable/mining` e
+  `enchantable/durability`); Fortuna e Toque Suave não. A Eficiência e a Pressa aceleram as
+  marteladas pelo mesmo cálculo da mineração e não mudam a força. Dois cuidados: o vanilla só soma a
+  Eficiência quando a ferramenta tem velocidade acima de 1, então o martelo de madeira (força 1)
+  minera a bigorna a 1,01; e quando o martelo "quebra na hora" (Eficiência V em martelo de força 4
+  ou mais) o client martelaria a cada tick, porque o vanilla só põe a pausa de 5 ticks depois de um
+  bloco que levou tempo para quebrar, então o servidor exige essa pausa entre marteladas
+  (`AnvilStrikes.MIN_TICKS_BETWEEN_STRIKES`). Gametests: `enchantmentsWorkOnHammers` e
+  `instantStrikesKeepThePause`.
 - **Martelo de netherite (pedido do usuário, não existe no Pixelmon):** aprimoramento do martelo de
   diamante na mesa de ferraria (molde de netherite + lingote), como as ferramentas de netherite do
   vanilla, então guarda encantamentos e desgaste. Números do netherite vanilla (durabilidade 2031,
