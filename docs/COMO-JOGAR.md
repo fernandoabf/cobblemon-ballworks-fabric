@@ -86,6 +86,8 @@ netherite. É o melhor martelo: termina a Bola Mestra e a Bola Criatura em 6 mar
 - **Funis:** qualquer lado alimenta (o disco vai para a entrada, o combustível para o combustível); um
   funil embaixo puxa só as peças prontas (e o balde vazio). Não usa redstone.
 - Precisa de picareta para quebrar; o conteúdo cai no chão.
+- Enquanto trabalha, a prensa desce uma vez por segundo e martela a peça, que vai subindo até virar
+  tampa.
 
 ## Receitas dos discos
 

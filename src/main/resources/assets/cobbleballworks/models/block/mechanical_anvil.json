@@ -6,10 +6,7 @@
     "side": "minecraft:block/furnace_side",
     "top": "minecraft:block/furnace_top",
     "metal": "minecraft:block/anvil_top",
-    "frame": "minecraft:block/anvil",
-    "piston_side": "minecraft:block/piston_side",
-    "piston_face": "minecraft:block/piston_top_sticky",
-    "piston_back": "minecraft:block/piston_bottom"
+    "frame": "minecraft:block/anvil"
   },
   "elements": [
     {
@@ -21,7 +18,7 @@
       ],
       "to": [
         16,
-        10,
+        8,
         16
       ],
       "faces": {
@@ -54,12 +51,12 @@
       "name": "platform",
       "from": [
         4,
-        10,
+        8,
         4
       ],
       "to": [
         12,
-        11,
+        9,
         12
       ],
       "faces": {
@@ -87,7 +84,7 @@
       "name": "post_west",
       "from": [
         1,
-        10,
+        8,
         7
       ],
       "to": [
@@ -120,7 +117,7 @@
       "name": "post_east",
       "from": [
         13,
-        10,
+        8,
         7
       ],
       "to": [
@@ -179,39 +176,6 @@
         },
         "down": {
           "texture": "#frame"
-        }
-      }
-    },
-    {
-      "name": "press",
-      "from": [
-        5,
-        14,
-        5
-      ],
-      "to": [
-        11,
-        15,
-        11
-      ],
-      "faces": {
-        "north": {
-          "texture": "#piston_side"
-        },
-        "south": {
-          "texture": "#piston_side"
-        },
-        "east": {
-          "texture": "#piston_side"
-        },
-        "west": {
-          "texture": "#piston_side"
-        },
-        "up": {
-          "texture": "#piston_back"
-        },
-        "down": {
-          "texture": "#piston_face"
         }
       }
     }

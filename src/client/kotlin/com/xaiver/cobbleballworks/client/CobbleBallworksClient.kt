@@ -28,8 +28,9 @@ object CobbleBallworksClient : ClientModInitializer {
     override fun onInitializeClient() {
         BlockEntityRenderers.register(ModBlockEntities.BALL_ANVIL, ::BallAnvilRenderer)
         BlockEntityRenderers.register(ModBlockEntities.MECHANICAL_ANVIL, ::MechanicalAnvilRenderer)
-        // The pieces' 3D models (models/piece) are not item or block models, so ask for them.
-        ModelLoadingPlugin.register { context -> context.addModels(PieceRenderer.modelIds) }
+        // The pieces' 3D models (models/piece) and the Mechanical Anvil's press are drawn by the
+        // renderers, not by a block or item, so ask the model loader for them.
+        ModelLoadingPlugin.register { context -> context.addModels(PieceRenderer.modelIds + MechanicalAnvilRenderer.modelIds) }
         MenuScreens.register(ModMenus.MECHANICAL_ANVIL, ::MechanicalAnvilScreen)
         ColorProviderRegistry.ITEM.register(
             ItemColor { _, tintIndex -> if (tintIndex == 0) COOKED_APRICORN_TINT else -1 },

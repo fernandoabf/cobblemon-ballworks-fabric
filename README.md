@@ -28,7 +28,7 @@ decisions: [`docs/PLANO.md`](docs/PLANO.md).
   evolution stones with Pixelmon's strength and durability, plus a netherite hammer (strength 8,
   upgraded from the diamond one at a smithing table like vanilla netherite tools).
 - **Mechanical Anvil**: input, fuel and output like a furnace, works with hoppers, 40 ticks per force
-  (10 s for a regular disc).
+  (10 s for a regular disc); its press comes down on the piece once a second while it works.
 - **EMI** (optional): a category for each anvil, with the strikes every hammer needs.
 - Server options in `config/cobbleballworks.json`; English and Brazilian Portuguese.
 

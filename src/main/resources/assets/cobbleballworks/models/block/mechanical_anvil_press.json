@@ -1,0 +1,43 @@
+{
+  "textures": {
+    "piston_side": "minecraft:block/piston_side",
+    "piston_face": "minecraft:block/piston_top_sticky",
+    "piston_back": "minecraft:block/piston_bottom",
+    "particle": "minecraft:block/piston_side"
+  },
+  "elements": [
+    {
+      "name": "press",
+      "from": [
+        5,
+        14,
+        5
+      ],
+      "to": [
+        11,
+        15,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#piston_side"
+        },
+        "south": {
+          "texture": "#piston_side"
+        },
+        "east": {
+          "texture": "#piston_side"
+        },
+        "west": {
+          "texture": "#piston_side"
+        },
+        "up": {
+          "texture": "#piston_back"
+        },
+        "down": {
+          "texture": "#piston_face"
+        }
+      }
+    }
+  ]
+}

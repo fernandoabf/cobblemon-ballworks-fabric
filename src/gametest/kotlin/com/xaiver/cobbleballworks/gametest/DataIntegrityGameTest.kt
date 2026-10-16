@@ -1,6 +1,8 @@
 package com.xaiver.cobbleballworks.gametest
 
 import com.google.gson.JsonObject
+import com.xaiver.cobbleballworks.block.BallAnvilBlock
+import com.xaiver.cobbleballworks.block.MechanicalAnvilBlock
 import com.xaiver.cobbleballworks.content.ForgeBall
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
 import net.fabricmc.loader.api.FabricLoader
@@ -144,6 +146,33 @@ class DataIntegrityGameTest : FabricGameTest {
         for (geometry in listOf("lid", "ancient_lid", "iron_base")) {
             val elements = models["$geometry.json"]?.get("elements")?.asJsonArray
             checks.check(elements != null && elements.size() > 0) { "piece/$geometry.json has no elements" }
+        }
+        checks.finish()
+    }
+
+    /**
+     * The Mechanical Anvil's press moves, so the renderer draws it (press + rod models) and the block
+     * model must not have it too; the item keeps it. The heights the renderers use match the models.
+     */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun anvilModelsMatchTheRenderers(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val models = modJsonResources("assets/$MOD_ID/models/block").associate { it.path.substringAfterLast('/') to it.json.asJsonObject }
+        fun elements(file: String): Map<String, JsonObject> =
+            models[file]?.getAsJsonArray("elements")?.map { it.asJsonObject }?.associateBy { it["name"]?.asString ?: "" } ?: emptyMap()
+        fun top(element: JsonObject?): Double? = element?.getAsJsonArray("to")?.get(1)?.asDouble
+
+        val machine = elements("mechanical_anvil.json")
+        checks.check("press" !in machine) { "the block model still has the press: it would not move" }
+        checks.check(top(machine["platform"]) == MechanicalAnvilBlock.PLATFORM_Y) {
+            "MechanicalAnvilBlock.PLATFORM_Y is ${MechanicalAnvilBlock.PLATFORM_Y}, the platform's top is ${top(machine["platform"])}"
+        }
+        checks.check("press" in elements("mechanical_anvil_inventory.json")) { "the item model should show the press" }
+        checks.check("press" in elements("mechanical_anvil_press.json")) { "missing the press model" }
+        checks.check("rod" in elements("mechanical_anvil_rod.json")) { "missing the press rod model" }
+        val anvil = elements("ball_anvil.json")
+        checks.check(top(anvil["face"]) == BallAnvilBlock.TOP_Y) {
+            "BallAnvilBlock.TOP_Y is ${BallAnvilBlock.TOP_Y}, the anvil's face top is ${top(anvil["face"])}"
         }
         checks.finish()
     }

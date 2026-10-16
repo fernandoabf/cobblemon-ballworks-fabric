@@ -437,11 +437,20 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
 - **Força salva no NBT:** além do item e do estágio, a força acumulada também é salva (o Pixelmon
   perdia a força parcial ao descarregar o chunk).
 - **Configuração** em `config/cobbleballworks.json`: `hammerDamagePerStage` (1),
-  `allowAnvilAutoreloading` (false) e `mechanicalAnvilSound` (true).
+  `allowAnvilAutoreloading` (false), `mechanicalAnvilSound` (true) e `disableOtherModsBallRecipes`
+  (true).
 - **Bigorna Mecânica:** 1 bloco (o Pixelmon 1.12.2 tinha 2), com corpo de fornalha (abertura acesa
   quando trabalha), plataforma onde a peça aparece (BER, estágio pelo progresso), pórtico e prensa de
   pistão grudento — as texturas são todas vanilla por referência, como os ingredientes da receita.
   Luz 15 acesa, fumaça e chama na frente, chiado de fornalha. Tempo: 40 ticks por ponto de força
   (200 para um disco). Som de "clank" (morte do golem de ferro) a cada peça, desligável na config.
   Dureza 2.5, picareta, dropa o conteúdo.
+- **Prensa animada** (o usuário notou que ela não se mexia): a prensa saiu do modelo do bloco
+  (`mechanical_anvil_press.json` e a haste `mechanical_anvil_rod.json` são desenhadas pelo
+  `MechanicalAnvilRenderer`; o ícone do item usa `mechanical_anvil_inventory.json`, com a prensa).
+  Enquanto a máquina trabalha (acesa e com peça), a prensa desce uma vez por segundo até a peça, a
+  achata 15% (ela alarga um pouco) e sobe pela haste; máquinas vizinhas batem em tempos diferentes.
+  O corpo de fornalha baixou de 10 para 8 px para dar 5 px de curso, tudo dentro do bloco (um funil
+  em cima continua encaixando). A conta da fase usa o tempo de jogo em `Long`: em `Float` ela
+  tremeria em mundos com mais de 16 milhões de ticks.
 

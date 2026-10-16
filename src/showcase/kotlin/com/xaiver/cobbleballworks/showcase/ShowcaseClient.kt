@@ -69,6 +69,10 @@ private object Showcase {
         Shot("anvil_master_lid_macro") { view(it, 6.5, Y + 1.7, 1.75, 0f, 62f) },
         Shot("mechanical_anvils") { view(it, 2.5, Y + 2.2, 4.6, 0f, 35f) },
         Shot("mechanical_anvil_closeup") { view(it, 2.5, Y + 1.9, 6.4, 0f, 40f) },
+        // The press moves once a second: three shots a few ticks apart catch it at different heights.
+        Shot("mechanical_press_1", wait = 20) { view(it, 2.5, Y + 1.75, 7.1, 0f, 32f) },
+        Shot("mechanical_press_2", wait = 5) { view(it, 2.5, Y + 1.75, 7.1, 0f, 32f) },
+        Shot("mechanical_press_3", wait = 5) { view(it, 2.5, Y + 1.75, 7.1, 0f, 32f) },
         Shot("mechanical_anvil_gui", wait = 40) { openMechanicalAnvil(it) },
         Shot("creative_tab", wait = 40) { openBallworksTab(it) },
         Shot("emi_poke_lid", wait = 100) { emi(it, EmiStack.of(ModItems.LIDS.getValue(ForgeBall.POKE))) },

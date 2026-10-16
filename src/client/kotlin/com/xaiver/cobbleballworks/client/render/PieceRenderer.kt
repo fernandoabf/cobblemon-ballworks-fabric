@@ -13,7 +13,6 @@ import net.minecraft.client.resources.model.BakedModel
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
-import net.minecraft.util.RandomSource
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
@@ -32,7 +31,7 @@ import java.util.WeakHashMap
 object PieceRenderer {
     /**
      * Cobblemon's ball is half a block wide; at this size the lid (5.5 x 2.9 px) fits the anvil's
-     * 7 px face and the 3 px gap under the Mechanical Anvil's press.
+     * 7 px face and the space under the Mechanical Anvil's press.
      */
     private const val SCALE = 0.65f
 
@@ -44,6 +43,9 @@ object PieceRenderer {
 
     /** Shaping gained per tick while the piece catches up with a new stage. */
     private const val GROWTH_PER_TICK = 0.08f
+
+    /** Top of an item lying flat (half size, raised 1/64), in blocks. */
+    private const val FLAT_ITEM_HEIGHT = 0.05f
 
     private class Piece(val model: ResourceLocation, val upsideDown: Boolean)
 
@@ -67,9 +69,17 @@ object PieceRenderer {
         }
     }
 
+    /** Height of the piece as [render] draws it unsquashed, in blocks. */
+    fun heightOf(stack: ItemStack, shaping: Float): Float {
+        val model = pieces[stack.item]?.let { Minecraft.getInstance().modelManager.getModel(it.model) } ?: return FLAT_ITEM_HEIGHT
+        val geometry = geometryOf(model)
+        return (geometry.maxY - geometry.minY) * SCALE * Mth.lerp(shaping.coerceIn(0f, 1f), FLAT_HEIGHT, 1f)
+    }
+
     /**
      * @param shaping 0 = a flat disc, 1 = the finished dome
      * @param facing where the front of the piece (the side the button goes on) looks
+     * @param squash height factor while something presses on the piece; it bulges out a little
      */
     fun render(
         stack: ItemStack,
@@ -79,6 +89,7 @@ object PieceRenderer {
         buffers: MultiBufferSource,
         light: Int,
         overlay: Int,
+        squash: Float = 1f,
     ) {
         poseStack.pushPose()
         poseStack.mulPose(Axis.YP.rotationDegrees(180f - facing.toYRot()))
@@ -88,8 +99,8 @@ object PieceRenderer {
             renderFlatItem(stack, poseStack, buffers, light, overlay)
         } else {
             val t = shaping.coerceIn(0f, 1f)
-            val width = Mth.lerp(t, FLAT_WIDTH, 1f)
-            poseStack.scale(SCALE * width, SCALE * Mth.lerp(t, FLAT_HEIGHT, 1f), SCALE * width)
+            val width = Mth.lerp(t, FLAT_WIDTH, 1f) * (1f + (1f - squash) * 0.5f)
+            poseStack.scale(SCALE * width, SCALE * Mth.lerp(t, FLAT_HEIGHT, 1f) * squash, SCALE * width)
             val geometry = geometryOf(model)
             if (piece.upsideDown) {
                 // Turned over around Z: x -> -x, y -> -y; its old top becomes the bottom.
@@ -98,9 +109,7 @@ object PieceRenderer {
             } else {
                 poseStack.translate(-(geometry.minX + geometry.maxX) / 2, -geometry.minY, -(geometry.minZ + geometry.maxZ) / 2)
             }
-            val consumer = buffers.getBuffer(Sheets.cutoutBlockSheet())
-            val pose = poseStack.last()
-            for (quad in geometry.quads) consumer.putBulkData(pose, quad, 1f, 1f, 1f, 1f, light, overlay)
+            ModelQuads.draw(model, poseStack, buffers.getBuffer(Sheets.cutoutBlockSheet()), light, overlay)
         }
         poseStack.popPose()
     }
@@ -118,17 +127,20 @@ object PieceRenderer {
      * ticks instead of jumping; a new piece (a lower target) shows up at once.
      */
     fun smoothShaping(anvil: BlockEntity, target: Float, partialTick: Float): Float {
-        val now = (anvil.level?.gameTime ?: 0L) + partialTick
-        val state = shown.getOrPut(anvil) { floatArrayOf(target, now) }
-        val elapsed = (now - state[1]).coerceIn(0f, 20f)
-        state[1] = now
-        state[0] = if (target <= state[0]) target else minOf(target, state[0] + elapsed * GROWTH_PER_TICK)
-        return state[0]
+        val now = (anvil.level?.gameTime ?: 0L) + partialTick.toDouble()
+        val state = shown.getOrPut(anvil) { Shown(target, now) }
+        val elapsed = (now - state.time).coerceIn(0.0, 20.0).toFloat()
+        state.time = now
+        state.shaping = if (target <= state.shaping) target else minOf(target, state.shaping + elapsed * GROWTH_PER_TICK)
+        return state.shaping
     }
 
-    private val shown = WeakHashMap<BlockEntity, FloatArray>()
+    /** What [smoothShaping] last showed for an anvil, and when (game time as a double: it gets large). */
+    private class Shown(var shaping: Float, var time: Double)
 
-    /** Every quad of a baked model and its bounds; rebuilt when a resource reload bakes new models. */
+    private val shown = WeakHashMap<BlockEntity, Shown>()
+
+    /** The bounds of a baked model's quads; rebuilt when a resource reload bakes new models. */
     private class Geometry(val quads: List<BakedQuad>) {
         var minX = Float.MAX_VALUE; var minY = Float.MAX_VALUE; var minZ = Float.MAX_VALUE
         var maxX = -Float.MAX_VALUE; var maxY = -Float.MAX_VALUE; var maxZ = -Float.MAX_VALUE
@@ -151,13 +163,5 @@ object PieceRenderer {
 
     private val geometries = WeakHashMap<BakedModel, Geometry>()
 
-    private val random = RandomSource.create()
-
-    private fun geometryOf(model: BakedModel): Geometry = geometries.getOrPut(model) {
-        val quads = (listOf<Direction?>(null) + Direction.entries).flatMap { side ->
-            random.setSeed(42L)
-            model.getQuads(null, side, random)
-        }
-        Geometry(quads)
-    }
+    private fun geometryOf(model: BakedModel): Geometry = geometries.getOrPut(model) { Geometry(ModelQuads.of(model)) }
 }

@@ -96,7 +96,10 @@ class MechanicalAnvilBlock(properties: Properties) : BaseEntityBlock(properties)
         val FACING = HorizontalDirectionalBlock.FACING
         val LIT = BlockStateProperties.LIT
 
-        /** Height of the platform the piece rests on, in pixels (see models/block/mechanical_anvil.json). */
-        const val PLATFORM_Y = 11.0
+        /**
+         * Height of the platform the piece rests on, in pixels (models/block/mechanical_anvil.json): the
+         * body is 8 px tall so the press, hanging from y 14, has a 5 px stroke down to the platform.
+         */
+        const val PLATFORM_Y = 9.0
     }
 }

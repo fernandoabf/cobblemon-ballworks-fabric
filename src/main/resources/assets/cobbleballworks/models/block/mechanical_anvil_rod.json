@@ -1,0 +1,35 @@
+{
+  "textures": {
+    "piston_side": "minecraft:block/piston_side",
+    "particle": "minecraft:block/piston_side"
+  },
+  "elements": [
+    {
+      "name": "rod",
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        1,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#piston_side"
+        },
+        "south": {
+          "texture": "#piston_side"
+        },
+        "east": {
+          "texture": "#piston_side"
+        },
+        "west": {
+          "texture": "#piston_side"
+        }
+      }
+    }
+  ]
+}
