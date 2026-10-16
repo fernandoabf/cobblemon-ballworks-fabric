@@ -239,16 +239,26 @@ diamante ~0,55 s; uma tampa: ~26 s com madeira, ~1,7 s com diamante). O martelo 
 ### 5.4 Visual
 
 - O BER (`BallAnvilRenderer` + `PieceRenderer`) desenha a peça no centro da face de trabalho da
-  bigorna (11 px de altura): **disco liso** no estágio 0, o centro subindo nos estágios 1 e 2 e a
+  bigorna (11 px de altura): **disco liso** no estágio 0, subindo nos estágios 1 e 2 até a
   **cúpula** quando a peça está pronta — a mesma sequência dos modelos do Pixelmon
-  (ModelDiscFlat/Stage1/Stage2/HemiSphere).
-- **Por que não os JSON importados:** a geometria exportada do Pixelmon estava de cabeça para baixo
-  (o exportador ignorou o giro de 180° do TESR antigo: as bordas subiam em vez do centro), tinha
-  3,8 px de largura e UV automático que caía fora das folhas box-UV. A peça agora é desenhada em
-  código, em camadas de "quadrado arredondado" com 6 px de largura, e texturizada com o **sprite da
-  própria peça** (a área opaca do sprite é medida em tempo de execução), então funciona para as 46
-  bolas, para o disco e a base de ferro, e para itens de receitas de datapack e resource packs. Os 90
-  modelos `anvil_states` e as 32 texturas `anvil_progress`/`anvil_states` do Pixelmon saíram do mod.
+  (ModelDiscFlat/Stage1/Stage2/HemiSphere). Ao passar de estágio a peça cresce em alguns ticks em vez
+  de pular; a frente da peça (onde vai o botão) olha para o lado da bigorna virado para o jogador.
+- **A peça é a Pokébola 3D do próprio Cobblemon:** o Cobblemon desenha a bola na mão com um modelo
+  JSON (`models/item/poke_ball_model.json`, ou `ancient_poke_ball_model.json` nas bolas de Hisui):
+  duas metades 8×4×8 com uma camada externa inflada, o botão e, nas antigas, placa, pino, ressaltos e
+  trava. `tools/derive_piece_models.py` copia a metade de cima (sem botão nem trava) para
+  `models/piece/lid.json` e `ancient_lid.json` e escreve um `models/piece/<bola>_lid.json` por bola
+  apontando para a textura 3D dela no Cobblemon (`cobblemon:item/poke_balls/models/<bola>_ball`, por
+  referência). A tampa pronta é essa metade em 65% (5,5 × 2,9 px: cabe na face de 7 px e embaixo da
+  prensa da Bigorna Mecânica); o disco é a mesma metade achatada (30% da altura, 12% mais larga) que
+  vai subindo até virar a tampa, então todo estágio tem a forma e as cores reais da bola. O disco e a
+  base de ferro usam a metade de baixo com `textures/item/piece/iron_base.png` (a textura da Pokébola
+  recolorida para aço), virada com a cúpula para cima. Item sem modelo de peça (receita de datapack)
+  aparece deitado como item.
+- **Histórico:** a geometria exportada do Pixelmon (`anvil_states`) estava de cabeça para baixo, com
+  3,8 px de largura e UV fora das folhas box-UV, e saiu do mod. A primeira versão do port desenhava
+  camadas de "quadrado arredondado" pintadas com o sprite 2D do item, que ficava embolado de perto;
+  foi trocada pelo modelo 3D do Cobblemon na 1.0.1.
 - A bigorna tem modelo próprio nas proporções da do Pixelmon (seção 11), então os discos não ficam
   enterrados.
 - **Conferência visual:** `xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runShowcase` sobe o client

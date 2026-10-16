@@ -65,6 +65,8 @@ private object Showcase {
         Shot("anvils_stages_closeup") { view(it, 2.0, Y + 1.8, 1.25, 0f, 52f) },
         Shot("anvils_lids_closeup") { view(it, 6.0, Y + 1.8, 1.25, 0f, 52f) },
         Shot("anvils_discs_row") { view(it, 5.0, Y + 1.9, 2.4, 0f, 45f) },
+        Shot("anvils_iron_closeup") { view(it, 8.5, Y + 1.8, 1.25, 0f, 52f) },
+        Shot("anvil_master_lid_macro") { view(it, 6.5, Y + 1.7, 1.75, 0f, 62f) },
         Shot("mechanical_anvils") { view(it, 2.5, Y + 2.2, 4.6, 0f, 35f) },
         Shot("mechanical_anvil_closeup") { view(it, 2.5, Y + 1.9, 6.4, 0f, 40f) },
         Shot("mechanical_anvil_gui", wait = 40) { openMechanicalAnvil(it) },

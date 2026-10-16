@@ -1,0 +1,6 @@
+{
+  "parent": "cobbleballworks:piece/lid",
+  "textures": {
+    "layer0": "cobblemon:item/poke_balls/models/moon_ball"
+  }
+}

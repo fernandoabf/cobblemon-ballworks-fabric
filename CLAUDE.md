@@ -20,7 +20,7 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 
 ## Estado atual
 
-**Versão 1.0.0**, com o checklist do plano completo, menos o teste com o modpack inteiro (que depende
+**Versão 1.0.1**, com o checklist do plano completo, menos o teste com o modpack inteiro (que depende
 do modpack do usuário). As 46 bolas do Cobblemon que têm receita passam pela forja: o disco usa a
 receita do Cobblemon com bolotas cozidas, vira tampa na bigorna e a bola é tampa + botão de pedra +
 base de ferro. Estão prontos a Bigorna de Pokébola, os 17 martelos, a Bigorna Mecânica, o plugin do
@@ -38,10 +38,12 @@ Mapa do código (`com.xaiver.cobbleballworks`):
   `cobbleballworks:anvil`; `config/BallworksConfig`.
 - `src/main/java/.../mixin/RecipeManagerMixin`: tira as receitas nativas das bolas do Cobblemon (os
   overrides de datapack perdem para o Cobblemon, ver 3.3 do plano).
-- `src/client`: renderers (`PieceRenderer` desenha as peças em 3D a partir dos sprites), a tela da
-  Bigorna Mecânica e o plugin do EMI (`compat/emi`).
-- `tools/derive_ball_parts.py`: gera os sprites de disco e tampa a partir do jar do Cobblemon;
-  `tools/make_icon.py` monta o ícone do mod com dois desses sprites.
+- `src/client`: renderers (`PieceRenderer` desenha a peça na bigorna com a metade da Pokébola 3D do
+  Cobblemon, `models/piece`, achatada nos estágios), a tela da Bigorna Mecânica e o plugin do EMI
+  (`compat/emi`).
+- `tools/`: `derive_ball_parts.py` gera os sprites de disco e tampa, `derive_piece_models.py` os
+  modelos 3D das peças (`models/piece`) e a textura de ferro, os dois a partir do jar do Cobblemon;
+  `make_icon.py` monta o ícone do mod.
 
 ## Ambiente e comandos
 

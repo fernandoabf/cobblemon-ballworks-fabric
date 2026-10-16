@@ -1,6 +1,7 @@
 package com.xaiver.cobbleballworks.gametest
 
 import com.google.gson.JsonObject
+import com.xaiver.cobbleballworks.content.ForgeBall
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.core.Registry
@@ -117,6 +118,33 @@ class DataIntegrityGameTest : FabricGameTest {
         }
         for (key in enUs.keySet() - ptBr.keySet()) checks.fail("pt_br is missing $key")
         for (key in ptBr.keySet() - enUs.keySet()) checks.fail("en_us is missing $key")
+        checks.finish()
+    }
+
+    /**
+     * The anvils draw each ball's piece with models/piece/<ball>_lid.json: the top half of
+     * Cobblemon's 3D ball (the ancient one for the Hisuian balls) with the ball's own 3D texture.
+     * [everyModelResolves] checks that parents and textures exist; this checks that none is missing.
+     */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun everyBallHasAPieceModel(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val models = modJsonResources("assets/$MOD_ID/models/piece").associate { it.path.substringAfterLast('/') to it.json.asJsonObject }
+        for (ball in ForgeBall.entries) {
+            val model = models["${ball.id}_lid.json"]
+            if (model == null) {
+                checks.fail("no piece model for ${ball.id}")
+                continue
+            }
+            val geometry = if (ball.id.startsWith("ancient_")) "ancient_lid" else "lid"
+            checks.check(model["parent"]?.asString == "$MOD_ID:piece/$geometry") { "${ball.id}: piece parent should be $geometry" }
+            val texture = model["textures"]?.asJsonObject?.get("layer0")?.asString
+            checks.check(texture == "cobblemon:item/poke_balls/models/${ball.ballId.path}") { "${ball.id}: piece texture is $texture" }
+        }
+        for (geometry in listOf("lid", "ancient_lid", "iron_base")) {
+            val elements = models["$geometry.json"]?.get("elements")?.asJsonArray
+            checks.check(elements != null && elements.size() > 0) { "piece/$geometry.json has no elements" }
+        }
         checks.finish()
     }
 
