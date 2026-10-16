@@ -4,6 +4,7 @@ import com.xaiver.cobbleballworks.item.HammerItem
 import com.xaiver.cobbleballworks.registry.ModCreativeTab
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
 import net.minecraft.core.BlockPos
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.gametest.framework.GameTest
 import net.minecraft.gametest.framework.GameTestHelper
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 
 /** Section 8 of docs/PLANO.md: everything the mod registers exists, with the Pixelmon numbers. */
@@ -61,6 +63,13 @@ class RegistryGameTest : FabricGameTest {
                 "${material}_hammer should mine other blocks like a bare hand"
             }
             checks.check(item.isEnchantable(stack) && item.enchantmentValue > 0) { "${material}_hammer should be enchantable" }
+            checks.check(stack.has(DataComponents.FIRE_RESISTANT) == (material == "netherite")) {
+                "only the netherite hammer should survive fire (${material}_hammer)"
+            }
+        }
+        val netherite = modItem("netherite_hammer")
+        checks.check(netherite is HammerItem && netherite.isValidRepairItem(ItemStack(netherite), ItemStack(Items.NETHERITE_INGOT))) {
+            "the netherite hammer should be repaired with netherite ingots"
         }
         checks.check(BuiltInRegistries.ITEM.keySet().count { it.namespace == MOD_ID && it.path.endsWith("_hammer") } == HAMMERS.size) {
             "unexpected number of hammers"
@@ -117,13 +126,17 @@ class RegistryGameTest : FabricGameTest {
             "ancient_azure", "ancient_roseate", "ancient_slate",
         )
 
-        /** material -> (strength, durability), from Pixelmon 1.12.2 ItemHammer/GenericHammer. */
+        /**
+         * material -> (strength, durability), from Pixelmon 1.12.2 ItemHammer/GenericHammer;
+         * netherite is not in Pixelmon (vanilla netherite durability, strength above every other).
+         */
         val HAMMERS = mapOf(
             "wood" to (1 to 59),
             "stone" to (2 to 131),
             "iron" to (3 to 250),
             "gold" to (4 to 32),
             "diamond" to (5 to 1561),
+            "netherite" to (8 to 2031),
             "aluminium" to (3 to 200),
             "ruby" to (4 to 300),
             "sapphire" to (4 to 300),

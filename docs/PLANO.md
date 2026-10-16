@@ -308,7 +308,7 @@ pelo EMI, com os JSONs em `data/cobbleballworks/recipe/anvil/`.
 receita `cobbleballworks:anvil` aparece nas duas categorias:
 
 - **Bigorna de Pokébola** (estações: a bigorna e a tag `#cobbleballworks:hammers`): peça → resultado;
-  um slot de martelo que passa pelos 17 martelos, um por segundo, com as marteladas daquele martelo
+  um slot de martelo que passa pelos 18 martelos, um por segundo, com as marteladas daquele martelo
   ao lado (×N); a seta lista todos de uma vez; a linha "Força 5 × 3 estágios" explica a regra no
   tooltip. Largura 134, a que cabe no EMI sem alargar a tela.
 - **Bigorna Mecânica** (estação: a bigorna mecânica): no estilo da fornalha do EMI, com a chama, a
@@ -363,8 +363,8 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 
 ## 10. Fora do escopo por enquanto
 
-Cadeia do alumínio (bauxita, placa), martelo de netherite (1.16+), Bigorna Mecânica de 2 blocos com
-animação, auto-recarga ligada por padrão, cherish e ancient origin (sem receita no Cobblemon).
+Cadeia do alumínio (bauxita, placa), Bigorna Mecânica de 2 blocos, auto-recarga ligada por padrão,
+cherish e ancient origin (sem receita no Cobblemon).
 
 ## 11. Decisões tomadas durante o port
 
@@ -389,6 +389,12 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   (Eficiência e Inquebrável, como no Pixelmon) e conserto na bigorna vanilla com o material da receita.
   Fora da bigorna mineram como a mão (velocidade 1) e gastam 1 por bloco, como as ferramentas do
   Pixelmon.
+- **Martelo de netherite (pedido do usuário, não existe no Pixelmon):** aprimoramento do martelo de
+  diamante na mesa de ferraria (molde de netherite + lingote), como as ferramentas de netherite do
+  vanilla, então guarda encantamentos e desgaste. Números do netherite vanilla (durabilidade 2031,
+  encantabilidade 15, dano 6 = diamante + 1, não queima) e força 8, acima das pedras de evolução (6):
+  3 marteladas no disco comum, 6 na Onírica e 6 na Mestra/Criatura (9 com força 6). Sprite: o martelo
+  de diamante recolorido (`tools/make_netherite_hammer.py`), como o vanilla faz com as ferramentas.
 - **Testes de integridade dos dados:** o Minecraft só registra no log um arquivo de dados quebrado (e
   uma tag com uma entrada inexistente é descartada inteira). Os gametests de
   `DataIntegrityGameTest` falham se qualquer tag, receita ou loot table do mod não carregar, se um item

@@ -82,6 +82,7 @@ class HammerItem(val material: HammerMaterial) : Item(properties(material)) {
 
         private fun properties(material: HammerMaterial): Properties = Properties()
             .durability(material.durability)
+            .apply { if (material.fireResistant) fireResistant() }
             .component(
                 DataComponents.TOOL,
                 Tool(listOf(Tool.Rule.overrideSpeed(ModTags.Blocks.HAMMERABLE, material.strength.toFloat())), 1.0f, 1),

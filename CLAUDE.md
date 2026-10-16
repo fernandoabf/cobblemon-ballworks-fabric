@@ -20,13 +20,14 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 
 ## Estado atual
 
-**Versão 1.0.1**, com o checklist do plano completo, menos o teste com o modpack inteiro (que depende
-do modpack do usuário). As 46 bolas do Cobblemon que têm receita passam pela forja: o disco usa a
-receita do Cobblemon com bolotas cozidas, vira tampa na bigorna e a bola é tampa + botão de pedra +
-base de ferro. Estão prontos a Bigorna de Pokébola, os 17 martelos, a Bigorna Mecânica, o plugin do
-EMI, a config do servidor e as traduções en_us/pt_br. Os 31 gametests passam no servidor headless com
-o Cobblemon real e o showcase confere o client (render, GUI, EMI), os dois em dev e em produção. Guia
-do jogador: [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
+**Versão 1.0.1**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
+depende do modpack do usuário). As 46 bolas do Cobblemon que têm receita passam pela forja: o disco
+usa a receita do Cobblemon com bolotas cozidas, vira tampa na bigorna e a bola é tampa + botão de
+pedra + base de ferro. Estão prontos a Bigorna de Pokébola, os 18 martelos (o de netherite sai da
+mesa de ferraria), a Bigorna Mecânica, o plugin do EMI, a config do servidor e as traduções
+en_us/pt_br. Os 31 gametests passam no servidor headless com o Cobblemon real e o showcase confere o
+client (render, GUI, EMI), os dois em dev e em produção. Guia do jogador:
+[`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
 
 Mapa do código (`com.xaiver.cobbleballworks`):
 
@@ -43,7 +44,7 @@ Mapa do código (`com.xaiver.cobbleballworks`):
   (`compat/emi`).
 - `tools/`: `derive_ball_parts.py` gera os sprites de disco e tampa, `derive_piece_models.py` os
   modelos 3D das peças (`models/piece`) e a textura de ferro, os dois a partir do jar do Cobblemon;
-  `make_icon.py` monta o ícone do mod.
+  `make_icon.py` monta o ícone do mod e `make_netherite_hammer.py` o sprite do martelo de netherite.
 
 ## Ambiente e comandos
 

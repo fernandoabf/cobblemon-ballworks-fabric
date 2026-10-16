@@ -17,6 +17,9 @@ import net.minecraft.world.item.crafting.CraftingInput
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.item.crafting.SingleRecipeInput
+import net.minecraft.world.item.crafting.SmithingRecipeInput
+import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import kotlin.io.path.readText
 
@@ -155,6 +158,37 @@ class RecipeGameTest : FabricGameTest {
         }
         checks.finish()
     }
+
+    /** Like vanilla netherite tools: the diamond hammer upgraded at a smithing table, keeping what it had. */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun netheriteHammerIsUpgradedAtTheSmithingTable(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val level = helper.level
+        val efficiency = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.EFFICIENCY)
+        val template = ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE)
+        val ingot = ItemStack(Items.NETHERITE_INGOT)
+
+        val diamond = ItemStack(modItem("diamond_hammer")!!)
+        diamond.enchant(efficiency, 3)
+        diamond.damageValue = 100
+        val result = smith(level, SmithingRecipeInput(template, diamond, ingot))
+        checks.check(result.item == modItem("netherite_hammer")) { "smithing a diamond hammer gives $result" }
+        checks.check(EnchantmentHelper.getItemEnchantmentLevel(efficiency, result) == 3) { "the upgrade lost Efficiency III" }
+        checks.check(result.damageValue == 100 && result.maxDamage == 2031) {
+            "the upgrade should keep the wear: ${result.damageValue}/${result.maxDamage}"
+        }
+
+        val iron = smith(level, SmithingRecipeInput(template, ItemStack(modItem("iron_hammer")!!), ingot))
+        checks.check(iron.isEmpty) { "an iron hammer should not become netherite ($iron)" }
+        val noTemplate = smith(level, SmithingRecipeInput(ItemStack.EMPTY, ItemStack(modItem("diamond_hammer")!!), ingot))
+        checks.check(noTemplate.isEmpty) { "the upgrade needs the netherite upgrade template ($noTemplate)" }
+        checks.finish()
+    }
+
+    private fun smith(level: Level, input: SmithingRecipeInput): ItemStack =
+        level.recipeManager.getRecipeFor(RecipeType.SMITHING, input, level)
+            .map { it.value().assemble(input, level.registryAccess()) }
+            .orElse(ItemStack.EMPTY)
 
     private fun craft(level: Level, input: CraftingInput): ItemStack =
         level.recipeManager.getRecipeFor(RecipeType.CRAFTING, input, level)

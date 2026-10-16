@@ -40,6 +40,11 @@ Receita: `MMM` / `MSM` / ` S ` (5 do material + 2 gravetos). Martelo melhor bate
 rápido. Aceitam Eficiência e Inquebrável, e consertam na bigorna comum com o material da receita.
 Rubi, safira e alumínio só têm receita se algum mod do pack tiver esses materiais.
 
+**Martelo de Netherite:** como as ferramentas de netherite do vanilla, sai da **mesa de ferraria**:
+Molde de Aprimoramento de Netherite + Martelo de Diamante + Lingote de Netherite. Mantém os
+encantamentos e o desgaste do martelo de diamante, não queima na lava e conserta com lingote de
+netherite. É o melhor martelo: termina a Bola Mestra e a Bola Criatura em 6 marteladas.
+
 | Martelo | Força | Durabilidade | Marteladas por disco (força 5) | Onírica (10) | Mestra/Criatura (15) |
 | --- | --- | --- | --- | --- | --- |
 | Madeira | 1 | 59 | 15 | 30 | 45 |
@@ -47,6 +52,7 @@ Rubi, safira e alumínio só têm receita se algum mod do pack tiver esses mater
 | Ferro | 3 | 250 | 6 | 12 | 15 |
 | Ouro | 4 | 32 | 6 | 9 | 12 |
 | Diamante | 5 | 1561 | 3 | 6 | 9 |
+| Netherite | 8 | 2031 | 3 | 6 | 6 |
 | Alumínio | 3 | 200 | 6 | 12 | 15 |
 | Rubi | 4 | 300 | 6 | 9 | 12 |
 | Safira | 4 | 300 | 6 | 9 | 12 |

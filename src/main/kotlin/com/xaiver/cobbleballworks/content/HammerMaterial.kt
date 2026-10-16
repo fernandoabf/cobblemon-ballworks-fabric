@@ -12,7 +12,8 @@ import net.minecraft.world.item.ItemStack
  *
  * [strength] is both the force of one strike and the mining speed on the anvil, so a better
  * hammer hits harder and faster. [attackDamage] is the attack damage modifier (Pixelmon tools:
- * 2 + the tool material bonus). The order is the order of Pixelmon's creative tab.
+ * 2 + the tool material bonus). The order is the order of Pixelmon's creative tab, with netherite
+ * (newer than Pixelmon's hammers) after diamond.
  */
 enum class HammerMaterial(
     val id: String,
@@ -21,12 +22,22 @@ enum class HammerMaterial(
     val enchantability: Int,
     val attackDamage: Double,
     private val repairMaterial: RepairMaterial,
+    /** Survives fire and lava as a dropped item, like vanilla netherite gear. */
+    val fireResistant: Boolean = false,
 ) {
     WOOD("wood", 1, 59, 15, 2.0, RepairMaterial.Tag(ItemTags.PLANKS)),
     STONE("stone", 2, 131, 5, 3.0, RepairMaterial.Tag(ItemTags.STONE_TOOL_MATERIALS)),
     IRON("iron", 3, 250, 14, 4.0, RepairMaterial.Tag(c("ingots/iron"))),
     GOLD("gold", 4, 32, 22, 2.0, RepairMaterial.Tag(c("ingots/gold"))),
     DIAMOND("diamond", 5, 1561, 10, 5.0, RepairMaterial.Tag(c("gems/diamond"))),
+
+    /**
+     * Not in Pixelmon: the top hammer, upgraded from the diamond one at a smithing table like
+     * vanilla netherite tools (vanilla's durability, enchantability and +1 damage over diamond).
+     * Strength 8 finishes a regular disc in 3 strikes and a Master/Beast Ball disc in 6 (9 with
+     * the strength 6 evolution stone hammers).
+     */
+    NETHERITE("netherite", 8, 2031, 15, 6.0, RepairMaterial.Tag(c("ingots/netherite")), fireResistant = true),
     ALUMINIUM("aluminium", 3, 200, 14, 4.0, RepairMaterial.Tag(c("ingots/aluminum"))),
     RUBY("ruby", 4, 300, 10, 5.0, RepairMaterial.Tag(c("gems/ruby"))),
     SAPPHIRE("sapphire", 4, 300, 10, 5.0, RepairMaterial.Tag(c("gems/sapphire"))),

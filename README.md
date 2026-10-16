@@ -23,8 +23,9 @@ decisions: [`docs/PLANO.md`](docs/PLANO.md).
 - **Poké Ball Anvil**: right-click a disc onto it and hold left-click with a hammer. The piece goes
   through 3 work stages (force 5 per stage; Dream Ball 10; Master and Beast Ball 15) and becomes a
   lid; iron discs become iron bases. Lid + stone button + iron base = one ball.
-- **17 hammers** (wood, stone, iron, gold, diamond, aluminium, ruby, sapphire, amethyst and the eight
-  evolution stones) with Pixelmon's strength and durability.
+- **18 hammers**: wood, stone, iron, gold, diamond, aluminium, ruby, sapphire, amethyst and the eight
+  evolution stones with Pixelmon's strength and durability, plus a netherite hammer (strength 8,
+  upgraded from the diamond one at a smithing table like vanilla netherite tools).
 - **Mechanical Anvil**: input, fuel and output like a furnace, works with hoppers, 40 ticks per force
   (10 s for a regular disc).
 - **EMI** (optional): a category for each anvil, with the strikes every hammer needs.
@@ -84,7 +85,7 @@ No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jd
 | `src/client` | client-only code (renderers, screens); Loom forbids `main` from touching `net.minecraft.client` |
 | `src/gametest` | headless Fabric gametests (dev-only mod, never shipped) |
 | `src/showcase` | dev-only client mod that builds scenes and takes screenshots (`runShowcase`) |
-| `tools` | scripts that generate assets from Cobblemon's jar: `derive_ball_parts.py` (disc and lid sprites), `derive_piece_models.py` (3D pieces on the anvils), `make_icon.py` (mod icon) |
+| `tools` | asset scripts: `derive_ball_parts.py` (disc and lid sprites) and `derive_piece_models.py` (3D pieces on the anvils) read Cobblemon's jar; `make_icon.py` (mod icon), `make_netherite_hammer.py` |
 | `legacy/forge-1.20.1` | the original Forge sources and build files, kept as porting reference |
 | `docs/PLANO.md` | specification of the port (Portuguese) |
 | `docs/COMO-JOGAR.md` | player guide with every recipe (Portuguese) |
@@ -108,6 +109,8 @@ No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jd
   MPL-2.0.
 - The hammer sprites in `assets/cobbleballworks/textures/item` were imported from **Pixelmon** by the
   original author; they belong to their respective authors and are **not** covered by the MIT license.
+  `netherite_hammer.png` is the diamond hammer sprite recoloured by
+  [`tools/make_netherite_hammer.py`](tools/make_netherite_hammer.py) and stays under the same terms.
   The anvil follows classic Pixelmon but is drawn by this mod (its model uses the vanilla anvil
   textures by reference). This is a non-commercial fan project.
 - The mod icon (`assets/cobbleballworks/icon.png`, made by [`tools/make_icon.py`](tools/make_icon.py))
