@@ -42,3 +42,12 @@ poke_balls/
 # OS cruft
 .DS_Store
 Thumbs.db
+
+# ---- Fabric port ----
+# Kotlin compiler caches
+.kotlin/
+# Real Cobblemon jar for dev runtime/gametest (downloaded by build.gradle) - never commit it
+run-libs/
+# Gradle cache used by dgradle.sh when pointed inside the repo
+.gradle-docker/
+*.log

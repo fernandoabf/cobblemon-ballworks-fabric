@@ -1,125 +1,172 @@
 plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id 'fabric-loom'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-version = mod_version
-group = mod_group_id
+version = project.mod_version
+group = project.maven_group
 
 base {
-    archivesName = mod_id
+    archivesName = project.archives_base_name
 }
-
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
-}
-
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-
-    // Uncomment to pre-apply official access transformers when you need them.
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            // no extra config needed
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            workingDirectory project.file('run-data')
-            args '--mod', mod_id,
-                 '--all',
-                 '--output', file('src/generated/resources/'),
-                 '--existing', file('src/main/resources/')
-        }
-    }
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    // Loom already adds the Fabric maven, Mojang's libraries and Maven Central.
     mavenCentral()
-    maven {
-        name = 'Kotlin for Forge'
-        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+}
+
+// ---------------------------------------------------------------------------
+// Real Cobblemon (the same jar the modpack/server runs), used ONLY at dev
+// runtime (gametest). It is downloaded from Modrinth into run-libs/
+// (git-ignored) the first time Gradle configures the project. Ballworks does not compile against Cobblemon classes: it only
+// references Cobblemon items by id (cobblemon:poke_ball, ...) in data files.
+// ---------------------------------------------------------------------------
+if (JavaVersion.current() < JavaVersion.VERSION_21) {
+    throw new GradleException("[cobbleballworks] Gradle is running on Java ${JavaVersion.current()}; " +
+            "Minecraft 1.21.1 / Loom need JDK 21. Install a JDK 21 and point JAVA_HOME to it (or use ./dgradle.sh).")
+}
+
+def cobblemonJar = file("run-libs/Cobblemon-fabric-${project.cobblemon_version}.jar")
+
+// The jar is the official release from Modrinth (same file the modpack/server run). It is
+// downloaded once into run-libs/ (git-ignored) and checked against its SHA-1.
+// Skip with -Pcobbleballworks.noCobblemonDownload=true or when Gradle runs --offline.
+if (!cobblemonJar.isFile() && !gradle.startParameter.offline &&
+        !project.hasProperty('cobbleballworks.noCobblemonDownload')) {
+    def url = project.cobblemon_url
+    def expected = project.cobblemon_sha1
+    logger.lifecycle("[cobbleballworks] Downloading Cobblemon ${project.cobblemon_version} for dev runtime: ${url}")
+    cobblemonJar.parentFile.mkdirs()
+    def tmp = new File(cobblemonJar.parentFile, cobblemonJar.name + '.part')
+    def conn = new URL(url).openConnection()
+    conn.setRequestProperty('User-Agent', 'cobbleballworks-build (github.com/fernandoabf/cobblemon-ballworks-fabric)')
+    conn.inputStream.withStream { input -> tmp.withOutputStream { out -> out << input } }
+    def sha1 = java.security.MessageDigest.getInstance('SHA-1').digest(tmp.bytes).encodeHex().toString()
+    if (sha1 != expected) {
+        tmp.delete()
+        throw new GradleException("[cobbleballworks] Cobblemon jar SHA-1 mismatch: expected ${expected}, got ${sha1}")
     }
-    maven {
-        name = 'Impact Dev (Cobblemon)'
-        url = 'https://maven.impactdev.net/repository/development/'
+    tmp.renameTo(cobblemonJar)
+}
+def hasCobblemon = cobblemonJar.isFile()
+if (!hasCobblemon) {
+    logger.warn("[cobbleballworks] ${cobblemonJar} not found: dev runs/gametest will NOT have Cobblemon " +
+            "(and cobbleballworks depends on it). Download it from ${project.cobblemon_url} into run-libs/.")
+}
+
+// Loom strips the jar-in-jar list ("jars" in fabric.mod.json) from remapped mod
+// dependencies, so in dev the libraries Cobblemon nests (GraalJS/Truffle for
+// Showdown, ICU4J, MongoDB driver) must be put on the runtime classpath by us.
+// We take the exact nested jars from the real Cobblemon jar (fabric-language-kotlin
+// is excluded: it comes from Maven via modImplementation below, same version).
+def cobblemonJijDir = layout.buildDirectory.dir('cobblemon-jij')
+def extractCobblemonJij = tasks.register('extractCobblemonJij', Sync) {
+    group = 'cobbleballworks'
+    description = 'Extracts the jar-in-jar libraries nested in the real Cobblemon jar (run-libs/).'
+    if (hasCobblemon) {
+        from(zipTree(cobblemonJar)) {
+            include 'META-INF/jars/*.jar'
+            exclude 'META-INF/jars/fabric-language-kotlin-*.jar'
+            eachFile { it.path = it.name }
+        }
     }
-    maven {
-        name = 'Modrinth'
-        url = 'https://api.modrinth.com/maven'
-        content { includeGroup 'maven.modrinth' }
+    includeEmptyDirs = false
+    into cobblemonJijDir
+}
+
+loom {
+    // src/main = common/server-safe code, src/client = client-only code
+    // (renderers etc.). Loom makes main unable to reference net.minecraft.client.*,
+    // which protects the dedicated server.
+    splitEnvironmentSourceSets()
+}
+
+sourceSets {
+    // Headless Fabric gametests (fabric-gametest-api-v1), run on a dedicated test server.
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
+loom {
+    mods {
+        cobbleballworks {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+        register('cobbleballworks-gametest') {
+            sourceSet sourceSets.gametest
+        }
+    }
+
+    runs {
+        // ./dgradle.sh runGametest -> headless dedicated gametest server that runs every
+        // @GameTest and exits by itself (exit code != 0 if a required test fails).
+        gametest {
+            server()
+            name 'Game Test (headless server)'
+            source sourceSets.gametest
+            runDir 'build/gametest'
+            vmArg '-Xmx3G'
+            vmArg '-Dfabric-api.gametest'
+            vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest/junit.xml').absolutePath}"
+            ideConfigGenerated false
+        }
+    }
+}
+
+// Fresh gametest world on every run (the gametest server otherwise reuses build/gametest/world).
+tasks.matching { it.name == 'runGametest' }.configureEach {
+    doFirst {
+        delete(file('build/gametest/world'))
     }
 }
 
 dependencies {
-    // Forge itself
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Kotlin for Forge — provides the Kotlin runtime loader on Forge
-    implementation "thedarkcolour:kotlinforforge:${kff_version}"
+    // Full Fabric API (includes fabric-gametest-api-v1).
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    // Cobblemon — use fg.deobf for non-Forge-distributed deps so dev env sees deobfuscated classes
-    implementation fg.deobf("com.cobblemon:forge:${cobblemon_version}")
+    if (hasCobblemon) {
+        modLocalRuntime files(cobblemonJar)
+        localRuntime fileTree(cobblemonJijDir) {
+            include '*.jar'
+            builtBy extractCobblemonJij
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
 }
 
 jar {
-    manifest {
-        attributes([
-            'Specification-Title'     : mod_id,
-            'Specification-Vendor'    : mod_authors,
-            'Specification-Version'   : '1',
-            'Implementation-Title'    : project.name,
-            'Implementation-Version'  : project.jar.archiveVersion,
-            'Implementation-Vendor'   : mod_authors,
-            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-    finalizedBy 'reobfJar'
-}
-
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = '17'
+    inputs.property 'archivesName', project.base.archivesName
+    from('LICENSE') {
+        rename { "${it}_${inputs.properties.archivesName}" }
     }
 }
