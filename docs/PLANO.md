@@ -238,20 +238,22 @@ diamante ~0,55 s; uma tampa: ~26 s com madeira, ~1,7 s com diamante). O martelo 
 
 ### 5.4 Visual
 
-- O BER desenha o item em cima da bigorna com os **modelos do Pixelmon** que a Ballworks importou
-  (`models/block/anvil_states/<bola>ball_disc_flat|stage1|stage2` + a tampa
-  `models/item/anvil_states/<bola>balllid`): estágio 0 = flat, 1 = stage1, 2 = stage2, pronto =
-  tampa. Disco/base de ferro: `iron_disc_flat` e a base.
-- Os modelos precisam de correção (ver auditoria): translação (+1.5, +3.3, +8) no flat e
-  (+1.5, +3.2, +8) nos outros, UV explícito (o UV automático pega pixels fora do sprite) e os 23
-  modelos de tampa apontam para `item/lids/<bola>balllid`, que não existe (o arquivo real é
-  `item/lids/<bola>_lid.png`). Registrar os modelos extras pelo `ModelLoadingPlugin` do Fabric.
-- Sem modelo/textura do Pixelmon: azure, citrine, roseate, slate, verdant (sem disco) e beast, dream,
-  park (sem tampa). Para as 5 coloridas, gerar a textura recolorindo a da Poké Ball, ou usar o item
-  como fallback.
-- Altura: a bigorna do Pixelmon tinha o topo em ~11.7/16 e os modelos de disco foram feitos para essa
-  altura; a bigorna da Ballworks tem o topo em 15/16. Ajustar a bigorna para as proporções do
-  Pixelmon ou transladar os discos.
+- O BER (`BallAnvilRenderer` + `PieceRenderer`) desenha a peça no centro da face de trabalho da
+  bigorna (11 px de altura): **disco liso** no estágio 0, o centro subindo nos estágios 1 e 2 e a
+  **cúpula** quando a peça está pronta — a mesma sequência dos modelos do Pixelmon
+  (ModelDiscFlat/Stage1/Stage2/HemiSphere).
+- **Por que não os JSON importados:** a geometria exportada do Pixelmon estava de cabeça para baixo
+  (o exportador ignorou o giro de 180° do TESR antigo: as bordas subiam em vez do centro), tinha
+  3,8 px de largura e UV automático que caía fora das folhas box-UV. A peça agora é desenhada em
+  código, em camadas de "quadrado arredondado" com 6 px de largura, e texturizada com o **sprite da
+  própria peça** (a área opaca do sprite é medida em tempo de execução), então funciona para as 46
+  bolas, para o disco e a base de ferro, e para itens de receitas de datapack e resource packs. Os 90
+  modelos `anvil_states` e as 32 texturas `anvil_progress`/`anvil_states` do Pixelmon saíram do mod.
+- A bigorna tem modelo próprio nas proporções da do Pixelmon (seção 11), então os discos não ficam
+  enterrados.
+- **Conferência visual:** `xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runShowcase` sobe o client
+  com o mod de dev `src/showcase`, cria um mundo plano, monta as cenas, salva screenshots em
+  `build/showcase/screenshots/` e fecha sozinho.
 
 ### 5.5 Opcional (config, padrão desligado como no Pixelmon)
 
@@ -320,7 +322,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
       entram junto com cada bigorna)
 - [x] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
 - [x] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
-- [ ] Bigorna: BER com os modelos do Pixelmon corrigidos (5.4)
+- [x] Bigorna: BER com os estágios do Pixelmon (5.4) + showcase com screenshots no client
 - [ ] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER
 - [x] Tipo de receita `cobbleballworks:anvil` (47 receitas: 46 discos + disco de ferro)
 - [ ] Plugin EMI

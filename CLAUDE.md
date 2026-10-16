@@ -40,6 +40,9 @@ ou o Temurin 21) e aponte o `JAVA_HOME`.
 - Na primeira configuração o Gradle baixa o jar oficial do Cobblemon 1.8.2 do Modrinth para
   `run-libs/` (git-ignored) e confere o SHA-1. Ele só é usado em runtime de desenvolvimento.
 - Resultado do gametest: `build/gametest/junit.xml` e `build/gametest/logs/latest.log`.
+- Conferência visual no client (sem monitor): `xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew
+  runShowcase` sobe o client com o mod de dev `src/showcase`, monta cenas num mundo plano, salva
+  screenshots em `build/showcase/screenshots/` e fecha sozinho (precisa de Xvfb e Mesa; ~2 min).
 - Alternativa sem JDK local: `./dgradle.sh <tarefas>` (mesmo Gradle dentro do Docker).
 
 ## Regras do projeto

@@ -1,9 +1,12 @@
 package com.xaiver.cobbleballworks.client
 
+import com.xaiver.cobbleballworks.client.render.BallAnvilRenderer
+import com.xaiver.cobbleballworks.registry.ModBlockEntities
 import com.xaiver.cobbleballworks.registry.ModItems
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.minecraft.client.color.item.ItemColor
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 
 /**
  * Client-only entrypoint (fabric.mod.json -> "client", adapter "kotlin").
@@ -17,6 +20,7 @@ object CobbleBallworksClient : ClientModInitializer {
     private const val COOKED_APRICORN_TINT = 0xFFEBC8A0.toInt()
 
     override fun onInitializeClient() {
+        BlockEntityRenderers.register(ModBlockEntities.BALL_ANVIL, ::BallAnvilRenderer)
         ColorProviderRegistry.ITEM.register(
             ItemColor { _, tintIndex -> if (tintIndex == 0) COOKED_APRICORN_TINT else -1 },
             *ModItems.COOKED_APRICORNS.values.toTypedArray(),

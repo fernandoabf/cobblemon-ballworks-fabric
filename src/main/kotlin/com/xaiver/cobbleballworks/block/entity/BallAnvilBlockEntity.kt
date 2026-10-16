@@ -43,8 +43,22 @@ class BallAnvilBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(ModBl
 
     val isEmpty: Boolean get() = item.isEmpty
 
-    /** True when the piece on the anvil has no anvil recipe left: it is done (a lid or a base). */
-    fun isFinished(): Boolean = !item.isEmpty && level?.let { AnvilRecipe.find(it, item) } == null
+    private var finishedFor: Item? = null
+    private var finishedValue = false
+
+    /**
+     * True when the piece on the anvil has no anvil recipe left: it is done (a lid or a base).
+     * Cached per item, since the renderer asks every frame.
+     */
+    fun isFinished(): Boolean {
+        if (item.isEmpty) return false
+        val level = level ?: return false
+        if (finishedFor !== item.item) {
+            finishedValue = AnvilRecipe.find(level, item) == null
+            finishedFor = item.item
+        }
+        return finishedValue
+    }
 
     /** Only pieces with an anvil recipe (discs) go on an empty anvil, as in Pixelmon. */
     fun canPlace(stack: ItemStack): Boolean {

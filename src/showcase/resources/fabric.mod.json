@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "cobbleballworks-showcase",
+  "version": "0.0.0",
+  "name": "Cobblemon Ballworks - client showcase (dev only)",
+  "description": "Builds scenes in a flat world and takes screenshots of them (./gradlew runShowcase). Never shipped.",
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.xaiver.cobbleballworks.showcase.ShowcaseClient"
+    ]
+  },
+  "depends": {
+    "cobbleballworks": "*"
+  }
+}
