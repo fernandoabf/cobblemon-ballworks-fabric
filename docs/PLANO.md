@@ -19,7 +19,8 @@ referência: o port reescreve tudo em `src/`.
 ## 1. A cadeia completa (como o jogador faz uma Poké Ball)
 
 1. Colhe apricorns (já existem no Cobblemon) e **cozinha na fornalha** → *Apricorn Cozido*.
-2. Faz o **disco** na bancada: 3 apricorns cozidos numa linha → N discos (tabela na seção 3).
+2. Faz o **disco** na bancada com a **receita da própria bola no Cobblemon** (mesmo formato,
+   materiais e quantidade, com os apricorns **cozidos**) → N discos (seção 3.1).
 3. Faz **discos de ferro**: 3 lingotes de ferro numa linha → 5 Discos de Ferro.
 4. Coloca o disco na **Bigorna** (clique direito) e **segura o clique esquerdo com um martelo** até
    ele virar **tampa** (ou o disco de ferro virar **base de ferro**). Ou usa a **Bigorna Mecânica**,
@@ -30,7 +31,7 @@ referência: o port reescreve tudo em `src/`.
 
 | Id | Nome pt-BR | Observação |
 | --- | --- | --- |
-| `cooked_<cor>_apricorn` (7: red, yellow, green, blue, pink, black, white) | Apricorn Vermelho Cozido... | fornalha: apricorn cru → cozido, 0.1 XP, 200 ticks; pilha 64 |
+| `cooked_<cor>_apricorn` (7: red, yellow, green, blue, pink, black, white) | Bolota Vermelha Cozida... | fornalha: apricorn cru → cozido, 0.1 XP, 200 ticks; pilha 64 |
 | `<bola>_lid_blank` | Disco de \<bola\> | id herdado da Ballworks ("lid blank" = disco do Pixelmon) |
 | `<bola>_lid` | Tampa de \<bola\> | |
 | `base_blank` | Disco de Ferro | |
@@ -39,40 +40,84 @@ referência: o port reescreve tudo em `src/`.
 | `ball_anvil` | Bigorna de Poké Ball | seção 5 (nome evita confusão com a bigorna vanilla) |
 | `mechanical_anvil` | Bigorna Mecânica | seção 6 |
 
+- `<bola>` = as **46 bolas do Cobblemon que têm receita**: as 22 do Pixelmon, as 5 de apricorn do
+  Cobblemon (citrine, verdant, azure, roseate, slate), park, dream, beast, master e as 15 `ancient_*`.
+  Cherish e Ancient Origin não têm receita no Cobblemon e ficam de fora.
 - Nomes pt-BR das bolas: use os nomes do `pt_br.json` do próprio Cobblemon para ficar consistente.
   Há `en_us.json` e `pt_br.json` completos.
+- Sprites de disco e tampa: derivados das bolas do Cobblemon por `tools/derive_ball_parts.py` (seção 11).
 - **Remover** da Ballworks: `ball_mold` e as receitas de Create/Mekanism/MekMM/Tinkers (97 arquivos;
   lista na auditoria) e as receitas de "martelar na grade de craft" (`<bola>_lid.json` shapeless com
   martelo e `pokeball_base.json`). No Pixelmon só se martela na bigorna.
 
 ## 3. Receitas
 
-### 3.1 Discos (shaped, 1 linha, vale em qualquer linha da grade e espelhado)
+### 3.1 Discos: a receita da bola no Cobblemon, saindo disco
 
-Cores: V=vermelho, A=amarelo, Vd=verde, Az=azul, R=rosa, P=preto, B=branco — sempre **cozidos**.
+**Decisão do usuário (16/10/2026):** todas as bolas usam a receita "difícil" do Cobblemon. O disco
+de cada bola é feito com a **receita da própria bola no Cobblemon** — mesmo formato, mesmos
+materiais (cobre, ferro, ouro, diamante, netherite, estrela do Nether, tumblestones...) e mesma
+quantidade —, mas com **apricorns cozidos** no lugar dos crus e com o **disco** como resultado. As
+bolas melhores custam o que custam no Cobblemon e o caminho do Pixelmon (fornalha → disco → bigorna →
+montagem) continua. As receitas de 3 apricorns numa linha do Pixelmon saíram (estão na pesquisa, só
+como referência).
 
-| Bola | Linha | Discos | | Bola | Linha | Discos |
-| --- | --- | --- | --- | --- | --- | --- |
-| poke | V V V | 5 | | heavy | Az Az Az | 3 |
-| great | Az V Az | 2 | | fast | V A V | 3 |
-| ultra | P A P | 1 | | repeat | V P V | 3 |
-| level | A V P | 2 | | timer | V P B | 3 |
-| moon | Az A P | 2 | | nest | Vd A Vd | 3 |
-| friend | V A Vd | 3 | | net | P Az P | 3 |
-| love | R R R | 3 | | dive | Az R Az | 3 |
-| safari | Vd Vd A | 3 | | luxury | B V P | 3 |
-| heal | B R B | 3 | | dusk | Vd P Vd | 3 |
-| premier | B V B | 3 | | sport | V B V | 3 |
-| quick | Az A Az | 3 | | lure | Vd V Vd | 3 |
+Formato da cruz: ` C ` / `ECD` / ` B ` (cima, esquerda, centro, direita, baixo), espelhável como
+toda receita shaped. Cores, sempre **cozidas**: V=vermelho, A=amarelo, Vd=verde, Az=azul, R=rosa,
+P=preto, B=branco. T1–T4 = tags `cobblemon:tier_N_poke_ball_materials` do Cobblemon (no pack: cobre,
+ferro, ouro, diamante). J/JC/JP = `cobblemon:tumblestone`/`sky_tumblestone`/`black_tumblestone`.
+**Força** = força por estágio na bigorna (seção 5.2).
 
-São as 22 bolas forjáveis do Pixelmon 1.12.2 (mesmas cores e quantidades no 1.7.10).
+| Bola | Cima | Esq. | Centro | Dir. | Baixo | Discos | Força |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| poke | V | V | T1 | V | V | 4 | 5 |
+| great | Az | V | T2 | V | Az | 4 | 5 |
+| ultra | P | A | T3 | A | P | 4 | 5 |
+| level | P | R | T2 | R | V | 4 | 5 |
+| moon | A | Az | T2 | P | A | 4 | 5 |
+| friend | A | Vd | T2 | Vd | V | 4 | 5 |
+| love | B | R | T3 | R | R | 4 | 5 |
+| safari | A | Vd | T1 | Vd | B | 4 | 5 |
+| heavy | P | Az | T2 | Az | P | 4 | 5 |
+| fast | V | A | T2 | A | B | 4 | 5 |
+| repeat | P | V | T3 | V | A | 4 | 5 |
+| timer | V | B | T3 | B | P | 4 | 5 |
+| nest | Vd | A | T2 | A | Vd | 4 | 5 |
+| net | P | Az | T2 | Az | B | 4 | 5 |
+| dive | B | Az | T2 | Az | Az | 4 | 5 |
+| luxury | P | B | T3 | V | P | 4 | 5 |
+| heal | R | B | T1 | B | R | 4 | 5 |
+| dusk | Vd | P | T3 | P | Vd | 4 | 5 |
+| premier | B | B | T1 | B | B | 4 | 5 |
+| sport | B | V | T2 | V | V | 4 | 5 |
+| quick | Az | A | T3 | A | Az | 4 | 5 |
+| lure | V | Az | T2 | Az | Vd | 4 | 5 |
+| citrine | A | A | T1 | A | A | 4 | 5 |
+| verdant | Vd | Vd | T1 | Vd | Vd | 4 | 5 |
+| azure | Az | Az | T1 | Az | Az | 4 | 5 |
+| roseate | R | R | T1 | R | R | 4 | 5 |
+| slate | P | P | T1 | P | P | 4 | 5 |
+| park | V | Vd | T2 | Vd | Vd | 4 | 5 |
+| dream | V | R | T4 | R | Az | 4 | 10 |
+| beast | `GEG` / `EDE` / `GEG` (D = T4, E = `echo_shard`, G = `#c:ingots/gold`) | | | | | 8 | 15 |
+| master | `shulker_shell` | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | `shulker_shell` | 1 | 15 |
+| ancient_poke | V | J | T1 | J | V | 4 | 5 |
+| ancient_great | V | J | T2 | J | Az | 4 | 5 |
+| ancient_ultra | A | J | T3 | J | P | 4 | 5 |
+| ancient_heavy | P | JP | T1 | JP | P | 4 | 5 |
+| ancient_leaden | P | JP | T2 | JP | P | 4 | 5 |
+| ancient_gigaton | P | JP | T3 | JP | P | 4 | 5 |
+| ancient_feather | Az | JC | T1 | JC | B | 4 | 5 |
+| ancient_wing | Az | JC | T2 | JC | B | 4 | 5 |
+| ancient_jet | Az | JC | T3 | JC | B | 4 | 5 |
+| ancient_ivory | B | J | T1 | J | B | 4 | 5 |
+| ancient_citrine | A | J | T1 | J | A | 4 | 5 |
+| ancient_verdant | Vd | J | T1 | J | Vd | 4 | 5 |
+| ancient_azure | Az | J | T1 | J | Az | 4 | 5 |
+| ancient_roseate | R | J | T1 | J | R | 4 | 5 |
+| ancient_slate | P | J | T1 | J | P | 4 | 5 |
 
-**Bolas só do Cobblemon (proposta, não existe no Pixelmon):** são variações coloridas da Poké Ball,
-então rendem 5 como ela. `citrine` A A A, `verdant` Vd Vd Vd, `slate` P P P; `azure` Az B Az e
-`roseate` R B R (porque Az Az Az e R R R já são Heavy e Love). Confirmar com o usuário.
-
-**Sem disco (como no Pixelmon):** master, park, beast, dream, cherish e as 16 `ancient_*` continuam
-com as receitas nativas do Cobblemon.
+Se um modpack mudar o conteúdo das tags de tier do Cobblemon, os discos acompanham.
 
 ### 3.2 Outras receitas
 
@@ -86,12 +131,16 @@ com as receitas nativas do Cobblemon.
 
 ### 3.3 Desativar as receitas nativas do Cobblemon
 
-Para cada bola com disco (as 22 + as 5 do Cobblemon), sobrescrever
-`data/cobblemon/recipe/<bola>.json` com uma condição de carga sempre falsa do Fabric
-(`fabric:load_conditions`; conferir os ids exatos no `fabric-resource-conditions-api-v1` 0.116.17).
-Conferir em gametest que, depois de carregar, `cobblemon:poke_ball` (etc.) **não existe** como
-receita e que `cobblemon:master_ball` e as `ancient_*` **continuam** existindo. Conferir também a
-ordem de prioridade entre data packs de mods no Fabric (o nosso mod depende do Cobblemon).
+As 46 receitas `data/cobblemon/recipe/<bola>_ball.json` são sobrescritas com uma condição de carga
+sempre falsa do Fabric: `"fabric:load_conditions": [{"condition": "fabric:not", "value":
+{"condition": "fabric:true"}}]` (ids conferidos no `fabric-resource-conditions-api-v1` 4.3.0). Sem
+isso as bolas continuariam saindo direto da bancada, e a Master e a Beast (que não usam apricorn)
+teriam duas receitas com a mesma grade. Também são desativadas as 7 receitas de fornalha
+`<cor>_apricorn_smelt_to_dye`, que disputariam a fornalha com o cozimento do apricorn.
+
+Gametest: depois de carregar, `cobblemon:poke_ball` (etc.) e `cobblemon:red_apricorn_smelt_to_dye`
+**não existem** como receita, e as outras receitas do Cobblemon continuam lá. Isso também confere a
+ordem de prioridade entre os data packs dos mods.
 
 > Atenção: o mod **Cobblemon Parts Refabricated** sobrescreve os mesmos arquivos. Os dois não devem
 > ficar instalados juntos; o modpack que vai usar este mod vai removê-lo.
@@ -146,15 +195,16 @@ rotaciona para o jogador (FACING), hitbox pequena como a do Pixelmon (0.2–0.8 
 
 ```
 a cada martelada: count += força_do_martelo
-se count >= 5:            # 15 era para a barra de alumínio, que não existe aqui
+se count >= força:        # força da receita: 5; Dream 10; Master e Beast 15 (seção 3.1)
     count = 0             # o excesso é descartado
     estágio += 1          # som ANVIL_LAND 0.15/1.0; gasta 1 de durabilidade
     se estágio == 3:      # disco -> tampa / disco de ferro -> base de ferro
         transforma o item; estágio = 0; som WOODEN_BUTTON_CLICK_OFF 0.1/3.0
 ```
 
-Marteladas por tampa = 3 × ceil(5 / força): madeira 15, pedra 9, ferro/ouro/gemas 6, diamante e
-pedras de evolução 3. Salvar no NBT o item e o estágio (o Pixelmon não salvava o `count` parcial).
+Marteladas por tampa = 3 × ceil(força da receita / força do martelo). Com força 5: madeira 15,
+pedra 9, ferro/ouro/gemas 6, diamante e pedras de evolução 3. Master e Beast (15): madeira 45,
+diamante 9, pedras de evolução 9. No Pixelmon o 15 era da barra de alumínio. Salvar no NBT o item e o estágio (o Pixelmon não salvava o `count` parcial).
 
 ### 5.3 Ritmo (por que "segurar o botão" funciona igual ao Pixelmon)
 
@@ -212,7 +262,8 @@ Existia do 1.7.10 ao 1.12.2 e funcionava **como uma fornalha**:
 - **Combustível:** qualquer combustível de fornalha, com o tempo de queima vanilla (1 carvão = 8
   itens). Só acende/consome quando há algo processável e espaço na saída; depois de acesa queima até o
   fim; balde de lava devolve o balde vazio.
-- **Tempo:** 200 ticks (10 s) por item. Entrada → saída: disco → tampa, disco de ferro → base de
+- **Tempo:** 200 ticks (10 s) por item no Pixelmon. Aqui: 40 ticks por ponto de força da receita,
+  ou seja 200 ticks para os discos comuns, 400 para a Dream e 600 para Master e Beast. Entrada → saída: disco → tampa, disco de ferro → base de
   ferro. Não usa martelo.
 - **Funis:** todas as faces aceitam inserção validada por slot (disco → entrada, combustível →
   combustível); extração só da saída (e do balde vazio no slot de combustível). Sem redstone e sem
@@ -257,6 +308,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Converter recursos para 1.21 (pastas, `result.id`, `c:`), apagar receitas de mods ausentes,
       `ball_mold` e o martelar na grade
 - [x] Itens: apricorns cozidos, discos, tampas, disco/base de ferro, martelos (força/durabilidade)
+- [x] Todas as 46 bolas do Cobblemon na forja, com sprites de disco/tampa derivados do Cobblemon
 - [ ] Receitas: cozimento, discos (tabela 3.1), disco de ferro, bigornas, martelos, montagem
 - [ ] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
 - [ ] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
@@ -271,7 +323,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 ## 10. Fora do escopo por enquanto
 
 Cadeia do alumínio (bauxita, placa), martelo de netherite (1.16+), Bigorna Mecânica de 2 blocos com
-animação, auto-recarga ligada por padrão, discos para master/park/beast/dream/cherish/ancient.
+animação, auto-recarga ligada por padrão, cherish e ancient origin (sem receita no Cobblemon).
 
 ## 11. Decisões tomadas durante o port
 
@@ -282,8 +334,14 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
 - **Textura do apricorn cozido:** o modelo aponta para o sprite do próprio Cobblemon
   (`cobblemon:item/<cor>_apricorn`, sem copiar o arquivo), tingido no client com um tom quente, mais
   uma sobreposição nossa com marcas de grelha e vapor. A cor do apricorn continua reconhecível.
-- **Peças de master/park/beast/dream removidas** (itens, modelos, texturas, receitas): não têm disco no
-  Pixelmon e continuam com as receitas do Cobblemon (seção 3.1).
+- **Todas as bolas do Cobblemon na forja** (decisão do usuário): as 46 bolas com receita no Cobblemon
+  têm disco e tampa. O disco usa a receita da bola no Cobblemon com apricorns cozidos (seção 3.1), a
+  Master e a Beast pedem 15 de força por estágio na bigorna e a Dream 10.
+- **Sprites de disco e tampa derivados do Cobblemon** (decisão do usuário): `tools/derive_ball_parts.py`
+  lê o sprite de cada bola dentro do jar do Cobblemon (`run-libs/`) e gera a tampa (a metade de cima da
+  bola, com uma borda) e o disco (essa metade achatada). O visual fica uniforme nas 46 bolas e
+  substitui os sprites que a Ballworks tinha importado do Pixelmon. Licença: o Cobblemon é MPL-2.0;
+  os PNGs gerados levam o aviso num bloco de texto do PNG e o README dá o crédito.
 - **Martelos:** além da força e da durabilidade do Pixelmon, têm o dano de ataque do Pixelmon
   (2 + bônus do material: madeira 2, pedra 3, ferro/alumínio 4, ouro 2, diamante 5, gemas e pedra da
   folha 5, fogo/água 6, demais pedras 3), velocidade de ataque de picareta, encantabilidade
