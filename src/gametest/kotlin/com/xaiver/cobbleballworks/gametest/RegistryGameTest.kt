@@ -3,10 +3,12 @@ package com.xaiver.cobbleballworks.gametest
 import com.xaiver.cobbleballworks.item.HammerItem
 import com.xaiver.cobbleballworks.registry.ModCreativeTab
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
+import net.minecraft.core.BlockPos
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.gametest.framework.GameTest
 import net.minecraft.gametest.framework.GameTestHelper
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
@@ -62,6 +64,28 @@ class RegistryGameTest : FabricGameTest {
         }
         checks.check(BuiltInRegistries.ITEM.keySet().count { it.namespace == MOD_ID && it.path.endsWith("_hammer") } == HAMMERS.size) {
             "unexpected number of hammers"
+        }
+        checks.finish()
+    }
+
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun blocksBlockEntitiesMenuAndRecipeTypeAreRegistered(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        for (block in listOf("ball_anvil", "mechanical_anvil")) {
+            checks.check(BuiltInRegistries.BLOCK.containsKey(modId(block))) { "missing block $block" }
+            checks.check(modItem(block) is BlockItem) { "missing block item $block" }
+            checks.check(BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(modId(block))) { "missing block entity type $block" }
+        }
+        checks.check(BuiltInRegistries.MENU.containsKey(modId("mechanical_anvil"))) { "missing menu type mechanical_anvil" }
+        checks.check(BuiltInRegistries.RECIPE_TYPE.containsKey(modId("anvil"))) { "missing recipe type anvil" }
+        checks.check(BuiltInRegistries.RECIPE_SERIALIZER.containsKey(modId("anvil"))) { "missing recipe serializer anvil" }
+        val anvil = BuiltInRegistries.BLOCK.get(modId("ball_anvil")).defaultBlockState()
+        checks.check(anvil.getDestroySpeed(helper.level, BlockPos.ZERO) == 1.0f && !anvil.requiresCorrectToolForDrops()) {
+            "the anvil should have hardness 1 and need no tool (Pixelmon)"
+        }
+        val machine = BuiltInRegistries.BLOCK.get(modId("mechanical_anvil")).defaultBlockState()
+        checks.check(machine.getDestroySpeed(helper.level, BlockPos.ZERO) == 2.5f && machine.requiresCorrectToolForDrops()) {
+            "the Mechanical Anvil should have hardness 2.5 and need a pickaxe (Pixelmon)"
         }
         checks.finish()
     }

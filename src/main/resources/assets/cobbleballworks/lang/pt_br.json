@@ -125,5 +125,14 @@
   "tag.item.cobbleballworks.hammers": "Martelos",
   "tag.item.cobbleballworks.cooked_apricorns": "Bolotas Cozidas",
   "tag.item.cobbleballworks.discs": "Discos de Pokébola",
-  "tag.item.cobbleballworks.lids": "Tampas de Pokébola"
+  "tag.item.cobbleballworks.lids": "Tampas de Pokébola",
+  "emi.category.cobbleballworks.ball_anvil": "Bigorna de Pokébola",
+  "emi.category.cobbleballworks.mechanical_anvil": "Bigorna Mecânica",
+  "emi.cobbleballworks.anvil.force": "Força %s × %s estágios",
+  "emi.cobbleballworks.anvil.force.line1": "Cada martelada soma a força do martelo.",
+  "emi.cobbleballworks.anvil.force.line2": "A cada %s de força, a peça avança um estágio.",
+  "emi.cobbleballworks.anvil.hammer_strikes": "×%s",
+  "emi.cobbleballworks.anvil.strikes_title": "Segure o clique esquerdo com um martelo. Marteladas:",
+  "emi.cobbleballworks.anvil.strikes": "%s: %s",
+  "emi.cobbleballworks.mechanical_anvil.time": "%ss"
 }

@@ -125,5 +125,14 @@
   "tag.item.cobbleballworks.hammers": "Hammers",
   "tag.item.cobbleballworks.cooked_apricorns": "Cooked Apricorns",
   "tag.item.cobbleballworks.discs": "Poké Ball Discs",
-  "tag.item.cobbleballworks.lids": "Poké Ball Lids"
+  "tag.item.cobbleballworks.lids": "Poké Ball Lids",
+  "emi.category.cobbleballworks.ball_anvil": "Poké Ball Anvil",
+  "emi.category.cobbleballworks.mechanical_anvil": "Mechanical Anvil",
+  "emi.cobbleballworks.anvil.force": "Force %s × %s stages",
+  "emi.cobbleballworks.anvil.force.line1": "Each strike adds the hammer's strength.",
+  "emi.cobbleballworks.anvil.force.line2": "Every %s force, the piece advances a stage.",
+  "emi.cobbleballworks.anvil.hammer_strikes": "×%s",
+  "emi.cobbleballworks.anvil.strikes_title": "Hold left click with a hammer. Strikes:",
+  "emi.cobbleballworks.anvil.strikes": "%s: %s",
+  "emi.cobbleballworks.mechanical_anvil.time": "%ss"
 }

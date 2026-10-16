@@ -13,6 +13,12 @@ base {
 repositories {
     // Loom already adds the Fabric maven, Mojang's libraries and Maven Central.
     mavenCentral()
+    // EMI (recipe viewer used by the modpack): compile against its API, run it in dev.
+    maven {
+        name = 'TerraformersMC'
+        url = 'https://maven.terraformersmc.com/releases/'
+        content { includeGroup 'dev.emi' }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -153,6 +159,7 @@ tasks.matching { it.name == 'runShowcase' }.configureEach {
             'onboardAccessibility:false', 'pauseOnLostFocus:false', 'tutorialStep:none',
             'joinedFirstServer:true', 'skipMultiplayerWarning:true', 'renderDistance:4',
             'simulationDistance:5', 'soundCategory_master:0.0', 'narrator:0', 'guiScale:2',
+            "lang:${project.findProperty('showcaseLang') ?: 'en_us'}",
         ].join('\n') + '\n'
     }
 }
@@ -165,6 +172,11 @@ dependencies {
     // Full Fabric API (includes fabric-gametest-api-v1).
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+    // EMI plugin (src/client/.../compat/emi): only the API at compile time; the full mod in dev
+    // runs so the showcase can screenshot it. Players get it from their own modpack.
+    modCompileOnly "dev.emi:emi-fabric:${project.emi_version}:api"
+    modLocalRuntime "dev.emi:emi-fabric:${project.emi_version}"
 
     if (hasCobblemon) {
         modLocalRuntime files(cobblemonJar)

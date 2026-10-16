@@ -10,9 +10,31 @@ This is a port of [Cobblemon Ballworks](https://github.com/cxaiverb/CobblemonBal
 as possible to the classic Pixelmon (1.7.10–1.12.2) mechanics, which were researched from the wiki,
 the community and the original game files (see [`docs/pesquisa/`](docs/pesquisa)).
 
-> **Status: work in progress.** The Fabric toolchain is ready (build + headless gametests running
-> against the real Cobblemon 1.8.2). The gameplay content is being ported now — see
-> [`docs/PLANO.md`](docs/PLANO.md) for the full specification and progress checklist.
+**How to play** (Portuguese): [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md). Specification and design
+decisions: [`docs/PLANO.md`](docs/PLANO.md).
+
+## Features
+
+- **Every Cobblemon ball that has a recipe (46)** is forged: Poké, Great and Ultra Balls, the apricorn
+  balls, Park, Dream, Beast, Master and all the Ancient balls. Cobblemon's own ball recipes are
+  disabled and come back as **disc** recipes with the same shape and materials (copper, iron, gold,
+  diamond, netherite...), using **cooked** apricorns. Cherish and Ancient Origin have no recipe in
+  Cobblemon and still have none.
+- **Poké Ball Anvil**: right-click a disc onto it and hold left-click with a hammer. The piece goes
+  through 3 work stages (force 5 per stage; Dream Ball 10; Master and Beast Ball 15) and becomes a
+  lid; iron discs become iron bases. Lid + stone button + iron base = one ball.
+- **17 hammers** (wood, stone, iron, gold, diamond, aluminium, ruby, sapphire, amethyst and the eight
+  evolution stones) with Pixelmon's strength and durability.
+- **Mechanical Anvil**: input, fuel and output like a furnace, works with hoppers, 40 ticks per force
+  (10 s for a regular disc).
+- **EMI** (optional): a category for each anvil, with the strikes every hammer needs.
+- Server options in `config/cobbleballworks.json`; English and Brazilian Portuguese.
+
+## Installing
+
+Put the jar in `mods/` on **both the server and the clients**, next to Fabric API and Cobblemon 1.8.x
+(Cobblemon already bundles fabric-language-kotlin). **Remove Cobblemon Parts Refabricated**: it
+overrides the same Poké Ball recipes.
 
 ## Versions
 
@@ -34,11 +56,17 @@ You need a **JDK 21**.
 ./gradlew build         # -> build/libs/cobbleballworks-<version>.jar (drop it in mods/)
 ./gradlew runGametest   # headless dedicated gametest server with the real Cobblemon; exits by itself
 ./gradlew genSources    # decompiled Minecraft 1.21.1 sources (Mojang mappings) for reference
+xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runShowcase   # client screenshots, see below
 ```
 
 The first configuration downloads the official Cobblemon 1.8.2 jar from Modrinth into `run-libs/`
-(git-ignored, SHA-1 checked). It is only used at dev runtime (gametests); the mod itself does not
-compile against Cobblemon classes.
+(git-ignored, SHA-1 checked). It is only used at dev runtime (gametests, showcase); the mod itself
+does not compile against Cobblemon classes. EMI is a compile-only API dependency plus a dev runtime.
+
+`runShowcase` starts the real client (Cobblemon and EMI included) with a dev-only mod that builds
+the anvils in a flat world, opens the screens and saves screenshots to
+`build/showcase/screenshots/`, then quits; `-PshowcaseLang=pt_br` takes them in Portuguese. It needs
+Xvfb and Mesa on a headless machine.
 
 No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jdk21` Docker image.
 
@@ -49,8 +77,11 @@ No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jd
 | `src/main` | common/server code + resources (`assets/`, `data/`) |
 | `src/client` | client-only code (renderers, screens); Loom forbids `main` from touching `net.minecraft.client` |
 | `src/gametest` | headless Fabric gametests (dev-only mod, never shipped) |
+| `src/showcase` | dev-only client mod that builds scenes and takes screenshots (`runShowcase`) |
+| `tools` | `derive_ball_parts.py`, which generates the disc and lid sprites from Cobblemon's jar |
 | `legacy/forge-1.20.1` | the original Forge sources and build files, kept as porting reference |
 | `docs/PLANO.md` | specification of the port (Portuguese) |
+| `docs/COMO-JOGAR.md` | player guide with every recipe (Portuguese) |
 | `docs/pesquisa` | research notes: classic Pixelmon mechanics, audit of the original assets (Portuguese) |
 
 ## Credits and licenses

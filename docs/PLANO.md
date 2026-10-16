@@ -293,6 +293,22 @@ API `dev.emi:emi-fabric:1.1.24+1.21.1:api` no maven da TerraformersMC) com as ca
 um tipo de receita próprio `cobbleballworks:anvil` (entrada, resultado), lido pelas duas bigornas e
 pelo EMI, com os JSONs em `data/cobbleballworks/recipe/anvil/`.
 
+**Feito** (`src/client/.../compat/emi/BallworksEmiPlugin.kt`): o mod compila só contra a API
+(`modCompileOnly`); o EMI completo roda apenas em dev (`modLocalRuntime`), para o showcase. Cada
+receita `cobbleballworks:anvil` aparece nas duas categorias:
+
+- **Bigorna de Pokébola** (estações: a bigorna e a tag `#cobbleballworks:hammers`): peça → resultado;
+  um slot de martelo que passa pelos 17 martelos, um por segundo, com as marteladas daquele martelo
+  ao lado (×N); a seta lista todos de uma vez; a linha "Força 5 × 3 estágios" explica a regra no
+  tooltip. Largura 134, a que cabe no EMI sem alargar a tela.
+- **Bigorna Mecânica** (estação: a bigorna mecânica): no estilo da fornalha do EMI, com a chama, a
+  seta que enche no tempo real e o tempo em segundos (40 ticks por força). Id sintético
+  `cobbleballworks:/mechanical_anvil/<ns>/<path>`, a convenção do EMI para receitas que não são o
+  arquivo de receita.
+
+As receitas de bancada (discos, montagem da bola) e de fornalha (bolotas cozidas) já aparecem nas
+categorias do próprio EMI.
+
 ## 8. Testes
 
 Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemon real):
@@ -325,9 +341,9 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Bigorna: BER com os estágios do Pixelmon (5.4) + showcase com screenshots no client
 - [x] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER
 - [x] Tipo de receita `cobbleballworks:anvil` (47 receitas: 46 discos + disco de ferro)
-- [ ] Plugin EMI
-- [ ] Traduções en_us/pt_br completas
-- [ ] Gametests da seção 8 todos verdes
+- [x] Plugin EMI (7): categorias das duas bigornas, marteladas por martelo, conferido no showcase
+- [x] Traduções en_us/pt_br completas (gametest de paridade + toda chave usada no código existe)
+- [x] Gametests da seção 8 todos verdes (30 no servidor headless com o Cobblemon real)
 - [ ] Testar num servidor com o modpack completo e no client (render, GUI, EMI)
 - [ ] Versão 1.0.0 e jar em `build/libs`
 

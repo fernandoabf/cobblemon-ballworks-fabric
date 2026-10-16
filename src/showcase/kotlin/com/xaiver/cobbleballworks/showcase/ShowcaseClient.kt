@@ -3,11 +3,15 @@ package com.xaiver.cobbleballworks.showcase
 import com.xaiver.cobbleballworks.block.MechanicalAnvilBlock
 import com.xaiver.cobbleballworks.block.entity.BallAnvilBlockEntity
 import com.xaiver.cobbleballworks.block.entity.MechanicalAnvilBlockEntity
+import com.xaiver.cobbleballworks.client.compat.emi.BallworksEmiPlugin
 import com.xaiver.cobbleballworks.content.ForgeBall
 import com.xaiver.cobbleballworks.content.HammerMaterial
 import com.xaiver.cobbleballworks.registry.ModBlocks
 import com.xaiver.cobbleballworks.registry.ModCreativeTab
 import com.xaiver.cobbleballworks.registry.ModItems
+import dev.emi.emi.api.EmiApi
+import dev.emi.emi.api.recipe.EmiRecipeCategory
+import dev.emi.emi.api.stack.EmiStack
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
@@ -16,6 +20,7 @@ import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -62,6 +67,12 @@ private object Showcase {
         Shot("mechanical_anvil_closeup") { view(it, 2.5, Y + 1.9, 6.4, 0f, 40f) },
         Shot("mechanical_anvil_gui", wait = 40) { openMechanicalAnvil(it) },
         Shot("creative_tab", wait = 40) { openBallworksTab(it) },
+        Shot("emi_poke_lid", wait = 100) { emi(it, EmiStack.of(ModItems.LIDS.getValue(ForgeBall.POKE))) },
+        Shot("emi_ultra_disc", wait = 40) { emi(it, EmiStack.of(ModItems.DISCS.getValue(ForgeBall.ULTRA))) },
+        Shot("emi_ultra_ball", wait = 40) { emi(it, EmiStack.of(BuiltInRegistries.ITEM.get(ForgeBall.ULTRA.ballId))) },
+        Shot("emi_master_lid", wait = 40) { emi(it, EmiStack.of(ModItems.LIDS.getValue(ForgeBall.MASTER))) },
+        Shot("emi_category_ball_anvil", wait = 40) { emiCategory(it, BallworksEmiPlugin.BALL_ANVIL) },
+        Shot("emi_category_mechanical_anvil", wait = 40) { emiCategory(it, BallworksEmiPlugin.MECHANICAL_ANVIL) },
     )
 
     private enum class Phase { WAIT_TITLE, LOADING, SETTLING, SHOOTING, DONE }
@@ -126,6 +137,10 @@ private object Showcase {
     /** Runs on the server thread. */
     private fun buildScene(level: ServerLevel, player: ServerPlayer) {
         level.setDayTime(6000)
+        val server = level.server
+        for (command in listOf("gamerule doPokemonSpawning false", "kill @e[type=!minecraft:player]")) {
+            server.commands.performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput(), command)
+        }
         player.abilities.flying = true
         player.onUpdateAbilities()
 
@@ -204,6 +219,20 @@ private object Showcase {
         field.set(null, ModCreativeTab.BALLWORKS)
         val player = mc.player!!
         mc.setScreen(CreativeModeInventoryScreen(player, player.connection.enabledFeatures(), true))
+    }
+
+    /** EMI's recipe screen for [stack] (EMI runs in dev through modLocalRuntime). */
+    private fun emi(mc: Minecraft, stack: EmiStack) {
+        mc.options.hideGui = false
+        mc.setScreen(null)
+        EmiApi.displayRecipes(stack)
+    }
+
+    /** Every recipe of one of our EMI categories. */
+    private fun emiCategory(mc: Minecraft, category: EmiRecipeCategory) {
+        mc.options.hideGui = false
+        mc.setScreen(null)
+        EmiApi.displayRecipeCategory(category)
     }
 
     private fun shoot(mc: Minecraft, name: String) {

@@ -29,6 +29,9 @@
         "adapter": "kotlin",
         "value": "com.xaiver.cobbleballworks.client.CobbleBallworksClient"
       }
+    ],
+    "emi": [
+      "com.xaiver.cobbleballworks.client.compat.emi.BallworksEmiPlugin"
     ]
   },
   "mixins": [
@@ -40,5 +43,8 @@
     "fabric-api": "*",
     "fabric-language-kotlin": ">=1.13.0",
     "cobblemon": ">=1.8.0"
+  },
+  "suggests": {
+    "emi": "*"
   }
 }
