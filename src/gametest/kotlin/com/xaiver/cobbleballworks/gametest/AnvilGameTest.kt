@@ -42,11 +42,7 @@ class AnvilGameTest : FabricGameTest {
         for (ball in ForgeBall.entries) {
             val recipe = AnvilRecipe.find(level, ItemStack(ModItems.DISCS.getValue(ball)))?.value()
             checks.check(recipe?.result?.item == ModItems.LIDS.getValue(ball)) { "${ball.id} disc does not hammer into its lid" }
-            val expectedForce = when (ball) {
-                ForgeBall.MASTER, ForgeBall.BEAST, ForgeBall.ANCIENT_ORIGIN -> 15
-                ForgeBall.DREAM, ForgeBall.CHERISH -> 10
-                else -> 5
-            }
+            val expectedForce = ball.catchClass.force
             checks.check(recipe?.force == expectedForce) { "${ball.id} disc force ${recipe?.force}, expected $expectedForce" }
             checks.check(AnvilRecipe.find(level, ItemStack(ModItems.LIDS.getValue(ball))) == null) { "${ball.id} lid should be finished" }
         }
@@ -151,7 +147,7 @@ class AnvilGameTest : FabricGameTest {
         val checks = Checks(helper)
         val (pos, anvil) = placeAnvil(helper)
         val player = fakePlayer(helper, "bw-takeback", GameType.SURVIVAL)
-        val disc = ModItems.DISCS.getValue(ForgeBall.NET)
+        val disc = ModItems.DISCS.getValue(ForgeBall.GREAT) // force 5: one diamond strike is one stage
         anvil.place(ItemStack(disc))
         anvil.strike(player, ItemStack(ModItems.hammer(HammerMaterial.DIAMOND)), 5)
         checks.check(anvil.stage == 1) { "a diamond strike should advance one stage" }

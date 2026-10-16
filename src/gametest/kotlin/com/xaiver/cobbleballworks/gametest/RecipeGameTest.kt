@@ -2,7 +2,9 @@ package com.xaiver.cobbleballworks.gametest
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.xaiver.cobbleballworks.content.CatchClass
 import com.xaiver.cobbleballworks.content.DisabledRecipes
+import com.xaiver.cobbleballworks.content.ForgeBall
 import com.mojang.serialization.JsonOps
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest
 import net.fabricmc.loader.api.FabricLoader
@@ -75,17 +77,19 @@ class RecipeGameTest : FabricGameTest {
                 continue
             }
             val original = JsonParser.parseString(path.readText()).asJsonObject
-            val count = original.getAsJsonObject("result")["count"]?.asInt ?: 1
+            val catchClass = ForgeBall.entries.first { it.id == ball }.catchClass
             val disc = modItem("${ball}_lid_blank")
-            val cooked = grid(original, cook = true)
+            // Cobblemon's grid with cooked apricorns and the middle metal of the ball's catch class.
+            val cooked = grid(original, cook = true, tier = catchClass.tier)
             val crafted = craft(level, cooked)
-            checks.check(crafted.item == disc && crafted.count == count) {
-                "$ball: Cobblemon's grid with cooked apricorns gives $crafted, expected ${count}x ${ball}_lid_blank"
+            checks.check(crafted.item == disc && crafted.count == catchClass.discs) {
+                "$ball: Cobblemon's grid with cooked apricorns and tier ${catchClass.tier} gives $crafted, " +
+                    "expected ${catchClass.discs}x ${ball}_lid_blank"
             }
             // With raw apricorns there must be nothing: the ball now only comes from the forge. Master
             // and Beast use no apricorns, so their raw grid is the disc grid itself.
-            val raw = craft(level, grid(original, cook = false))
-            val usesApricorns = cooked.items().map { it.item } != grid(original, cook = false).items().map { it.item }
+            val raw = craft(level, grid(original, cook = false, tier = catchClass.tier))
+            val usesApricorns = cooked.items().map { it.item } != grid(original, cook = false, tier = catchClass.tier).items().map { it.item }
             checks.check(if (usesApricorns) raw.isEmpty else raw.item == disc) {
                 "$ball: Cobblemon's original grid gives $raw"
             }
@@ -172,6 +176,42 @@ class RecipeGameTest : FabricGameTest {
     }
 
     /**
+     * A disc costs what its ball helps a capture (CatchClass, from Cobblemon's catch multipliers): the
+     * metal in the middle, the discs per craft and the force on the anvil all follow the class, and a
+     * stronger class never costs less.
+     */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun discCostFollowsTheCatchClass(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val recipes = modJsonResources("data/$MOD_ID/recipe").associate { it.path.removePrefix("data/$MOD_ID/recipe/") to it.json.asJsonObject }
+        for (ball in ForgeBall.entries) {
+            val catchClass = ball.catchClass
+            val disc = recipes["${ball.id}_lid_blank.json"]
+            if (disc == null) {
+                checks.fail("${ball.id}: no disc recipe")
+                continue
+            }
+            val tiers = disc.getAsJsonObject("key").entrySet().mapNotNull { (_, value) ->
+                value.asJsonObject["tag"]?.asString?.let { TIER_TAG.matchEntire(it)?.groupValues?.get(1)?.toInt() }
+            }
+            val expectedTiers = if (catchClass.tier > 0) listOf(catchClass.tier) else emptyList()
+            checks.check(tiers == expectedTiers) { "${ball.id} (${catchClass.name}): middle tier $tiers, expected $expectedTiers" }
+            checks.check(disc.getAsJsonObject("result")["count"].asInt == catchClass.discs) {
+                "${ball.id} (${catchClass.name}): ${disc.getAsJsonObject("result")["count"]} discs, expected ${catchClass.discs}"
+            }
+            val force = recipes["anvil/${ball.id}_lid.json"]?.get("force")?.asInt ?: 5
+            checks.check(force == catchClass.force) { "${ball.id} (${catchClass.name}): force $force, expected ${catchClass.force}" }
+        }
+        // Classes are listed from the weakest to the strongest ball: none may be cheaper than the one before.
+        CatchClass.entries.zipWithNext().forEach { (weaker, stronger) ->
+            val cheaper = stronger.discs > weaker.discs || stronger.force < weaker.force ||
+                (stronger.tier in 1 until weaker.tier)
+            checks.check(!cheaper) { "${stronger.name} costs less than ${weaker.name}" }
+        }
+        checks.finish()
+    }
+
+    /**
      * Other mods' recipes for a forged ball go too, whatever their id: Cobblemon Parts Refabricated
      * overrides Cobblemon's ids and adds Cherish and Ancient Origin ones Cobblemon does not have.
      */
@@ -235,8 +275,11 @@ class RecipeGameTest : FabricGameTest {
             .map { it.value().assemble(input, level.registryAccess()) }
             .orElse(ItemStack.EMPTY)
 
-    /** The 3x3 grid of a shaped recipe file, with one item per ingredient (cooked apricorns if [cook]). */
-    private fun grid(recipe: JsonObject, cook: Boolean): CraftingInput {
+    /**
+     * The 3x3 grid of a shaped recipe file, with one item per ingredient: cooked apricorns if [cook],
+     * and Cobblemon's tier material swapped for [tier]'s when given (0: keep it).
+     */
+    private fun grid(recipe: JsonObject, cook: Boolean, tier: Int = 0): CraftingInput {
         val pattern = recipe.getAsJsonArray("pattern").map { it.asString }
         val key = recipe.getAsJsonObject("key")
         val items = pattern.flatMap { row ->
@@ -244,7 +287,12 @@ class RecipeGameTest : FabricGameTest {
                 if (symbol == ' ') {
                     ItemStack.EMPTY
                 } else {
-                    val ingredient = Ingredient.CODEC_NONEMPTY.parse(JsonOps.INSTANCE, key[symbol.toString()]).getOrThrow()
+                    var json = key[symbol.toString()]
+                    val tag = json.asJsonObject["tag"]?.asString
+                    if (tier > 0 && tag != null && TIER_TAG.matches(tag)) {
+                        json = JsonParser.parseString("""{"tag": "cobblemon:tier_${tier}_poke_ball_materials"}""")
+                    }
+                    val ingredient = Ingredient.CODEC_NONEMPTY.parse(JsonOps.INSTANCE, json).getOrThrow()
                     val item = ingredient.items.first().item
                     val id = BuiltInRegistries.ITEM.getKey(item)
                     if (cook && id.namespace == "cobblemon" && id.path.endsWith("_apricorn")) {
@@ -260,6 +308,9 @@ class RecipeGameTest : FabricGameTest {
 
     private companion object {
         fun cobblemonId(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath("cobblemon", path)
+
+        /** Cobblemon's ball material tags, cobblemon:tier_N_poke_ball_materials. */
+        val TIER_TAG = Regex("""cobblemon:tier_(\d)_poke_ball_materials""")
 
         fun cobblemonItem(path: String) = BuiltInRegistries.ITEM.get(cobblemonId(path))
 

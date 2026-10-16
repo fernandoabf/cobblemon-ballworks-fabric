@@ -63,62 +63,81 @@ bolas melhores custam o que custam no Cobblemon e o caminho do Pixelmon (fornalh
 montagem) continua. As receitas de 3 apricorns numa linha do Pixelmon saíram (estão na pesquisa, só
 como referência).
 
+**Balanceamento pela captura (pedido do usuário, 1.2.0):** o material do Cobblemon segue o "nível" da
+bola, não o quanto ela ajuda: a Nível (até ×4), a Rede (×3), a Mergulho (×3,5) e outras situacionais
+custavam ferro, menos que a Ultra (×2, ouro), e a Rápida (×5) custava o mesmo que a Ultra. Agora o
+formato e as bolotas continuam os do Cobblemon, mas o **centro**, os **discos por receita** e a
+**força** seguem a `CatchClass` da bola, tirada dos multiplicadores do Cobblemon 1.8.2
+(`PokeBalls`/`CatchRateModifiers`; as situacionais contam pelo melhor caso):
+
+| Classe | Captura | Centro | Discos | Força |
+| --- | --- | --- | --- | --- |
+| `BASIC` | ×1 | T1 cobre | 4 | 5 |
+| `GOOD` | ×1,5 | T2 ferro | 4 | 5 |
+| `STRONG` | ×2 a ×2,5 | T3 ouro | 4 | 5 |
+| `SITUATIONAL` | ×3 a ×4 na condição | T4 diamante | 4 | 10 |
+| `EXTREME` | ×5 a ×8 na condição | T4 diamante | 2 | 10 |
+| `GUARANTEED` | garantida | netherite + estrela do Nether (receita da Master) | 1 | 15 |
+
+O gametest `discCostFollowsTheCatchClass` confere centro, discos e força de cada bola contra a classe,
+e que nenhuma classe mais forte saia mais barata.
+
 Formato da cruz: ` C ` / `ECD` / ` B ` (cima, esquerda, centro, direita, baixo), espelhável como
 toda receita shaped. Cores, sempre **cozidas**: V=vermelho, A=amarelo, Vd=verde, Az=azul, R=rosa,
 P=preto, B=branco. T1–T4 = tags `cobblemon:tier_N_poke_ball_materials` do Cobblemon (no pack: cobre,
 ferro, ouro, diamante). J/JC/JP = `cobblemon:tumblestone`/`sky_tumblestone`/`black_tumblestone`.
 **Força** = força por estágio na bigorna (seção 5.2).
 
-| Bola | Cima | Esq. | Centro | Dir. | Baixo | Discos | Força |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| poke | V | V | T1 | V | V | 4 | 5 |
-| great | Az | V | T2 | V | Az | 4 | 5 |
-| ultra | P | A | T3 | A | P | 4 | 5 |
-| level | P | R | T2 | R | V | 4 | 5 |
-| moon | A | Az | T2 | P | A | 4 | 5 |
-| friend | A | Vd | T2 | Vd | V | 4 | 5 |
-| love | B | R | T3 | R | R | 4 | 5 |
-| safari | A | Vd | T1 | Vd | B | 4 | 5 |
-| heavy | P | Az | T2 | Az | P | 4 | 5 |
-| fast | V | A | T2 | A | B | 4 | 5 |
-| repeat | P | V | T3 | V | A | 4 | 5 |
-| timer | V | B | T3 | B | P | 4 | 5 |
-| nest | Vd | A | T2 | A | Vd | 4 | 5 |
-| net | P | Az | T2 | Az | B | 4 | 5 |
-| dive | B | Az | T2 | Az | Az | 4 | 5 |
-| luxury | P | B | T3 | V | P | 4 | 5 |
-| heal | R | B | T1 | B | R | 4 | 5 |
-| dusk | Vd | P | T3 | P | Vd | 4 | 5 |
-| premier | B | B | T1 | B | B | 4 | 5 |
-| sport | B | V | T2 | V | V | 4 | 5 |
-| quick | Az | A | T3 | A | Az | 4 | 5 |
-| lure | V | Az | T2 | Az | Vd | 4 | 5 |
-| citrine | A | A | T1 | A | A | 4 | 5 |
-| verdant | Vd | Vd | T1 | Vd | Vd | 4 | 5 |
-| azure | Az | Az | T1 | Az | Az | 4 | 5 |
-| roseate | R | R | T1 | R | R | 4 | 5 |
-| slate | P | P | T1 | P | P | 4 | 5 |
-| park | V | Vd | T2 | Vd | Vd | 4 | 5 |
-| dream | V | R | T4 | R | Az | 4 | 10 |
-| beast | `GEG` / `EDE` / `GEG` (D = T4, E = `echo_shard`, G = `#c:ingots/gold`) | | | | | 8 | 15 |
-| master | `shulker_shell` | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | `shulker_shell` | 1 | 15 |
-| cherish ¹ | V | `#c:ingots/gold` | T4 | `#c:ingots/gold` | P | 4 | 10 |
-| ancient_poke | V | J | T1 | J | V | 4 | 5 |
-| ancient_great | V | J | T2 | J | Az | 4 | 5 |
-| ancient_ultra | A | J | T3 | J | P | 4 | 5 |
-| ancient_heavy | P | JP | T1 | JP | P | 4 | 5 |
-| ancient_leaden | P | JP | T2 | JP | P | 4 | 5 |
-| ancient_gigaton | P | JP | T3 | JP | P | 4 | 5 |
-| ancient_feather | Az | JC | T1 | JC | B | 4 | 5 |
-| ancient_wing | Az | JC | T2 | JC | B | 4 | 5 |
-| ancient_jet | Az | JC | T3 | JC | B | 4 | 5 |
-| ancient_ivory | B | J | T1 | J | B | 4 | 5 |
-| ancient_citrine | A | J | T1 | J | A | 4 | 5 |
-| ancient_verdant | Vd | J | T1 | J | Vd | 4 | 5 |
-| ancient_azure | Az | J | T1 | J | Az | 4 | 5 |
-| ancient_roseate | R | J | T1 | J | R | 4 | 5 |
-| ancient_slate | P | J | T1 | J | P | 4 | 5 |
-| ancient_origin ¹ | JC | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | JP | 1 | 15 |
+| Bola | Cima | Esq. | Centro | Dir. | Baixo | Discos | Força | Captura |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| poke | V | V | T1 | V | V | 4 | 5 | ×1 |
+| great | Az | V | T2 | V | Az | 4 | 5 | ×1,5 |
+| ultra | P | A | T3 | A | P | 4 | 5 | ×2 |
+| level | P | R | T4 | R | V | 4 | 10 | até ×4 (seu Pokémon de nível bem maior) |
+| moon | A | Az | T4 | P | A | 4 | 10 | até ×4 (conforme a lua) |
+| friend | A | Vd | T1 | Vd | V | 4 | 5 | ×1 (mais amizade) |
+| love | B | R | T4 | R | R | 2 | 10 | ×8 (mesma espécie, gênero oposto) |
+| safari | A | Vd | T2 | Vd | B | 4 | 5 | ×1,5 |
+| heavy | P | Az | T4 | Az | P | 4 | 10 | até ×4 (Pokémon pesado) |
+| fast | V | A | T4 | A | B | 4 | 10 | ×4 (Velocidade base 100+) |
+| repeat | P | V | T4 | V | A | 4 | 10 | ×3,5 (espécie já capturada) |
+| timer | V | B | T4 | B | P | 4 | 10 | até ×4 (batalha longa) |
+| nest | Vd | A | T4 | A | Vd | 4 | 10 | até ×4 (nível baixo) |
+| net | P | Az | T4 | Az | B | 4 | 10 | ×3 (Água e Inseto) |
+| dive | B | Az | T4 | Az | Az | 4 | 10 | ×3,5 (debaixo d'água) |
+| luxury | P | B | T1 | V | P | 4 | 5 | ×1 (amizade sobe mais) |
+| heal | R | B | T1 | B | R | 4 | 5 | ×1 (cura o Pokémon) |
+| dusk | Vd | P | T4 | P | Vd | 4 | 10 | ×3,5 (no escuro) |
+| premier | B | B | T1 | B | B | 4 | 5 | ×1 |
+| sport | B | V | T2 | V | V | 4 | 5 | ×1,5 |
+| quick | Az | A | T4 | A | Az | 2 | 10 | ×5 (primeiro turno) |
+| lure | V | Az | T4 | Az | Vd | 4 | 10 | ×4 (fisgado na pesca) |
+| citrine | A | A | T1 | A | A | 4 | 5 | ×1 |
+| verdant | Vd | Vd | T1 | Vd | Vd | 4 | 5 | ×1 |
+| azure | Az | Az | T1 | Az | Az | 4 | 5 | ×1 |
+| roseate | R | R | T1 | R | R | 4 | 5 | ×1 |
+| slate | P | P | T1 | P | P | 4 | 5 | ×1 |
+| park | V | Vd | T3 | Vd | Vd | 4 | 5 | ×2,5 |
+| dream | V | R | T4 | R | Az | 4 | 10 | ×4 (dormindo) |
+| beast | `GEG` / `EDE` / `GEG` (D = T4, E = `echo_shard`, G = `#c:ingots/gold`) |  |  |  |  | 2 | 10 | ×5 em Ultra Criaturas (×0,1 nas outras) |
+| master | `shulker_shell` | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | `shulker_shell` | 1 | 15 | garantida |
+| cherish ¹ | V | V | T1 | V | P | 4 | 5 | ×1 |
+| ancient_poke | V | J | T1 | J | V | 4 | 5 | ×1 |
+| ancient_great | V | J | T2 | J | Az | 4 | 5 | ×1,5 |
+| ancient_ultra | A | J | T3 | J | P | 4 | 5 | ×2 |
+| ancient_heavy | P | JP | T1 | JP | P | 4 | 5 | ×1 (arremesso curto) |
+| ancient_leaden | P | JP | T2 | JP | P | 4 | 5 | ×1,5 (arremesso curto) |
+| ancient_gigaton | P | JP | T3 | JP | P | 4 | 5 | ×2 (arremesso curto) |
+| ancient_feather | Az | JC | T1 | JC | B | 4 | 5 | ×1 (arremesso longo) |
+| ancient_wing | Az | JC | T2 | JC | B | 4 | 5 | ×1,5 (arremesso longo) |
+| ancient_jet | Az | JC | T3 | JC | B | 4 | 5 | ×2 (arremesso longo) |
+| ancient_ivory | B | J | T1 | J | B | 4 | 5 | ×1 |
+| ancient_citrine | A | J | T1 | J | A | 4 | 5 | ×1 |
+| ancient_verdant | Vd | J | T1 | J | Vd | 4 | 5 | ×1 |
+| ancient_azure | Az | J | T1 | J | Az | 4 | 5 | ×1 |
+| ancient_roseate | R | J | T1 | J | R | 4 | 5 | ×1 |
+| ancient_slate | P | J | T1 | J | P | 4 | 5 | ×1 |
+| ancient_origin ¹ | JC | `#c:ingots/netherite` | `nether_star` | `#c:ingots/netherite` | JP | 1 | 15 | garantida |
 
 ¹ Sem receita no Cobblemon: receita do mod na mesma cruz (seção 11).
 
@@ -212,7 +231,7 @@ rotaciona para o jogador (FACING), hitbox pequena como a do Pixelmon (0.2–0.8 
 
 ```
 a cada martelada: count += força_do_martelo
-se count >= força:        # força da receita: 5; Dream 10; Master e Beast 15 (seção 3.1)
+se count >= força:        # força da receita: 5, 10 ou 15 pela classe de captura (seção 3.1)
     count = 0             # o excesso é descartado
     estágio += 1          # som ANVIL_LAND 0.15/1.0; gasta 1 de durabilidade
     se estágio == 3:      # disco -> tampa / disco de ferro -> base de ferro
@@ -220,7 +239,7 @@ se count >= força:        # força da receita: 5; Dream 10; Master e Beast 15 (
 ```
 
 Marteladas por tampa = 3 × ceil(força da receita / força do martelo). Com força 5: madeira 15,
-pedra 9, ferro/ouro/gemas 6, diamante e pedras de evolução 3. Master e Beast (15): madeira 45,
+pedra 9, ferro/ouro/gemas 6, diamante e pedras de evolução 3. Master e Origem (15): madeira 45,
 diamante 9, pedras de evolução 9. No Pixelmon o 15 era da barra de alumínio. Salvar no NBT o item e o estágio (o Pixelmon não salvava o `count` parcial).
 
 ### 5.3 Ritmo (por que "segurar o botão" funciona igual ao Pixelmon)
@@ -292,7 +311,7 @@ Existia do 1.7.10 ao 1.12.2 e funcionava **como uma fornalha**:
   itens). Só acende/consome quando há algo processável e espaço na saída; depois de acesa queima até o
   fim; balde de lava devolve o balde vazio.
 - **Tempo:** 200 ticks (10 s) por item no Pixelmon. Aqui: 40 ticks por ponto de força da receita,
-  ou seja 200 ticks para os discos comuns, 400 para a Dream e 600 para Master e Beast. Entrada → saída: disco → tampa, disco de ferro → base de
+  ou seja 200 ticks para força 5, 400 para força 10 e 600 para força 15. Entrada → saída: disco → tampa, disco de ferro → base de
   ferro. Não usa martelo.
 - **Funis:** todas as faces aceitam inserção validada por slot (disco → entrada, combustível →
   combustível); extração só da saída (e do balde vazio no slot de combustível). Sem redstone e sem
@@ -374,6 +393,21 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] 1.1.0 (pedidos do usuário depois do teste): martelo de netherite; Bola Estima e Origem Ancestral
       na forja e receitas de bola de outros mods desligadas (3.3); encantamentos nos martelos; prensa
       animada na Bigorna Mecânica (seção 11)
+- [x] 1.2.0: custo dos discos pela captura (`CatchClass`, seção 3.1)
+- [ ] **Próxima atualização (pedido do usuário): base de cada bola.** Hoje toda bola usa a Base de
+      Ferro. Análise prévia da metade de baixo das texturas 3D do Cobblemon: 24 bolas têm a base
+      branca/cinza padrão (Pokébola, Grande, Ultra, Nível, Lua, Amizade, Amor, Safári, Pesada, Veloz,
+      Repetição, Tempo, Ninho, Rede, Premier, Esporte, Isca, as 5 de apricorn, Parque e Mestra) e 24
+      têm base própria: Mergulho (azul), Luxo (preta), Cura (rosa), Crepúsculo (escura), Rápida,
+      Onírica (roxa), Criatura, Estima e Origem Ancestral (vermelhas) e as 15 ancestrais (madeira e
+      latão; Pesada, Massiva e Titânica em metal escuro). Conferir Parque e Tempo, que o Cobblemon
+      Parts Refabricated trata como base própria. Decidir com o usuário as receitas dessas bases.
+- [ ] **Próxima correção (relatada pelo usuário): chama apagada na Bigorna Mecânica clonada.** Ao
+      clonar a máquina no criativo (Ctrl + botão do meio), o item leva o conteúdo e o progresso; posta
+      de novo, ela continua forjando, mas o bloco nasce com `lit=false`. O `serverTick` só troca o
+      `LIT` quando o estado de queima muda no tick, e aqui ele já começa queimando. Corrigir
+      comparando o `LIT` do bloco com `isLit()` a cada tick, com gametest (colocar a máquina com dados
+      de block entity queimando e conferir que acende).
 
 ## 10. Fora do escopo por enquanto
 
@@ -390,13 +424,13 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   (`cobblemon:item/<cor>_apricorn`, sem copiar o arquivo), tingido no client com um tom quente, mais
   uma sobreposição nossa com marcas de grelha e vapor. A cor do apricorn continua reconhecível.
 - **Todas as bolas do Cobblemon na forja** (decisão do usuário): as 48 bolas têm disco e tampa. O
-  disco usa a receita da bola no Cobblemon com apricorns cozidos (seção 3.1), a Master e a Beast pedem
-  15 de força por estágio na bigorna e a Dream 10.
+  disco usa a receita da bola no Cobblemon com apricorns cozidos, com centro, discos e força pela
+  classe de captura (seção 3.1).
 - **Cherish e Ancient Origin** (pedido do usuário, que viu as duas saindo pelo Parts Refabricated):
-  sem receita no Cobblemon, ganharam receitas de disco do mod na mesma cruz. Estima: apricorn vermelho
-  cozido em cima, ouro dos lados, diamante (T4) no meio, apricorn preto cozido embaixo, 4 discos,
-  força 10 (como a Onírica). Origem Ancestral: tumblestone celeste em cima, netherite dos lados,
-  estrela do Nether no meio, tumblestone preta embaixo, 1 disco, força 15 (como a Mestra).
+  sem receita no Cobblemon, ganharam receitas de disco do mod na mesma cruz. Estima (×1, classe
+  básica desde a 1.2.0): apricorn vermelho cozido em cima e dos lados, apricorn preto embaixo, cobre
+  no meio, 4 discos, força 5. Origem Ancestral (garantida): tumblestone celeste em cima, netherite dos
+  lados, estrela do Nether no meio, tumblestone preta embaixo, 1 disco, força 15 (como a Mestra).
 - **Sprites de disco e tampa derivados do Cobblemon** (decisão do usuário): `tools/derive_ball_parts.py`
   lê o sprite de cada bola dentro do jar do Cobblemon (`run-libs/`) e gera a tampa (a metade de cima da
   bola, com uma borda) e o disco (essa metade achatada). O visual fica uniforme nas 48 bolas e
@@ -421,7 +455,7 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   diamante na mesa de ferraria (molde de netherite + lingote), como as ferramentas de netherite do
   vanilla, então guarda encantamentos e desgaste. Números do netherite vanilla (durabilidade 2031,
   encantabilidade 15, dano 6 = diamante + 1, não queima) e força 8, acima das pedras de evolução (6):
-  3 marteladas no disco comum, 6 na Onírica e 6 na Mestra/Criatura (9 com força 6). Sprite: o martelo
+  3 marteladas nos discos de força 5, 6 nos de força 10 e 6 nos de força 15 (9 com força 6). Sprite: o martelo
   de diamante recolorido (`tools/make_netherite_hammer.py`), como o vanilla faz com as ferramentas.
 - **Testes de integridade dos dados:** o Minecraft só registra no log um arquivo de dados quebrado (e
   uma tag com uma entrada inexistente é descartada inteira). Os gametests de

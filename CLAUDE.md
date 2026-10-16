@@ -20,20 +20,22 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 
 ## Estado atual
 
-**Versão 1.1.0**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
-depende do modpack do usuário). As 48 bolas do Cobblemon passam pela forja: o disco usa a receita do
-Cobblemon com bolotas cozidas (Estima e Origem Ancestral, sem receita no Cobblemon, têm receitas do
-mod), vira tampa na bigorna e a bola é tampa + botão de pedra + base de ferro. Receitas de bola de
-outros mods (Cobblemon Parts Refabricated) são desligadas. Estão prontos a Bigorna de Pokébola, os 18
-martelos (o de netherite sai da mesa de ferraria; encantamentos funcionam), a Bigorna Mecânica com a
-prensa animada, o plugin do EMI, a config do servidor e as traduções en_us/pt_br. Os 37 gametests
-passam no servidor headless com o Cobblemon real e o showcase confere o client (render, GUI, EMI), os
-dois em dev e em produção. Guia do jogador: [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
+**Versão 1.2.0**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
+depende do modpack do usuário) e as bases próprias de cada bola (próxima atualização, seção 9 do
+plano). As 48 bolas do Cobblemon passam pela forja: o disco usa o formato e as bolotas cozidas da
+receita do Cobblemon, com o metal do centro, os discos e a força pela captura da bola (`CatchClass`;
+Estima e Origem Ancestral, sem receita no Cobblemon, têm receitas do mod), vira tampa na bigorna e a
+bola é tampa + botão de pedra + base de ferro. Receitas de bola de outros mods (Cobblemon Parts
+Refabricated) são desligadas. Estão prontos a Bigorna de Pokébola, os 18 martelos (o de netherite
+sai da mesa de ferraria; encantamentos funcionam), a Bigorna Mecânica com a prensa animada, o plugin
+do EMI, a config do servidor e as traduções en_us/pt_br. Os 38 gametests passam no servidor headless
+com o Cobblemon real e o showcase confere o client (render, GUI, EMI), os dois em dev e em produção.
+Guia do jogador: [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
 
 Mapa do código (`com.xaiver.cobbleballworks`):
 
-- `content/`: regras e dados (`ForgeBall`: as 48 bolas; `HammerMaterial`; `AnvilRules`;
-  `ApricornColor`; `DisabledRecipes`).
+- `content/`: regras e dados (`ForgeBall`: as 48 bolas e a `CatchClass` de cada; `HammerMaterial`;
+  `AnvilRules`; `ApricornColor`; `DisabledRecipes`).
 - `registry/`: registros (itens, blocos, block entities, menu, tipo de receita, tags, aba criativa).
 - `block/` e `block/entity/`: as duas bigornas; `menu/`: o menu da Bigorna Mecânica; `item/`:
   martelos e `AnvilStrikes` (o servidor confere o ritmo das marteladas); `recipe/AnvilRecipe`: o tipo

@@ -19,11 +19,16 @@ decisions: [`docs/PLANO.md`](docs/PLANO.md).
   Park, Dream, Beast, Master, Cherish and all the Ancient balls. Cobblemon's own ball recipes are
   disabled and come back as **disc** recipes with the same shape and materials (copper, iron, gold,
   diamond, netherite...), using **cooked** apricorns. Cherish and Ancient Origin, which have no
-  recipe in Cobblemon, get disc recipes of the forge's own (Dream-like and Master-like). Other mods'
+  recipe in Cobblemon, get disc recipes of the forge's own (basic and Master-like). Other mods'
   recipes that make one of these balls are switched off too (config `disableOtherModsBallRecipes`).
+- **Balanced by catch rate**: a disc's middle metal, the discs per craft and the force on the anvil
+  follow the ball's catch multiplier in Cobblemon 1.8.2 (copper for x1, iron x1.5, gold x2-2.5,
+  diamond for x3 and up, netherite and a nether star for the guaranteed balls), keeping the shape and
+  apricorns of Cobblemon's recipe.
 - **Poké Ball Anvil**: right-click a disc onto it and hold left-click with a hammer. The piece goes
-  through 3 work stages (force 5 per stage; Dream Ball 10; Master and Beast Ball 15) and becomes a
-  lid; iron discs become iron bases. Lid + stone button + iron base = one ball.
+  through 3 work stages (force 5 per stage, 10 for the strong situational balls, 15 for Master and
+  Ancient Origin) and becomes a lid; iron discs become iron bases. Lid + stone button + iron base =
+  one ball.
 - **18 hammers**: wood, stone, iron, gold, diamond, aluminium, ruby, sapphire, amethyst and the eight
   evolution stones with Pixelmon's strength and durability, plus a netherite hammer (strength 8,
   upgraded from the diamond one at a smithing table like vanilla netherite tools).

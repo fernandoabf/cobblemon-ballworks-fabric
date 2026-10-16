@@ -12,7 +12,7 @@
       "item": "cobbleballworks:cooked_pink_apricorn"
     },
     "c": {
-      "tag": "cobblemon:tier_3_poke_ball_materials"
+      "tag": "cobblemon:tier_4_poke_ball_materials"
     },
     "l": {
       "item": "cobbleballworks:cooked_pink_apricorn"
@@ -26,6 +26,6 @@
   },
   "result": {
     "id": "cobbleballworks:love_lid_blank",
-    "count": 4
+    "count": 2
   }
 }
