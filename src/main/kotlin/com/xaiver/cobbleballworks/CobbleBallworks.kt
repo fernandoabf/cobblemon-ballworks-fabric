@@ -5,6 +5,7 @@ import com.xaiver.cobbleballworks.registry.ModBlockEntities
 import com.xaiver.cobbleballworks.registry.ModBlocks
 import com.xaiver.cobbleballworks.registry.ModCreativeTab
 import com.xaiver.cobbleballworks.registry.ModItems
+import com.xaiver.cobbleballworks.registry.ModMenus
 import com.xaiver.cobbleballworks.registry.ModRecipes
 import net.fabricmc.api.ModInitializer
 import net.minecraft.resources.ResourceLocation
@@ -31,6 +32,7 @@ object CobbleBallworks : ModInitializer {
         ModBlockEntities.init()
         ModItems.init()
         ModRecipes.init()
+        ModMenus.init()
         ModCreativeTab.init()
         LOGGER.info("Cobblemon Ballworks initialized ({} items).", ModItems.all().size + ModBlocks.items().size)
     }

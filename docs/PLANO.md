@@ -323,7 +323,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
 - [x] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
 - [x] Bigorna: BER com os estágios do Pixelmon (5.4) + showcase com screenshots no client
-- [ ] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER
+- [x] Bigorna Mecânica: bloco, block entity com funis, menu/tela, combustível, luz/partículas, som, BER
 - [x] Tipo de receita `cobbleballworks:anvil` (47 receitas: 46 discos + disco de ferro)
 - [ ] Plugin EMI
 - [ ] Traduções en_us/pt_br completas
@@ -378,4 +378,10 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   perdia a força parcial ao descarregar o chunk).
 - **Configuração** em `config/cobbleballworks.json`: `hammerDamagePerStage` (1),
   `allowAnvilAutoreloading` (false) e `mechanicalAnvilSound` (true).
+- **Bigorna Mecânica:** 1 bloco (o Pixelmon 1.12.2 tinha 2), com corpo de fornalha (abertura acesa
+  quando trabalha), plataforma onde a peça aparece (BER, estágio pelo progresso), pórtico e prensa de
+  pistão grudento — as texturas são todas vanilla por referência, como os ingredientes da receita.
+  Luz 15 acesa, fumaça e chama na frente, chiado de fornalha. Tempo: 40 ticks por ponto de força
+  (200 para um disco). Som de "clank" (morte do golem de ferro) a cada peça, desligável na config.
+  Dureza 2.5, picareta, dropa o conteúdo.
 

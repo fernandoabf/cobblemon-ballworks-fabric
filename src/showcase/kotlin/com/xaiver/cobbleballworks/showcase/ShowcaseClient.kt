@@ -1,6 +1,8 @@
 package com.xaiver.cobbleballworks.showcase
 
+import com.xaiver.cobbleballworks.block.MechanicalAnvilBlock
 import com.xaiver.cobbleballworks.block.entity.BallAnvilBlockEntity
+import com.xaiver.cobbleballworks.block.entity.MechanicalAnvilBlockEntity
 import com.xaiver.cobbleballworks.content.ForgeBall
 import com.xaiver.cobbleballworks.content.HammerMaterial
 import com.xaiver.cobbleballworks.registry.ModBlocks
@@ -13,11 +15,13 @@ import net.minecraft.client.Screenshot
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.Difficulty
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.LevelSettings
@@ -42,25 +46,29 @@ class ShowcaseClient : ClientModInitializer {
 private object Showcase {
     private val LOGGER = LoggerFactory.getLogger("cobbleballworks-showcase")
 
-    /** A camera position for a screenshot: eye position and the point it looks at. */
-    private data class View(val name: String, val x: Double, val y: Double, val z: Double, val yaw: Float, val pitch: Float)
-
-    /** Ground level of the default flat world (grass top). */
+    /** Ground level of the default flat world (top of the grass). */
     private const val Y = -60
 
+    /** One screenshot: what to set up on the client first, then how long to wait before shooting. */
+    private class Shot(val name: String, val wait: Int = 60, val setup: (Minecraft) -> Unit)
+
     /** Eye heights stay at least 1.7 above the ground, or the player is pushed into a crawl. */
-    private val views = listOf(
-        View("anvils_overview", 5.0, Y + 2.6, -2.2, 0f, 28f),
-        View("anvils_stages_closeup", 2.0, Y + 1.8, 1.25, 0f, 52f),
-        View("anvils_lids_closeup", 6.0, Y + 1.8, 1.25, 0f, 52f),
-        View("anvils_discs_row", 5.0, Y + 1.9, 2.4, 0f, 45f),
+    private val shots = listOf(
+        Shot("anvils_overview") { view(it, 5.0, Y + 2.6, -2.2, 0f, 28f) },
+        Shot("anvils_stages_closeup") { view(it, 2.0, Y + 1.8, 1.25, 0f, 52f) },
+        Shot("anvils_lids_closeup") { view(it, 6.0, Y + 1.8, 1.25, 0f, 52f) },
+        Shot("anvils_discs_row") { view(it, 5.0, Y + 1.9, 2.4, 0f, 45f) },
+        Shot("mechanical_anvils") { view(it, 2.5, Y + 2.2, 4.6, 0f, 35f) },
+        Shot("mechanical_anvil_closeup") { view(it, 2.5, Y + 1.9, 6.4, 0f, 40f) },
+        Shot("mechanical_anvil_gui", wait = 40) { openMechanicalAnvil(it) },
+        Shot("creative_tab", wait = 40) { openBallworksTab(it) },
     )
 
-    private enum class Phase { WAIT_TITLE, LOADING, SETTLING, SHOOTING, INVENTORY, DONE }
+    private enum class Phase { WAIT_TITLE, LOADING, SETTLING, SHOOTING, DONE }
 
     private var phase = Phase.WAIT_TITLE
     private var timer = 0
-    private var viewIndex = 0
+    private var shot = 0
 
     fun tick(mc: Minecraft) {
         when (phase) {
@@ -76,31 +84,27 @@ private object Showcase {
                 phase = Phase.SETTLING
             }
             Phase.SETTLING -> if (--timer <= 0) {
-                goTo(mc, views[0])
-                timer = 60
+                startShot(mc)
                 phase = Phase.SHOOTING
             }
             Phase.SHOOTING -> if (--timer <= 0) {
-                shoot(mc, views[viewIndex].name)
-                viewIndex++
-                if (viewIndex < views.size) {
-                    goTo(mc, views[viewIndex])
-                    timer = 60
+                shoot(mc, shots[shot].name)
+                shot++
+                if (shot < shots.size) {
+                    startShot(mc)
                 } else {
-                    mc.options.hideGui = false
-                    openBallworksTab(mc)
-                    timer = 40
-                    phase = Phase.INVENTORY
+                    phase = Phase.DONE
+                    LOGGER.info("[showcase] done, quitting")
+                    mc.stop()
                 }
-            }
-            Phase.INVENTORY -> if (--timer <= 0) {
-                shoot(mc, "inventory")
-                phase = Phase.DONE
-                LOGGER.info("[showcase] done, quitting")
-                mc.stop()
             }
             Phase.DONE -> Unit
         }
+    }
+
+    private fun startShot(mc: Minecraft) {
+        shots[shot].setup(mc)
+        timer = shots[shot].wait
     }
 
     private fun createWorld(mc: Minecraft) {
@@ -125,6 +129,7 @@ private object Showcase {
         player.abilities.flying = true
         player.onUpdateAbilities()
 
+        // Row 1: a Poké Ball disc at each stage, finished lids, the iron disc and base.
         val stages = listOf(
             ModItems.DISCS.getValue(ForgeBall.POKE) to 0,
             ModItems.DISCS.getValue(ForgeBall.POKE) to 1,
@@ -138,17 +143,18 @@ private object Showcase {
             ModItems.IRON_BASE to 0,
         )
         stages.forEachIndexed { i, (item, stage) -> anvil(level, player, BlockPos(i, Y, 2), ItemStack(item), stage) }
+        // Row 2: discs of different balls.
         val discs = listOf(
             ForgeBall.GREAT, ForgeBall.ULTRA, ForgeBall.MASTER, ForgeBall.BEAST, ForgeBall.DREAM,
             ForgeBall.ANCIENT_JET, ForgeBall.LEVEL, ForgeBall.SAFARI, ForgeBall.LUXURY, ForgeBall.PREMIER,
         )
         discs.forEachIndexed { i, ball -> anvil(level, player, BlockPos(i, Y, 4), ItemStack(ModItems.DISCS.getValue(ball)), 0) }
+        // Row 3: Mechanical Anvils, idle and working.
+        mechanicalAnvil(level, BlockPos(0, Y, 8), ItemStack.EMPTY, ItemStack.EMPTY)
+        mechanicalAnvil(level, BlockPos(2, Y, 8), ItemStack(ModItems.DISCS.getValue(ForgeBall.ULTRA), 16), ItemStack(Items.COAL, 4))
+        mechanicalAnvil(level, BlockPos(4, Y, 8), ItemStack(ModItems.DISCS.getValue(ForgeBall.POKE), 16), ItemStack(Items.CHARCOAL, 2))
 
         player.inventory.clearContent()
-        val showcaseItems = ModItems.HAMMERS.values.take(9) + ModItems.COOKED_APRICORNS.values + listOf(ModItems.IRON_DISC, ModItems.IRON_BASE) +
-            listOf(ForgeBall.POKE, ForgeBall.GREAT, ForgeBall.ULTRA, ForgeBall.MASTER, ForgeBall.ANCIENT_POKE, ForgeBall.BEAST, ForgeBall.DREAM, ForgeBall.LUXURY, ForgeBall.PREMIER)
-                .flatMap { listOf(ModItems.DISCS.getValue(it), ModItems.LIDS.getValue(it)) }
-        showcaseItems.take(36).forEach { player.inventory.add(ItemStack(it)) }
         LOGGER.info("[showcase] scene built")
     }
 
@@ -161,16 +167,38 @@ private object Showcase {
         repeat(stage) { anvil.strike(player, hammer, 5) }
     }
 
-    private fun goTo(mc: Minecraft, view: View) {
+    private fun mechanicalAnvil(level: ServerLevel, pos: BlockPos, input: ItemStack, fuel: ItemStack) {
+        // Facing north, towards the cameras.
+        level.setBlockAndUpdate(pos, ModBlocks.MECHANICAL_ANVIL.defaultBlockState().setValue(MechanicalAnvilBlock.FACING, Direction.NORTH))
+        val anvil = level.getBlockEntity(pos) as MechanicalAnvilBlockEntity
+        anvil.setItem(MechanicalAnvilBlockEntity.SLOT_INPUT, input)
+        anvil.setItem(MechanicalAnvilBlockEntity.SLOT_FUEL, fuel)
+    }
+
+    private fun view(mc: Minecraft, x: Double, y: Double, z: Double, yaw: Float, pitch: Float) {
+        mc.setScreen(null)
+        mc.options.hideGui = true
         val server = mc.singleplayerServer ?: return
         server.execute {
             val player = server.playerList.players.first()
-            player.teleportTo(server.overworld(), view.x, view.y - player.eyeHeight, view.z, view.yaw, view.pitch)
+            player.teleportTo(server.overworld(), x, y - player.eyeHeight, z, yaw, pitch)
+        }
+    }
+
+    private fun openMechanicalAnvil(mc: Minecraft) {
+        mc.options.hideGui = false
+        val server = mc.singleplayerServer ?: return
+        server.execute {
+            val player = server.playerList.players.first()
+            val anvil = server.overworld().getBlockEntity(BlockPos(2, Y, 8)) as? MechanicalAnvilBlockEntity
+            if (anvil != null) player.openMenu(anvil)
         }
     }
 
     /** Opens the creative inventory on the mod's tab (the screen keeps the last tab in a static field). */
     private fun openBallworksTab(mc: Minecraft) {
+        mc.options.hideGui = false
+        mc.player?.closeContainer()
         val field = CreativeModeInventoryScreen::class.java.getDeclaredField("selectedTab")
         field.isAccessible = true
         field.set(null, ModCreativeTab.BALLWORKS)

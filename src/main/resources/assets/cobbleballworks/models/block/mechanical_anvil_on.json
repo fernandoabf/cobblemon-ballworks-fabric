@@ -1,0 +1,6 @@
+{
+  "parent": "cobbleballworks:block/mechanical_anvil",
+  "textures": {
+    "front": "minecraft:block/furnace_front_on"
+  }
+}

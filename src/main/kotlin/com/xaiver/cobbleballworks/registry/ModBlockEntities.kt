@@ -2,6 +2,7 @@ package com.xaiver.cobbleballworks.registry
 
 import com.xaiver.cobbleballworks.CobbleBallworks
 import com.xaiver.cobbleballworks.block.entity.BallAnvilBlockEntity
+import com.xaiver.cobbleballworks.block.entity.MechanicalAnvilBlockEntity
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -13,6 +14,13 @@ object ModBlockEntities {
         BuiltInRegistries.BLOCK_ENTITY_TYPE,
         CobbleBallworks.id("ball_anvil"),
         BlockEntityType.Builder.of(::BallAnvilBlockEntity, ModBlocks.BALL_ANVIL).build(null),
+    )
+
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+    val MECHANICAL_ANVIL: BlockEntityType<MechanicalAnvilBlockEntity> = Registry.register(
+        BuiltInRegistries.BLOCK_ENTITY_TYPE,
+        CobbleBallworks.id("mechanical_anvil"),
+        BlockEntityType.Builder.of(::MechanicalAnvilBlockEntity, ModBlocks.MECHANICAL_ANVIL).build(null),
     )
 
     fun init() = Unit

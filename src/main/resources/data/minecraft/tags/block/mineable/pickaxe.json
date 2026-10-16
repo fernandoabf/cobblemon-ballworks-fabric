@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "cobbleballworks:ball_anvil"
+    "cobbleballworks:ball_anvil",
+    "cobbleballworks:mechanical_anvil"
   ]
 }

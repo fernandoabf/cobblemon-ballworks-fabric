@@ -2,6 +2,7 @@ package com.xaiver.cobbleballworks.registry
 
 import com.xaiver.cobbleballworks.CobbleBallworks
 import com.xaiver.cobbleballworks.block.BallAnvilBlock
+import com.xaiver.cobbleballworks.block.MechanicalAnvilBlock
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.BlockItem
@@ -31,8 +32,27 @@ object ModBlocks {
 
     val BALL_ANVIL_ITEM: BlockItem = registerItem(BALL_ANVIL)
 
+    /**
+     * Pixelmon's Mechanical Anvil: hardness 2.5, needs a pickaxe, glows (light 15, as in Pixelmon)
+     * while it works.
+     */
+    val MECHANICAL_ANVIL: MechanicalAnvilBlock = register(
+        "mechanical_anvil",
+        MechanicalAnvilBlock(
+            BlockBehaviour.Properties.of()
+                .mapColor(MapColor.METAL)
+                .strength(2.5f, 6.0f)
+                .requiresCorrectToolForDrops()
+                .sound(SoundType.METAL)
+                .noOcclusion()
+                .lightLevel { state -> if (state.getValue(MechanicalAnvilBlock.LIT)) 15 else 0 },
+        ),
+    )
+
+    val MECHANICAL_ANVIL_ITEM: BlockItem = registerItem(MECHANICAL_ANVIL)
+
     /** Block items, in creative tab order. */
-    fun items(): List<Item> = listOf(BALL_ANVIL_ITEM)
+    fun items(): List<Item> = listOf(BALL_ANVIL_ITEM, MECHANICAL_ANVIL_ITEM)
 
     private fun <T : Block> register(path: String, block: T): T =
         Registry.register(BuiltInRegistries.BLOCK, CobbleBallworks.id(path), block)
