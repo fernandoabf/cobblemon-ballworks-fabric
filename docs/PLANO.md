@@ -256,7 +256,7 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] Toolchain: Loom 1.13.6 + Kotlin 2.2.20 + mojmap, gametest headless com o Cobblemon real
 - [x] Converter recursos para 1.21 (pastas, `result.id`, `c:`), apagar receitas de mods ausentes,
       `ball_mold` e o martelar na grade
-- [ ] Itens: apricorns cozidos, discos, tampas, disco/base de ferro, martelos (força/durabilidade)
+- [x] Itens: apricorns cozidos, discos, tampas, disco/base de ferro, martelos (força/durabilidade)
 - [ ] Receitas: cozimento, discos (tabela 3.1), disco de ferro, bigornas, martelos, montagem
 - [ ] Desativar as receitas nativas das bolas forjáveis (3.3) + gametest
 - [ ] Bigorna: bloco, block entity, interação (5.1), marteladas (5.2/5.3), sons, NBT/sync
@@ -272,3 +272,28 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 
 Cadeia do alumínio (bauxita, placa), martelo de netherite (1.16+), Bigorna Mecânica de 2 blocos com
 animação, auto-recarga ligada por padrão, discos para master/park/beast/dream/cherish/ancient.
+
+## 11. Decisões tomadas durante o port
+
+Registro do que foi decidido na implementação, com o motivo. Mudar qualquer uma é simples.
+
+- **Nomes pt-BR dos apricorns cozidos:** "Bolota Vermelha Cozida" etc., porque o `pt_br.json` do
+  Cobblemon chama o apricorn cru de "Bolota Vermelha" (o Pixelmon usava "Apricorn ... Cozido").
+- **Textura do apricorn cozido:** o modelo aponta para o sprite do próprio Cobblemon
+  (`cobblemon:item/<cor>_apricorn`, sem copiar o arquivo), tingido no client com um tom quente, mais
+  uma sobreposição nossa com marcas de grelha e vapor. A cor do apricorn continua reconhecível.
+- **Peças de master/park/beast/dream removidas** (itens, modelos, texturas, receitas): não têm disco no
+  Pixelmon e continuam com as receitas do Cobblemon (seção 3.1).
+- **Martelos:** além da força e da durabilidade do Pixelmon, têm o dano de ataque do Pixelmon
+  (2 + bônus do material: madeira 2, pedra 3, ferro/alumínio 4, ouro 2, diamante 5, gemas e pedra da
+  folha 5, fogo/água 6, demais pedras 3), velocidade de ataque de picareta, encantabilidade
+  (Eficiência e Inquebrável, como no Pixelmon) e conserto na bigorna vanilla com o material da receita.
+  Fora da bigorna mineram como a mão (velocidade 1) e gastam 1 por bloco, como as ferramentas do
+  Pixelmon.
+- **Testes de integridade dos dados:** o Minecraft só registra no log um arquivo de dados quebrado (e
+  uma tag com uma entrada inexistente é descartada inteira). Os gametests de
+  `DataIntegrityGameTest` falham se qualquer tag, receita ou loot table do mod não carregar, se um item
+  não tiver modelo ou nome em en_us/pt_br, ou se um modelo apontar para textura inexistente.
+- **Modelos de tampa herdados (`models/item/anvil_states/`) e as cópias em `textures/item/lids/`
+  removidos:** apontavam para texturas inexistentes; o BER da seção 5.4 usa modelos novos.
+

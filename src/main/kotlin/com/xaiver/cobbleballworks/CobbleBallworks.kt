@@ -1,14 +1,17 @@
 package com.xaiver.cobbleballworks
 
+import com.xaiver.cobbleballworks.registry.ModCreativeTab
+import com.xaiver.cobbleballworks.registry.ModItems
 import net.fabricmc.api.ModInitializer
+import net.minecraft.resources.ResourceLocation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
  * Fabric entrypoint (fabric.mod.json -> "main", adapter "kotlin").
  *
- * Fabric 1.21.1 port of Cobblemon Ballworks by xaiver (cxaiverb), MIT.
- * Toolchain skeleton only: no content is registered yet.
+ * Fabric 1.21.1 port of Cobblemon Ballworks by xaiver (cxaiverb), MIT, reworked to match the
+ * Poké Ball forge of classic Pixelmon (see docs/PLANO.md).
  */
 object CobbleBallworks : ModInitializer {
     const val MOD_ID = "cobbleballworks"
@@ -16,7 +19,11 @@ object CobbleBallworks : ModInitializer {
     @JvmField
     val LOGGER: Logger = LoggerFactory.getLogger(MOD_ID)
 
+    fun id(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, path)
+
     override fun onInitialize() {
-        LOGGER.info("Cobblemon Ballworks (Fabric) initialized - toolchain skeleton, no content yet.")
+        ModItems.init()
+        ModCreativeTab.init()
+        LOGGER.info("Cobblemon Ballworks initialized ({} items).", ModItems.all().size)
     }
 }

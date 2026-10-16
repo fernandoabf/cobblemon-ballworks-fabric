@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "cobbleballworks:cooked_red_apricorn",
+    "cobbleballworks:cooked_yellow_apricorn",
+    "cobbleballworks:cooked_green_apricorn",
+    "cobbleballworks:cooked_blue_apricorn",
+    "cobbleballworks:cooked_pink_apricorn",
+    "cobbleballworks:cooked_black_apricorn",
+    "cobbleballworks:cooked_white_apricorn"
+  ]
+}
