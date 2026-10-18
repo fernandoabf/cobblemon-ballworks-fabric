@@ -1,7 +1,6 @@
 package com.xaiver.cobbleballworks.item
 
 import com.xaiver.cobbleballworks.block.BallAnvilBlock
-import com.xaiver.cobbleballworks.block.entity.BallAnvilBlockEntity
 import com.xaiver.cobbleballworks.content.AnvilRules
 import com.xaiver.cobbleballworks.content.HammerMaterial
 import com.xaiver.cobbleballworks.registry.ModTags
@@ -9,7 +8,6 @@ import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.LivingEntity
@@ -39,18 +37,12 @@ class HammerItem(val material: HammerMaterial) : Item(properties(material)) {
 
     /**
      * Called by the client before it breaks a block locally and by the server before it breaks it
-     * for real (MultiPlayerGameMode/ServerPlayerGameMode.destroyBlock). On the anvil the "break"
-     * becomes a strike on the server and the anvil is never broken, as Pixelmon's
-     * ItemHammer.onBlockStartBreak did. Mining progress, cracks and hit sounds stay vanilla.
+     * for real (MultiPlayerGameMode/ServerPlayerGameMode.destroyBlock). A hammer never breaks the
+     * anvil, as Pixelmon's ItemHammer.onBlockStartBreak did; strikes come from AnvilStrikes, which
+     * also keeps the client from mining it.
      */
-    override fun canAttackBlock(state: BlockState, level: Level, pos: BlockPos, player: Player): Boolean {
-        if (state.block !is BallAnvilBlock) return true
-        if (player is ServerPlayer) {
-            val anvil = level.getBlockEntity(pos) as? BallAnvilBlockEntity
-            if (anvil != null) AnvilStrikes.strike(player, anvil, state, pos)
-        }
-        return false
-    }
+    override fun canAttackBlock(state: BlockState, level: Level, pos: BlockPos, player: Player): Boolean =
+        state.block !is BallAnvilBlock
 
     override fun hurtEnemy(stack: ItemStack, target: LivingEntity, attacker: LivingEntity): Boolean = true
 
@@ -91,7 +83,7 @@ class HammerItem(val material: HammerMaterial) : Item(properties(material)) {
             .apply { if (material.fireResistant) fireResistant() }
             .component(
                 DataComponents.TOOL,
-                Tool(listOf(Tool.Rule.overrideSpeed(ModTags.Blocks.HAMMERABLE, maxOf(material.strength.toFloat(), MIN_ANVIL_SPEED))), 1.0f, 1),
+                Tool(listOf(Tool.Rule.minesAndDrops(ModTags.Blocks.HAMMERABLE, maxOf(material.strength.toFloat(), MIN_ANVIL_SPEED))), 1.0f, 1),
             )
             .attributes(
                 ItemAttributeModifiers.builder()

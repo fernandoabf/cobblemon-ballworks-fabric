@@ -31,7 +31,8 @@ import net.minecraft.world.phys.shapes.VoxelShape
 /**
  * The Poké Ball anvil (Pixelmon's "Anvil"): right click with a disc puts it on top, right click
  * with the main hand takes the piece back, and holding left click with a hammer hammers it (see
- * HammerItem.canAttackBlock). Any other tool, or the bare hand, breaks it and drops the piece.
+ * AnvilStrikes). Any other tool, or the bare hand, breaks it and drops the piece; only an iron
+ * pickaxe or better drops the anvil itself.
  */
 class BallAnvilBlock(properties: Properties) : BaseEntityBlock(properties) {
 

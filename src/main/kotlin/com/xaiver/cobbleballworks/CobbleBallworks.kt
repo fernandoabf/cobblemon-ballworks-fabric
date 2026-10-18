@@ -1,6 +1,7 @@
 package com.xaiver.cobbleballworks
 
 import com.xaiver.cobbleballworks.config.BallworksConfig
+import com.xaiver.cobbleballworks.item.AnvilStrikes
 import com.xaiver.cobbleballworks.registry.ModBlockEntities
 import com.xaiver.cobbleballworks.registry.ModBlocks
 import com.xaiver.cobbleballworks.registry.ModCreativeTab
@@ -34,6 +35,7 @@ object CobbleBallworks : ModInitializer {
         ModRecipes.init()
         ModMenus.init()
         ModCreativeTab.init()
+        AnvilStrikes.init()
         LOGGER.info("Cobblemon Ballworks initialized ({} items).", ModItems.all().size + ModBlocks.items().size)
     }
 }

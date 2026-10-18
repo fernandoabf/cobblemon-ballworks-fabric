@@ -18,6 +18,7 @@ import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.gametest.framework.GameTest
 import net.minecraft.gametest.framework.GameTestHelper
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EquipmentSlot
@@ -167,25 +168,57 @@ class AnvilGameTest : FabricGameTest {
         val disc = ModItems.DISCS.getValue(ForgeBall.POKE)
         anvil.place(ItemStack(disc))
 
-        // ServerPlayerGameMode.destroyBlock is what a completed mining of the block calls.
+        // A START (holding left click) is a strike; ServerPlayerGameMode.destroyBlock, what a
+        // completed mining would call, must neither break the anvil nor strike a second time.
         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack(ModItems.hammer(HammerMaterial.DIAMOND)))
+        startHammering(helper, player, absolute)
+        checks.check(anvil.stage == 1) { "a START with a diamond hammer should have been a strike (stage ${anvil.stage})" }
         checks.check(!player.gameMode.destroyBlock(absolute)) { "the hammer broke the anvil" }
         checks.check(helper.getBlockState(pos).`is`(ModBlocks.BALL_ANVIL)) { "the anvil is gone after a hammer strike" }
-        checks.check(anvil.stage == 1) { "the completed 'break' should have been a strike (stage ${anvil.stage})" }
+        checks.check(anvil.stage == 1) { "the completed 'break' struck again (stage ${anvil.stage})" }
 
-        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack(Items.IRON_PICKAXE))
-        checks.check(player.gameMode.destroyBlock(absolute)) { "a pickaxe should break the anvil" }
-        checks.check(helper.getBlockState(pos).isAir) { "the anvil should be gone" }
-        checks.check(helper.getEntities(net.minecraft.world.entity.EntityType.ITEM, pos, 2.0).any { it.item.`is`(ModBlocks.BALL_ANVIL_ITEM) }) {
-            "breaking should drop the anvil"
-        }
-        checks.check(helper.getEntities(net.minecraft.world.entity.EntityType.ITEM, pos, 2.0).any { it.item.`is`(disc) }) {
-            "breaking should drop the piece on it, still a disc"
+        fun drops(item: net.minecraft.world.item.Item) =
+            helper.getEntities(net.minecraft.world.entity.EntityType.ITEM, pos, 2.0).filter { it.item.`is`(item) }.sumOf { it.item.count }
+
+        // The bare hand and a stone pickaxe break it but only drop the piece; an iron pickaxe drops the anvil.
+        val tools = listOf(ItemStack.EMPTY to 0, ItemStack(Items.STONE_PICKAXE) to 0, ItemStack(Items.IRON_PICKAXE) to 1)
+        for ((i, entry) in tools.withIndex()) {
+            val (tool, anvilsDropped) = entry
+            val name = if (tool.isEmpty) "the bare hand" else tool.item.toString()
+            if (i > 0) {
+                helper.setBlock(pos, ModBlocks.BALL_ANVIL.defaultBlockState())
+                helper.getBlockEntity<BallAnvilBlockEntity>(pos).place(ItemStack(disc))
+            }
+            helper.killAllEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity::class.java)
+            player.setItemInHand(InteractionHand.MAIN_HAND, tool)
+            checks.check(player.gameMode.destroyBlock(absolute)) { "$name should break the anvil" }
+            checks.check(helper.getBlockState(pos).isAir) { "the anvil should be gone after $name" }
+            checks.check(drops(ModBlocks.BALL_ANVIL_ITEM) == anvilsDropped) { "$name dropped ${drops(ModBlocks.BALL_ANVIL_ITEM)} anvils, expected $anvilsDropped" }
+            checks.check(drops(disc) == 1) { "$name should drop the piece on it, still a disc" }
         }
         checks.finish()
     }
 
-    /** Later strikes come without a new START packet, so the anvil checks their timing itself. */
+    /** Needing an iron pickaxe to drop the anvil must not slow hammers down: they are its right tool. */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun hammersMineTheAnvilAtTheirStrength(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        val (pos, _) = placeAnvil(helper)
+        val absolute = helper.absolutePos(pos)
+        val player = fakePlayer(helper, "bw-speed", GameType.SURVIVAL)
+        for (material in HammerMaterial.entries) {
+            equip(player, ItemStack(ModItems.hammer(material)))
+            val perTick = helper.getBlockState(pos).getDestroyProgress(player, helper.level, absolute)
+            val expected = maxOf(material.strength.toFloat(), 1.01f) / 30f
+            checks.check(kotlin.math.abs(perTick - expected) < 1e-4f) { "${material.id} hammer mines ${perTick}/tick, expected $expected" }
+        }
+        checks.finish()
+    }
+
+    /**
+     * A held click sends a START every tick; the server strikes once per vanilla mining cycle of the
+     * hammer (mining, the 5-tick pause, the tick that starts it), as hammering paced itself in Pixelmon.
+     */
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
     fun strikesFasterThanMiningAreIgnored(helper: GameTestHelper) {
         val (pos, anvil) = placeAnvil(helper)
@@ -193,15 +226,36 @@ class AnvilGameTest : FabricGameTest {
         val player = fakePlayer(helper, "bw-timing", GameType.SURVIVAL)
         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack(ModItems.hammer(HammerMaterial.WOOD)))
         anvil.place(ItemStack(ModItems.DISCS.getValue(ForgeBall.POKE)))
-        player.gameMode.destroyBlock(absolute)
-        player.gameMode.destroyBlock(absolute)
+        val perTick = helper.getBlockState(pos).getDestroyProgress(player, helper.level, absolute)
+        val gap = AnvilStrikes.ticksBetweenStrikes(perTick)
+        // A wooden hammer mines the anvil in 30 ticks: one strike every 36 ticks.
+        if (gap != 36) helper.fail("wooden hammer: $gap ticks between strikes, expected 36")
+        startHammering(helper, player, absolute)
+        startHammering(helper, player, absolute)
         if (anvil.force != 1) helper.fail("an instant second strike was accepted (force ${anvil.force})")
-        // A wooden hammer mines the anvil in 30 ticks; 70% of that is the tolerance.
-        helper.runAfterDelay(22) {
-            player.gameMode.destroyBlock(absolute)
+        helper.runAfterDelay(gap - 1L) {
+            startHammering(helper, player, absolute)
+            if (anvil.force != 1) helper.fail("a strike 1 tick too early was accepted (force ${anvil.force})")
+        }
+        helper.runAfterDelay(gap.toLong()) {
+            startHammering(helper, player, absolute)
             if (anvil.force != 2) helper.fail("a strike after the mining time was refused (force ${anvil.force})")
             helper.succeed()
         }
+    }
+
+    /** Fabric's AttackBlockCallback comes before vanilla's reach check, so the strike checks it. */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun anvilsOutOfReachCannotBeHammered(helper: GameTestHelper) {
+        val (pos, anvil) = placeAnvil(helper)
+        val absolute = helper.absolutePos(pos)
+        val player = fakePlayer(helper, "bw-reach", GameType.SURVIVAL)
+        player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack(ModItems.hammer(HammerMaterial.DIAMOND)))
+        anvil.place(ItemStack(ModItems.DISCS.getValue(ForgeBall.POKE)))
+        player.moveTo(absolute.x + 0.5, absolute.y.toDouble(), absolute.z - 20.5, 0f, 0f)
+        startHammering(helper, player, absolute)
+        if (anvil.stage != 0 || anvil.force != 0) helper.fail("a player 20 blocks away struck the anvil (stage ${anvil.stage}, force ${anvil.force})")
+        helper.succeed()
     }
 
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
@@ -212,11 +266,19 @@ class AnvilGameTest : FabricGameTest {
         val player = fakePlayer(helper, "bw-creative", GameType.CREATIVE)
         player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack(ModItems.hammer(HammerMaterial.DIAMOND)))
         anvil.place(ItemStack(ModItems.DISCS.getValue(ForgeBall.POKE)))
-        repeat(3) { player.gameMode.destroyBlock(absolute) }
-        checks.check(anvil.item.item == ModItems.LIDS.getValue(ForgeBall.POKE)) { "3 creative clicks with a diamond hammer: ${anvil.item}" }
-        checks.check(player.mainHandItem.damageValue == 0) { "creative hammering wore the hammer" }
-        checks.check(helper.getBlockState(pos).`is`(ModBlocks.BALL_ANVIL)) { "creative hammering broke the anvil" }
-        checks.finish()
+        // Creative strikes keep vanilla's 5-tick pause too: a held click sends a START every tick.
+        startHammering(helper, player, absolute)
+        startHammering(helper, player, absolute)
+        checks.check(anvil.stage == 1) { "a second creative strike in the same tick was accepted (stage ${anvil.stage})" }
+        val pause = AnvilStrikes.MIN_TICKS_BETWEEN_STRIKES.toLong()
+        helper.runAfterDelay(pause) { startHammering(helper, player, absolute) }
+        helper.runAfterDelay(2 * pause) {
+            startHammering(helper, player, absolute)
+            checks.check(anvil.item.item == ModItems.LIDS.getValue(ForgeBall.POKE)) { "3 creative strikes with a diamond hammer: ${anvil.item}" }
+            checks.check(player.mainHandItem.damageValue == 0) { "creative hammering wore the hammer" }
+            checks.check(helper.getBlockState(pos).`is`(ModBlocks.BALL_ANVIL)) { "creative hammering broke the anvil" }
+            checks.finish()
+        }
     }
 
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
@@ -317,13 +379,13 @@ class AnvilGameTest : FabricGameTest {
         if (helper.level.getBlockState(absolute).getDestroyProgress(player, helper.level, absolute) < 1f) {
             helper.fail("an Efficiency V netherite hammer should instamine the anvil")
         }
-        player.gameMode.destroyBlock(absolute)
-        player.gameMode.destroyBlock(absolute)
+        startHammering(helper, player, absolute)
+        startHammering(helper, player, absolute)
         if (anvil.stage != 0 || anvil.force != HammerMaterial.NETHERITE.strength) {
             helper.fail("a second strike in the same tick was accepted (stage ${anvil.stage}, force ${anvil.force})")
         }
         helper.runAfterDelay(AnvilStrikes.MIN_TICKS_BETWEEN_STRIKES.toLong()) {
-            player.gameMode.destroyBlock(absolute)
+            startHammering(helper, player, absolute)
             if (anvil.stage != 1) helper.fail("a strike after the pause was refused (stage ${anvil.stage}, force ${anvil.force})")
             helper.succeed()
         }
@@ -375,5 +437,19 @@ class AnvilGameTest : FabricGameTest {
             val result = player.gameMode.useItemOn(player, helper.level, player.getItemInHand(hand), hand, hit)
             if (result.consumesAction()) return
         }
+    }
+
+    /**
+     * The START_DESTROY_BLOCK packet a client sends when it starts mining [absolute] (each mining
+     * cycle of a held click), through vanilla's handler and Fabric's AttackBlockCallback.
+     */
+    private fun startHammering(helper: GameTestHelper, player: FakePlayer, absolute: BlockPos) {
+        player.gameMode.handleBlockBreakAction(
+            absolute,
+            ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK,
+            Direction.UP,
+            helper.level.maxBuildHeight,
+            0,
+        )
     }
 }

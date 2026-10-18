@@ -132,6 +132,13 @@
           "texture": "#side"
         },
         "up": {
+          "uv": [
+            4.5,
+            2,
+            11.5,
+            14
+          ],
+          "rotation": 90,
           "texture": "#top"
         },
         "down": {

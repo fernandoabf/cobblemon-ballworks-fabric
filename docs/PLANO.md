@@ -264,6 +264,15 @@ diamante ~0,55 s; uma tampa: ~26 s com madeira, ~1,7 s com diamante). O martelo 
 - Alternativa, se o caminho acima falhar: `PlayerBlockBreakEvents.BEFORE` no servidor + retorno
   `false` só no client.
 - Em criativo cada clique é uma martelada (vanilla já quebra na hora).
+- **Revisto na 1.2.1:** no servidor real a martelada pela quebra completa falhava, e a martelada
+  passou para o `START_DESTROY_BLOCK`, pelo `AttackBlockCallback` do Fabric, que responde
+  `SUCCESS` para martelo na bigorna nos dois lados. O client não minera (sem rachaduras; o usuário
+  preferiu assim) e, com o clique seguro, manda um START por tick; o servidor cancela o tratamento
+  vanilla e dita o ritmo: uma martelada por ciclo de mineração vanilla do martelo (mineração + 5 ticks
+  de `destroyDelay` + o tick do START; madeira 36 ticks, netherite 10), como no Pixelmon. Criativo e
+  martelo que quebra na hora esperam 5 ticks. O Fabric chama o callback antes das checagens do
+  vanilla, então `AnvilStrikes` confere alcance, proteção do spawn e modo aventura. Gametests:
+  `strikesFasterThanMiningAreIgnored`, `anvilsOutOfReachCannotBeHammered`.
 
 ### 5.4 Visual
 
@@ -468,12 +477,12 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
 - **Bigorna:** modelo novo nas proporções da bigorna do Pixelmon (menor que um bloco: face de trabalho
   de 12×7 px no topo, a 11 px de altura, com chifre e calcanhar), usando as texturas da bigorna vanilla
   por referência (`minecraft:block/anvil` e `anvil_top`). A hitbox acompanha o modelo. Dureza 1.0,
-  resistência 1200 (o 2000 do 1.12 equivale a 1200 hoje), som de metal, sem exigir ferramenta;
-  picareta quebra mais rápido. Nome: "Poké Ball Anvil" / "Bigorna de Pokébola".
-- **Ritmo das marteladas conferido no servidor:** depois da primeira martelada o client vanilla não
-  manda um novo START_DESTROY_BLOCK, e o servidor aceitaria qualquer STOP na hora. `AnvilStrikes`
-  confere o tempo desde a martelada anterior com a mesma tolerância de 70% que o vanilla usa na
-  primeira. Em criativo não há essa conferência (cada clique é uma martelada).
+  resistência 1200 (o 2000 do 1.12 equivale a 1200 hoje), som de metal. Desde a 1.2.1 (pedido do
+  usuário) só dropa com picareta de ferro ou melhor, como a bigorna vanilla; o martelo é a
+  ferramenta certa dela (regra `minesAndDrops`), para o ritmo continuar `força / 30`. Nome: "Poké Ball Anvil" / "Bigorna de Pokébola".
+- **Ritmo das marteladas conferido no servidor:** cada START_DESTROY_BLOCK de um martelo é uma
+  martelada (desde a 1.2.1, ver 5.3). O client manda um por tick, e `AnvilStrikes` só aceita uma
+  martelada por ciclo de mineração vanilla do martelo (5 ticks em criativo).
 - **Força salva no NBT:** além do item e do estágio, a força acumulada também é salva (o Pixelmon
   perdia a força parcial ao descarregar o chunk).
 - **Configuração** em `config/cobbleballworks.json`: `hammerDamagePerStage` (1),

@@ -15,8 +15,10 @@ import net.minecraft.world.level.material.PushReaction
 
 object ModBlocks {
     /**
-     * Pixelmon's anvil: hardness 1.0 and no tool needed (so a hammer of strength S takes 30/S ticks
-     * per strike), metal sounds, very high blast resistance.
+     * Pixelmon's anvil: hardness 1.0 (a hammer of strength S, the right tool for it, takes 30/S
+     * ticks per strike), metal sounds, very high blast resistance. Unlike Pixelmon's, it only drops
+     * itself to an iron pickaxe or better (tags needs_iron_tool and mineable/pickaxe), like a
+     * vanilla anvil; the piece on it always drops.
      */
     val BALL_ANVIL: BallAnvilBlock = register(
         "ball_anvil",
@@ -24,6 +26,7 @@ object ModBlocks {
             BlockBehaviour.Properties.of()
                 .mapColor(MapColor.METAL)
                 .strength(1.0f, 1200.0f)
+                .requiresCorrectToolForDrops()
                 .sound(SoundType.METAL)
                 .noOcclusion()
                 .pushReaction(PushReaction.BLOCK),

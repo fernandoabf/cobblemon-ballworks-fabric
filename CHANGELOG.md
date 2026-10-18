@@ -4,6 +4,20 @@ O que muda em cada versão do port para Fabric 1.21.1. O jar de cada versão fic
 [Releases](https://github.com/fernandoabf/cobblemon-ballworks-fabric/releases); o guia do jogador é o
 [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
 
+## 1.2.1 — 2026-10-18
+
+**Martelar funciona no servidor e voltou ao ritmo do Pixelmon.**
+
+- Em servidor dedicado as marteladas falhavam. Agora é só segurar o clique: o martelo bate sem
+  rachar a bigorna, e o servidor conta as marteladas no ritmo do martelo. O ritmo é o do Pixelmon:
+  uma tampa comum leva uns 26 s com martelo de madeira e menos de 2 s com o de diamante.
+- O servidor confere o alcance e a proteção do spawn antes de aceitar a martelada: não dá para
+  martelar (nem pegar a tampa pronta) de uma bigorna longe.
+- A Bigorna de Pokébola só cai inteira com **picareta de ferro ou melhor**, como a bigorna do
+  vanilla. Com a mão ou uma picareta mais fraca ela some; a peça em cima sempre cai.
+- Corrigida a fresta transparente no topo da bigorna, junto da ponta e do calcanhar: o topo usava
+  as colunas transparentes da textura da bigorna vanilla.
+
 ## 1.2.0 — 2026-10-16
 
 **O custo das bolas agora acompanha a captura.** O Cobblemon escolhe o material da receita pelo

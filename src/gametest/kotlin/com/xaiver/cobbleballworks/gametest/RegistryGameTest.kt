@@ -83,9 +83,12 @@ class RegistryGameTest : FabricGameTest {
         checks.check(BuiltInRegistries.RECIPE_TYPE.containsKey(modId("anvil"))) { "missing recipe type anvil" }
         checks.check(BuiltInRegistries.RECIPE_SERIALIZER.containsKey(modId("anvil"))) { "missing recipe serializer anvil" }
         val anvil = BuiltInRegistries.BLOCK.get(modId("ball_anvil")).defaultBlockState()
-        checks.check(anvil.getDestroySpeed(helper.level, BlockPos.ZERO) == 1.0f && !anvil.requiresCorrectToolForDrops()) {
-            "the anvil should have hardness 1 and need no tool (Pixelmon)"
-        }
+        checks.check(anvil.getDestroySpeed(helper.level, BlockPos.ZERO) == 1.0f) { "the anvil should have hardness 1 (Pixelmon)" }
+        checks.check(
+            anvil.requiresCorrectToolForDrops() &&
+                anvil.`is`(net.minecraft.tags.BlockTags.NEEDS_IRON_TOOL) &&
+                anvil.`is`(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE),
+        ) { "the anvil should only drop to an iron pickaxe or better" }
         val machine = BuiltInRegistries.BLOCK.get(modId("mechanical_anvil")).defaultBlockState()
         checks.check(machine.getDestroySpeed(helper.level, BlockPos.ZERO) == 2.5f && machine.requiresCorrectToolForDrops()) {
             "the Mechanical Anvil should have hardness 2.5 and need a pickaxe (Pixelmon)"

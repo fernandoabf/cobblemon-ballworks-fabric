@@ -26,15 +26,17 @@ viram **tampas** na bigorna, e a bola é montada com a tampa.
   direita).
 - **Colocar:** clique direito com um disco (mão principal ou secundária) numa bigorna vazia. Dá para
   ficar com o martelo na mão principal e os discos na secundária.
-- **Martelar:** segure o clique esquerdo com um martelo. Cada "quebra" completa é uma martelada; o
-  martelo nunca quebra a bigorna. Cada martelada soma a força do martelo; a cada **5 de força** (10
+- **Martelar:** segure o clique esquerdo com um martelo; ele nunca quebra a bigorna. As marteladas
+  saem no ritmo do martelo: uma a cada ~1,8 s com o de madeira, ~0,8 s com o de ferro e ~0,6 s com o
+  de diamante. Cada martelada soma a força do martelo; a cada **5 de força** (10
   nas situacionais, como Tela, Rápida e Amor; 15 na Mestra e na Origem Ancestral; veja "Receitas dos
   discos") a peça avança um estágio, e no 3º estágio vira tampa. O martelo perde 1 de durabilidade
   por estágio.
 - **Pegar a tampa:** continue martelando (a peça pronta vai para o inventário sem gastar o martelo)
   ou clique direito com a mão principal.
 - **Tirar um disco pela metade:** clique direito com a mão principal (o progresso se perde).
-- **Quebrar:** com a mão ou picareta; a bigorna e a peça em cima caem no chão.
+- **Quebrar:** só uma **picareta de ferro ou melhor** derruba a bigorna, como a bigorna do vanilla.
+  Com a mão ou uma picareta mais fraca ela some sem cair. A peça em cima sempre cai no chão.
 
 ## Martelos
 

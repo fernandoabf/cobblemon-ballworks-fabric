@@ -177,6 +177,46 @@ class DataIntegrityGameTest : FabricGameTest {
         checks.finish()
     }
 
+    /**
+     * Vanilla's anvil_top.png is only opaque in columns 3 to 12: a face that maps the outer columns
+     * (as the automatic UV of the 12 px wide anvil face did) shows a see-through strip.
+     */
+    @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
+    fun anvilTopTextureOnlyUsesItsOpaqueColumns(helper: GameTestHelper) {
+        val checks = Checks(helper)
+        for (res in modJsonResources("assets/$MOD_ID/models")) {
+            val model = res.json.asJsonObject
+            val textures = model.getAsJsonObject("textures")
+            fun resolve(ref: String): String? {
+                var value: String? = ref
+                repeat(8) { if (value?.startsWith("#") == true) value = textures?.get(value!!.substring(1))?.asString }
+                return value
+            }
+            for (element in model.getAsJsonArray("elements") ?: continue) {
+                val e = element.asJsonObject
+                val (x1, y1, z1) = e.getAsJsonArray("from").map { it.asDouble }
+                val (x2, y2, z2) = e.getAsJsonArray("to").map { it.asDouble }
+                for ((side, value) in e.getAsJsonObject("faces").entrySet()) {
+                    val face = value.asJsonObject
+                    if (resolve(face["texture"].asString)?.removePrefix("minecraft:") != "block/anvil_top") continue
+                    // BlockElement's automatic UVs when a face has none.
+                    val uv = face.getAsJsonArray("uv")?.map { it.asDouble } ?: when (side) {
+                        "down" -> listOf(x1, 16 - z2, x2, 16 - z1)
+                        "up" -> listOf(x1, z1, x2, z2)
+                        "north" -> listOf(16 - x2, 16 - y2, 16 - x1, 16 - y1)
+                        "south" -> listOf(x1, 16 - y2, x2, 16 - y1)
+                        "west" -> listOf(z1, 16 - y2, z2, 16 - y1)
+                        else -> listOf(16 - z2, 16 - y2, 16 - z1, 16 - y1)
+                    }
+                    checks.check(minOf(uv[0], uv[2]) >= 3.0 && maxOf(uv[0], uv[2]) <= 13.0) {
+                        "${res.path}: ${e["name"]?.asString} $side maps anvil_top columns ${uv[0]}..${uv[2]}, outside the opaque 3..13"
+                    }
+                }
+            }
+        }
+        checks.finish()
+    }
+
     @GameTest(template = FabricGameTest.EMPTY_STRUCTURE)
     fun everyModelResolves(helper: GameTestHelper) {
         val checks = Checks(helper)

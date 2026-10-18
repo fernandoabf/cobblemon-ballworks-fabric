@@ -20,7 +20,7 @@ base de ferro → Poké Ball; e a Bigorna Mecânica, uma "fornalha" que martela 
 
 ## Estado atual
 
-**Versão 1.2.0**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
+**Versão 1.2.1**, com o checklist do plano completo, menos o teste com o modpack inteiro (que
 depende do modpack do usuário) e as bases próprias de cada bola (próxima atualização, seção 9 do
 plano). As 48 bolas do Cobblemon passam pela forja: o disco usa o formato e as bolotas cozidas da
 receita do Cobblemon, com o metal do centro, os discos e a força pela captura da bola (`CatchClass`;
@@ -28,7 +28,7 @@ Estima e Origem Ancestral, sem receita no Cobblemon, têm receitas do mod), vira
 bola é tampa + botão de pedra + base de ferro. Receitas de bola de outros mods (Cobblemon Parts
 Refabricated) são desligadas. Estão prontos a Bigorna de Pokébola, os 18 martelos (o de netherite
 sai da mesa de ferraria; encantamentos funcionam), a Bigorna Mecânica com a prensa animada, o plugin
-do EMI, a config do servidor e as traduções en_us/pt_br. Os 38 gametests passam no servidor headless
+do EMI, a config do servidor e as traduções en_us/pt_br. Os 41 gametests passam no servidor headless
 com o Cobblemon real e o showcase confere o client (render, GUI, EMI), os dois em dev e em produção.
 Guia do jogador: [`docs/COMO-JOGAR.md`](docs/COMO-JOGAR.md).
 
