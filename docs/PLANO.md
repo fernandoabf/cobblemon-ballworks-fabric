@@ -405,14 +405,12 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
 - [x] 1.2.0: custo dos discos pela captura (`CatchClass`, seção 3.1)
 - [x] Releases no GitHub: `.github/workflows/release.yml` testa e publica o jar de cada versão nova,
       com a seção dela no `CHANGELOG.md` (a 1.2.0 é a primeira)
-- [ ] **Próxima atualização (pedido do usuário): base de cada bola.** Hoje toda bola usa a Base de
-      Ferro. Análise prévia da metade de baixo das texturas 3D do Cobblemon: 24 bolas têm a base
-      branca/cinza padrão (Pokébola, Grande, Ultra, Nível, Lua, Amizade, Amor, Safári, Pesada, Veloz,
-      Repetição, Tempo, Ninho, Tela, Prêmio, Esporte, Isca, as 5 de apricorn, Parque e Mestra) e 24
-      têm base própria: Mergulho (azul), Luxo (preta), Cura (rosa), Crepúsculo (escura), Rápida,
-      Onírica (roxa), Criatura, Estima e Origem Ancestral (vermelhas) e as 15 ancestrais (madeira e
-      latão; Pesada, Massiva e Titânica em metal escuro). Conferir Parque e Tempo, que o Cobblemon
-      Parts Refabricated trata como base própria. Decidir com o usuário as receitas dessas bases.
+- [x] 1.2.1: martelada no START do servidor, no ritmo do Pixelmon (5.3); bigorna só dropa com
+      picareta de ferro; fresta transparente no topo da bigorna corrigida
+- [ ] **Próxima atualização (pedido do usuário): base de cada bola** (12.1). Hoje toda bola usa a
+      Base de Ferro. Análise feita; falta decidir com o usuário as receitas das bases.
+- [ ] **Meta seguinte (pedido do usuário): Pokébola personalizada por jogador** (12.2). Falta o
+      usuário escolher entre paleta/padrões e desenho livre, e onde o desenho precisa aparecer.
 - [ ] **Próxima correção (relatada pelo usuário): chama apagada na Bigorna Mecânica clonada.** Ao
       clonar a máquina no criativo (Ctrl + botão do meio), o item leva o conteúdo e o progresso; posta
       de novo, ela continua forjando, mas o bloco nasce com `lit=false`. O `serverTick` só troca o
@@ -503,3 +501,73 @@ Registro do que foi decidido na implementação, com o motivo. Mudar qualquer um
   em cima continua encaixando). A conta da fase usa o tempo de jogo em `Long`: em `Float` ela
   tremeria em mundos com mais de 16 milhões de ticks.
 
+
+## 12. Próximas metas
+
+### 12.1 Base de cada bola (pedido do usuário)
+
+Hoje toda bola é tampa + botão + **Base de Ferro**. Só que no Cobblemon (que segue os jogos) várias
+bolas têm a metade de baixo diferente, e a forja deve refletir isso. Análise de 18/10/2026 nas
+texturas 3D do Cobblemon 1.8.2 (`textures/item/poke_balls/models/<bola>_ball.png`; a metade de
+baixo fica em x ≥ 32), com as cores dominantes medidas pixel a pixel.
+
+**Por que algumas são diferentes:** o desenho padrão de Pokébola é tampa colorida e base branca.
+Quando o tema da bola cobre a bola inteira (a Luxo é preta e dourada, a Rápida azul e amarela),
+a base acompanha a tampa. Algumas têm base de outra cor que a tampa (Mergulho, Onírica). A Prêmio é
+o caso inverso: a base é a branca padrão e a tampa é que é branca também. As ancestrais (Hisui,
+Legends: Arceus) são de madeira com latão. As "pesadas" são de metal escuro, e a Marfim e a Ultra
+são de material claro.
+
+| Grupo | Bolas | Metade de baixo | Base proposta |
+| --- | --- | --- | --- |
+| Branca padrão | Pokébola, Grande, Ultra, Nível, Lua, Amizade, Amor, Safári, Pesada, Repetição, Ninho, Tela, Prêmio, Esporte, Isca, Mestra, Citrina, Verdejante, Cerúlea, Rosada, Ardósia (21) | branca/cinza, igual em todas (#BAA, #DDD, #CBB) | Base de Ferro (a atual) |
+| Branca com detalhes | Veloz (marcas amarelas), Parque (folhagem verde), Tempo (marcas vermelhas) | branca com enfeites perto da faixa | Base de Ferro, ou base própria se o usuário quiser os enfeites |
+| Igual à tampa | Luxo (preta e dourada), Rápida (azul e amarela), Crepúsculo (escura e verde), Criatura (azul quadriculada), Estima (vermelha), Cura (rosa) | da cor da tampa | base própria de cada uma |
+| Cor diferente da tampa | Mergulho (tampa branca, base azul), Onírica (tampa rosa, base roxa) | azul / roxa | base própria |
+| Ancestral de madeira | Pokébola, Grande, Pena, Asa, Jato, Citrina, Verdejante, Cerúlea, Rosada e Ardósia Ancestrais (10) | madeira com latão, igual em todas (#A85, #B97, #DB8) | Base de Madeira (uma só para as 10) |
+| Ancestral clara | Marfim e Ultra Ancestrais | marfim (#A98, #CCB, #BA9); a análise anterior as tinha posto na madeira | Base de Marfim |
+| Ancestral de metal | Pesada, Massiva e Titânica Ancestrais | metal escuro (a Massiva um pouco mais clara) | Base de Metal Escuro (uma só) |
+| Ancestral vermelha | Origem Ancestral | vermelha, como a tampa | base própria (pode ser a mesma da Estima) |
+
+A Bola Estranha (`strange_ball`) também tem textura no Cobblemon (verde-água, base igual à tampa),
+mas não está na forja (não é uma das 48).
+
+Conta: as 24 primeiras ficam com a Base de Ferro. As outras 24 pedem 11 bases novas (8 próprias,
+madeira, marfim e metal escuro, com a Origem usando a da Estima), 12 se a Origem tiver a dela e até
+15 se Veloz, Parque e Tempo também ganharem a sua. Implementação prevista:
+
+- Itens `<nome>_base` e modelos de peça como o `piece/iron_base` (seção 5.4), gerados pelo
+  `tools/derive_piece_models.py` a partir da metade de baixo da própria bola (sem recolorir).
+- Receita de montagem de cada bola com a base certa (tampa + botão + base) e o EMI mostrando isso.
+- **A decidir com o usuário:** como se faz cada base. Ideias: base de ferro + corante (as
+  coloridas), disco de tábuas martelado na bigorna (madeira), disco de quartzo ou osso (marfim),
+  disco de ferro com carvão ou de netherite (metal escuro).
+- Gametest: toda bola monta com a base do seu grupo e nenhuma base fica sem uso.
+
+### 12.2 Pokébola personalizada por jogador (pedido do usuário)
+
+Cada jogador faz o desenho da própria bola ao forjar. O desenho é **só visual**: a bola continua
+sendo do tipo dela (Pokébola, Grande…), com a mesma captura. Criar um tipo de bola por jogador não
+dá, porque os registros são fixos e precisam ser iguais no servidor e em todos os clients.
+
+Por onde o desenho aparece, do mais simples ao mais difícil:
+
+| Nível | Onde aparece | Dificuldade | O que exige |
+| --- | --- | --- | --- |
+| 1 | Item: inventário, mão, chão | baixa | O desenho fica num componente do item (`cobbleballworks:design`) e o client pinta o ícone e o modelo 3D com ele. Não mexe no Cobblemon. |
+| 2 | Bola arremessada (voo, captura, balanço) | média | Mixin no render da entidade de Pokébola do Cobblemon e sincronizar o desenho da entidade com os outros jogadores. |
+| 3 | Bola do Pokémon capturado (soltar, resumo, PC) | alta | O Cobblemon só guarda o tipo da bola (`caughtBall`). Seria preciso salvar o desenho nos dados persistentes do Pokémon e alterar várias telas e animações do Cobblemon, frágil a cada versão dele. |
+
+Quanta liberdade o jogador tem:
+
+- **Paleta** (baixa a média): cores da metade de cima, da de baixo, da faixa e do botão, escolhidas
+  na forja (pelas bolotas e corantes) ou numa tela.
+- **Padrões prontos** (média): listras, bolinhas, raio, chama…, cada um com cores à escolha.
+- **Desenho livre, pixel a pixel** (alta): editor dentro do jogo, envio dos desenhos a todos os
+  jogadores e textura gerada na hora; num servidor público precisa de moderação.
+
+Recomendação: começar pelo nível 1 com paleta e padrões, ligado à forja, e depois ir para o
+nível 2. O nível 3 e o desenho livre ficam por último. **A decidir com o usuário:** paleta/padrões
+ou desenho livre, e se o desenho precisa aparecer ao arremessar e ao soltar o Pokémon. Antes de
+começar, conferir no jar do Cobblemon 1.8.2 como ele renderiza a bola arremessada e onde guarda a
+bola do Pokémon.
