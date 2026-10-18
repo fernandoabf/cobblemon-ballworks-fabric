@@ -64,7 +64,7 @@ montagem) continua. As receitas de 3 apricorns numa linha do Pixelmon saíram (e
 como referência).
 
 **Balanceamento pela captura (pedido do usuário, 1.2.0):** o material do Cobblemon segue o "nível" da
-bola, não o quanto ela ajuda: a Nível (até ×4), a Rede (×3), a Mergulho (×3,5) e outras situacionais
+bola, não o quanto ela ajuda: a Nível (até ×4), a Tela (×3), a Mergulho (×3,5) e outras situacionais
 custavam ferro, menos que a Ultra (×2, ouro), e a Rápida (×5) custava o mesmo que a Ultra. Agora o
 formato e as bolotas continuam os do Cobblemon, mas o **centro**, os **discos por receita** e a
 **força** seguem a `CatchClass` da bola, tirada dos multiplicadores do Cobblemon 1.8.2
@@ -394,10 +394,12 @@ Toda mecânica precisa de gametest (`./gradlew runGametest`, roda com o Cobblemo
       na forja e receitas de bola de outros mods desligadas (3.3); encantamentos nos martelos; prensa
       animada na Bigorna Mecânica (seção 11)
 - [x] 1.2.0: custo dos discos pela captura (`CatchClass`, seção 3.1)
+- [x] Releases no GitHub: `.github/workflows/release.yml` testa e publica o jar de cada versão nova,
+      com a seção dela no `CHANGELOG.md` (a 1.2.0 é a primeira)
 - [ ] **Próxima atualização (pedido do usuário): base de cada bola.** Hoje toda bola usa a Base de
       Ferro. Análise prévia da metade de baixo das texturas 3D do Cobblemon: 24 bolas têm a base
       branca/cinza padrão (Pokébola, Grande, Ultra, Nível, Lua, Amizade, Amor, Safári, Pesada, Veloz,
-      Repetição, Tempo, Ninho, Rede, Premier, Esporte, Isca, as 5 de apricorn, Parque e Mestra) e 24
+      Repetição, Tempo, Ninho, Tela, Prêmio, Esporte, Isca, as 5 de apricorn, Parque e Mestra) e 24
       têm base própria: Mergulho (azul), Luxo (preta), Cura (rosa), Crepúsculo (escura), Rápida,
       Onírica (roxa), Criatura, Estima e Origem Ancestral (vermelhas) e as 15 ancestrais (madeira e
       latão; Pesada, Massiva e Titânica em metal escuro). Conferir Parque e Tempo, que o Cobblemon

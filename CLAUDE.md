@@ -113,3 +113,11 @@ O resultado é o jar de `build/libs/`. Ele vai nos dois lados: na pasta `mods/` 
 client. O **Cobblemon Parts Refabricated** pode sair do modpack: as receitas de bola dele (as 48) são
 desligadas pelo mixin de receitas (config `disableOtherModsBallRecipes`), então as peças dele ficam sem
 uso.
+
+**Releases:** os jogadores baixam o jar nas Releases do GitHub. O workflow
+`.github/workflows/release.yml` roda em todo push que muda `gradle.properties`, `CHANGELOG.md` ou o
+próprio workflow. Se o `mod_version` ainda não tem a release `v<mod_version>`, ele faz o jar nesse
+commit, roda `build runGametest runProductionGametest` e publica o jar, com a seção da versão no
+`CHANGELOG.md` mais as instruções de instalação. Para lançar uma versão: suba o `mod_version`,
+escreva a seção `## <versão> — <data>` no `CHANGELOG.md` (pt-BR) e dê push. Sem a seção, o workflow
+falha avisando.

@@ -9,9 +9,10 @@ viram **tampas** na bigorna, e a bola é montada com a tampa.
 1. **Cozinhe as bolotas (apricorns)** na fornalha: Bolota Vermelha → Bolota Vermelha Cozida, e assim
    por diante. (A fornalha não faz mais corante de bolota.)
 2. **Faça os discos** na bancada com a **mesma receita da bola no Cobblemon**, trocando as bolotas
-   cruas por cozidas. O material do centro continua o mesmo do Cobblemon: cobre, ferro, ouro ou
-   diamante, conforme o nível da bola. Exemplo: 4 Bolotas Vermelhas Cozidas em cruz + 1 lingote de
-   cobre no centro → 4 Discos de Pokébola. A tabela completa está no fim desta página (e no EMI).
+   cruas por cozidas. O material do centro segue o quanto a bola ajuda a capturar: cobre, ferro, ouro
+   ou diamante (netherite e estrela do Nether nas de captura garantida). Exemplo: 4 Bolotas Vermelhas
+   Cozidas em cruz + 1 lingote de cobre no centro → 4 Discos de Pokébola. A tabela completa está no
+   fim desta página (e no EMI).
 3. **Faça discos de ferro:** 3 lingotes de ferro numa linha → 5 Discos de Ferro.
 4. **Martele na Bigorna de Pokébola:** clique direito com o disco na bigorna e **segure o clique
    esquerdo com um martelo** até o disco virar **tampa** (o disco de ferro vira **base de ferro**).
@@ -27,8 +28,9 @@ viram **tampas** na bigorna, e a bola é montada com a tampa.
   ficar com o martelo na mão principal e os discos na secundária.
 - **Martelar:** segure o clique esquerdo com um martelo. Cada "quebra" completa é uma martelada; o
   martelo nunca quebra a bigorna. Cada martelada soma a força do martelo; a cada **5 de força** (10
-  nas bolas fortes e situacionais, 15 na Mestra e na Origem Ancestral; veja "Receitas dos discos") a
-  peça avança um estágio, e no 3º estágio vira tampa. O martelo perde 1 de durabilidade por estágio.
+  nas situacionais, como Tela, Rápida e Amor; 15 na Mestra e na Origem Ancestral; veja "Receitas dos
+  discos") a peça avança um estágio, e no 3º estágio vira tampa. O martelo perde 1 de durabilidade
+  por estágio.
 - **Pegar a tampa:** continue martelando (a peça pronta vai para o inventário sem gastar o martelo)
   ou clique direito com a mão principal.
 - **Tirar um disco pela metade:** clique direito com a mão principal (o progresso se perde).
@@ -98,10 +100,10 @@ delas vale:
 
 | Captura no Cobblemon | Centro do disco | Discos | Força | Bolas |
 | --- | --- | --- | --- | --- |
-| ×1 (sem bônus) | T1 cobre | 4 | 5 | Pokébola, Premier, Cura, Amizade, Luxo, Estima, bolas de apricorn, Pokébola/Pesada/Pena/Marfim Ancestral e as ancestrais de apricorn |
+| ×1 (sem bônus) | T1 cobre | 4 | 5 | Pokébola, Prêmio, Cura, Amizade, Luxo, Estima, bolas de apricorn, Pokébola/Pesada/Pena/Marfim Ancestral e as ancestrais de apricorn |
 | ×1,5 | T2 ferro | 4 | 5 | Grande, Safári, Esporte, Grande/Massiva/Asa Ancestral |
 | ×2 a ×2,5 | T3 ouro | 4 | 5 | Ultra, Parque, Ultra/Titânica/Jato Ancestral |
-| ×3 a ×4 na condição dela | T4 diamante | 4 | 10 | Rede, Mergulho, Crepúsculo, Repetição, Ninho, Tempo, Nível, Lua, Pesada, Isca, Veloz, Onírica |
+| ×3 a ×4 na condição dela | T4 diamante | 4 | 10 | Tela, Mergulho, Crepúsculo, Repetição, Ninho, Tempo, Nível, Lua, Pesada, Isca, Veloz, Onírica |
 | ×5 a ×8 na condição dela | T4 diamante | 2 | 10 | Rápida, Amor, Criatura |
 | captura garantida | netherite + estrela do Nether | 1 | 15 | Mestra, Origem Ancestral |
 

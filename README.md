@@ -39,9 +39,12 @@ decisions: [`docs/PLANO.md`](docs/PLANO.md).
 
 ## Installing
 
-Put the jar in `mods/` on **both the server and the clients**, next to Fabric API and Cobblemon 1.8.x
+Download the jar from the
+[latest release](https://github.com/fernandoabf/cobblemon-ballworks-fabric/releases/latest) and put
+it in `mods/` on **both the server and the clients**, next to Fabric API and Cobblemon 1.8.x
 (Cobblemon already bundles fabric-language-kotlin). Cobblemon Parts Refabricated is not needed: its
-Poké Ball recipes are switched off, so its parts would have no use.
+Poké Ball recipes are switched off, so its parts would have no use. What changed in each version:
+[`CHANGELOG.md`](CHANGELOG.md) (Portuguese).
 
 ## Versions
 
@@ -80,6 +83,10 @@ Before a release, `./gradlew runProductionGametest` runs the same gametests on a
 server (official installer and launcher, intermediary names, the remapped jar plus the published
 Fabric API and Cobblemon jars), and `runProductionShowcase` (under `xvfb-run`) does the showcase on a
 production client with the published EMI.
+
+Releases are published by `.github/workflows/release.yml`: a push with a `mod_version` that has no
+release yet builds the jar on that commit, runs `build runGametest runProductionGametest` and
+publishes it as release `v<mod_version>`, with the version's section of `CHANGELOG.md` as notes.
 
 No JDK? `./dgradle.sh <tasks>` runs the same Gradle inside the `gradle:8.14.3-jdk21` Docker image.
 
